@@ -3,6 +3,8 @@
  */
 package br.pucrio.inf.les.bdijade.core;
 
+import java.io.Serializable;
+
 import jade.lang.acl.ACLMessage;
 
 /**
@@ -12,7 +14,7 @@ import jade.lang.acl.ACLMessage;
  * 
  * @author ingrid
  */
-public class Capability {
+public class Capability implements Serializable {
 
 	private static final long serialVersionUID = -4922359927943108421L;
 

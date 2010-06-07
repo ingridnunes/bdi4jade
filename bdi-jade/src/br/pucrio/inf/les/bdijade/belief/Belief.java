@@ -41,6 +41,19 @@ public abstract class Belief<T> extends MetadataElement implements
 	}
 
 	/**
+	 * Initializes a belief with its name.
+	 * 
+	 * @param name
+	 *            the belief name.
+	 * @param value
+	 *            the belief initial value.
+	 */
+	public Belief(String name, T value) {
+		this(name);
+		setValue(value);
+	}
+
+	/**
 	 * Adds a belief base that contains this belief. The agent whose capability
 	 * contains this belief in the belief base believes in this belief.
 	 * 

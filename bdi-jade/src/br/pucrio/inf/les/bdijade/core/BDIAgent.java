@@ -337,7 +337,7 @@ public class BDIAgent extends Agent {
 			if (removed) {
 				capability.setMyAgent(null);
 			}
-			return this.capabilities.remove(capability);
+			return removed;
 		}
 	}
 
@@ -431,8 +431,8 @@ public class BDIAgent extends Agent {
 	 */
 	@Override
 	protected void takeDown() {
-		for (Capability capability : capabilities) {
-			this.removeCapability(capability);
+		while (!capabilities.isEmpty()) {
+			this.removeCapability(capabilities.iterator().next());
 		}
 	}
 
