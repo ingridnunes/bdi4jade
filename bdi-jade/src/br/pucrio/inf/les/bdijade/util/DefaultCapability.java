@@ -18,6 +18,8 @@ import br.pucrio.inf.les.bdijade.util.plan.SimplePlan;
  */
 public class DefaultCapability extends Capability {
 
+	private static final long serialVersionUID = -2230280269621396198L;
+
 	/**
 	 * @see br.pucrio.inf.les.bdijade.core.Capability#setup()
 	 */

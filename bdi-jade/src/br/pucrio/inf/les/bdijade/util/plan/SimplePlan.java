@@ -20,7 +20,7 @@ import br.pucrio.inf.les.bdijade.plan.PlanBody;
  */
 public class SimplePlan extends Plan {
 
-	private final Class<? extends Behaviour> planBodyClass;
+	protected final Class<? extends Behaviour> planBodyClass;
 
 	/**
 	 * Creates a new Simple Plan. It is a plan whose body is the specified class

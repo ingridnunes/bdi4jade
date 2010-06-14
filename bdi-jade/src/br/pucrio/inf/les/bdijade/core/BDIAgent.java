@@ -166,7 +166,7 @@ public class BDIAgent extends Agent {
 	private static final long serialVersionUID = -841774495336214256L;
 	private final BDIInterpreter bdiInterpreter;
 	private BeliefRevisionStrategy beliefRevisionStrategy;
-	public final Set<Capability> capabilities;
+	private final Set<Capability> capabilities;
 	private DeliberationFunction deliberationFunction;
 	private final List<Intention> intentions;
 	private OptionGenerationFunction optionGenerationFunction;
