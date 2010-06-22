@@ -18,6 +18,8 @@ import br.pucrio.inf.les.bdijade.util.plan.SimplePlan;
  */
 public class SubgoalCapability extends Capability {
 
+	private static final long serialVersionUID = -4388902481688697669L;
+
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
 		plans.add(new SimplePlan(TopLevelGoal.class, ParentPlan.class));
