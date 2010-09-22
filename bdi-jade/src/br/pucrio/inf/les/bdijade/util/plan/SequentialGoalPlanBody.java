@@ -26,23 +26,23 @@ import br.pucrio.inf.les.bdijade.util.goal.SequentialGoal;
  * 
  * @author ingrid
  */
-public class SequentialGoalPlan extends Behaviour implements PlanBody,
+public class SequentialGoalPlanBody extends Behaviour implements PlanBody,
 		OutputPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private List<Goal> completedGoals;
-	private Goal currentGoal;
-	private GoalFinishedEvent failedGoal;
-	private Iterator<Goal> it;
-	private Log log;
-	private PlanInstance planInstance;
-	private Boolean success;
+	protected List<Goal> completedGoals;
+	protected Goal currentGoal;
+	protected GoalFinishedEvent failedGoal;
+	protected Iterator<Goal> it;
+	protected Log log;
+	protected PlanInstance planInstance;
+	protected Boolean success;
 
 	/**
 	 * Created a new SequentialGoalPlan.
 	 */
-	public SequentialGoalPlan() {
+	public SequentialGoalPlanBody() {
 		this.log = LogFactory.getLog(this.getClass());
 	}
 

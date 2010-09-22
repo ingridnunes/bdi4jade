@@ -7,8 +7,8 @@ import br.pucrio.inf.les.bdijade.core.BDIAgent;
 import br.pucrio.inf.les.bdijade.core.Capability;
 import br.pucrio.inf.les.bdijade.util.goal.ParallelGoal;
 import br.pucrio.inf.les.bdijade.util.goal.SequentialGoal;
-import br.pucrio.inf.les.bdijade.util.plan.ParallelGoalPlan;
-import br.pucrio.inf.les.bdijade.util.plan.SequentialGoalPlan;
+import br.pucrio.inf.les.bdijade.util.plan.ParallelGoalPlanBody;
+import br.pucrio.inf.les.bdijade.util.plan.SequentialGoalPlanBody;
 import br.pucrio.inf.les.bdijade.util.plan.SimplePlan;
 
 /**
@@ -26,9 +26,9 @@ public class DefaultCapability extends Capability {
 	@Override
 	protected void setup() {
 		this.getPlanLibrary().addPlan(
-				new SimplePlan(SequentialGoal.class, SequentialGoalPlan.class));
+				new SimplePlan(SequentialGoal.class, SequentialGoalPlanBody.class));
 		this.getPlanLibrary().addPlan(
-				new SimplePlan(ParallelGoal.class, ParallelGoalPlan.class));
+				new SimplePlan(ParallelGoal.class, ParallelGoalPlanBody.class));
 	}
 
 }

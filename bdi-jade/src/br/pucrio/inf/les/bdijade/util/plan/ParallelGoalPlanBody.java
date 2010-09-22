@@ -24,23 +24,23 @@ import br.pucrio.inf.les.bdijade.util.goal.ParallelGoal;
  * @author ingrid
  * 
  */
-public class ParallelGoalPlan extends Behaviour implements PlanBody,
+public class ParallelGoalPlanBody extends Behaviour implements PlanBody,
 		OutputPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private List<Goal> completedGoals;
-	private boolean dispatched;
-	private GoalFinishedEvent failedGoal;
-	private Log log;
-	private ParallelGoal parallelGoal;
-	private PlanInstance planInstance;
-	private Boolean success;
+	protected List<Goal> completedGoals;
+	protected boolean dispatched;
+	protected GoalFinishedEvent failedGoal;
+	protected Log log;
+	protected ParallelGoal parallelGoal;
+	protected PlanInstance planInstance;
+	protected Boolean success;
 
 	/**
 	 * Created a new ParallelGoalPlan.
 	 */
-	public ParallelGoalPlan() {
+	public ParallelGoalPlanBody() {
 		this.log = LogFactory.getLog(this.getClass());
 	}
 
