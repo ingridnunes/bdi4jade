@@ -18,7 +18,7 @@ import br.pucrio.inf.les.bdijade.plan.Plan;
  * 
  * @author ingrid
  */
-// FIXME PlanLibrary - create indexes to optimize plan matches
+// XXX PlanLibrary - create indexes to optimize plan matches
 public class PlanLibrary implements Serializable {
 
 	private static final long serialVersionUID = 3038533629659859857L;

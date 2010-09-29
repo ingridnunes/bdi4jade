@@ -32,7 +32,7 @@ public class PersistentBelief<T> extends Belief<T> implements Serializable,
 	 * @see br.pucrio.inf.les.bdijade.belief.Belief#setValue(java.lang.Object)
 	 */
 	public void setValue(T value) {
-		// TODO PersistentBelief.setValue(T value)
+		// XXX PersistentBelief.setValue(T value)
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class PersistentBelief<T> extends Belief<T> implements Serializable,
 	 */
 	@Override
 	public T getValue() {
-		// TODO PersistentBelief.getValue()
+		// XXX PersistentBelief.getValue()
 		return null;
 	}
 

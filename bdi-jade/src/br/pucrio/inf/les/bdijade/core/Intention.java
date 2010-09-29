@@ -42,7 +42,7 @@ public class Intention {
 	private final Log log;
 	private final BDIAgent myAgent;
 	private boolean noLongerDesired;
-	private final Capability owner;// FIXME Intention - owner (Capability)
+	private final Capability owner;// XXX Intention - owner (Capability)
 	private boolean unachievable;
 	private boolean waiting;
 
