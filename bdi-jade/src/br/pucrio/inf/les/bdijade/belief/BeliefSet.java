@@ -56,6 +56,6 @@ public abstract class BeliefSet<T> extends Belief<Set<T>> {
 	 *            the value to be removed.
 	 * @return true if the value was removed.
 	 */
-	public abstract boolean remove(T value);
+	public abstract boolean removeValue(T value);
 
 }

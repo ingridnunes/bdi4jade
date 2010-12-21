@@ -229,6 +229,24 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Drops a given goal of this agent. If the goal is not part of the agent's
+	 * current goal, no action is performed.
+	 * 
+	 * @param goal
+	 *            the goal to be dropped.
+	 */
+	public void dropGoal(Goal goal) {
+		synchronized (intentions) {
+			for (Intention intention : intentions) {
+				if (intention.getGoal().equals(goal)) {
+					intention.noLongerDesire();
+					return;
+				}
+			}
+		}
+	}
+
+	/**
 	 * Returns a collection of all beliefs from all capabilities of this agent.
 	 * It may have two equivalent beliefs, i.e. beliefs with the same name.
 	 * 

@@ -73,9 +73,9 @@ public class TransientBeliefSet<T> extends BeliefSet<T> {
 	}
 
 	/**
-	 * @see br.pucrio.inf.les.bdijade.belief.BeliefSet#remove(java.lang.Object)
+	 * @see br.pucrio.inf.les.bdijade.belief.BeliefSet#removeValue(java.lang.Object)
 	 */
-	public boolean remove(T value) {
+	public boolean removeValue(T value) {
 		return this.values.remove(value);
 	}
 
