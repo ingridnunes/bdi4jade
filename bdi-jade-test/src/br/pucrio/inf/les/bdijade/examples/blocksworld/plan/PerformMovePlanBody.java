@@ -35,13 +35,13 @@ public class PerformMovePlanBody extends Behaviour implements PlanBody {
 	@Override
 	public void action() {
 		if (!thing2.equals(Thing.TABLE)) {
-			clearSet.remove(new Clear(thing2));
+			clearSet.removeValue(new Clear(thing2));
 		}
 
 		for (Thing thing : Thing.THINGS) {
 			On on = new On(thing1, thing);
 			if (onSet.hasValue(on)) {
-				onSet.remove(on);
+				onSet.removeValue(on);
 				if (!Thing.TABLE.equals(thing)) {
 					clearSet.addValue(new Clear(thing));
 				}

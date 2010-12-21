@@ -51,7 +51,7 @@ public class ClearPlanBody extends Behaviour implements PlanBody {
 				}
 			}
 		} else if (planInstance.getGoalEvent() != null) {
-			onSet.remove(on);
+			onSet.removeValue(on);
 			on = null;
 			waiting = false;
 			index++;
