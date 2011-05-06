@@ -1,0 +1,10 @@
+BDI4JADE is an implementation of the BDI architecture built on top of JADE
+First release: May 2011.
+BDI4JADE is distributed under LGPL (see file LICENSE).
+
+Java 1.5 is required to run this application, it is available
+at http://java.sun.com.
+
+For more information, please read doc/index.html.
+
+Thank you for your interest in BDI4JADE!
