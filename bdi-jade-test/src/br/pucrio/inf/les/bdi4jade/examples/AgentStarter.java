@@ -37,6 +37,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.pucrio.inf.les.bdi4jade.examples.helloworld.HelloWorldAgent;
+
 /**
  * @author ingrid
  * 
@@ -47,8 +49,9 @@ public class AgentStarter {
 
 	static {
 		agents = new HashMap<String, Agent>();
-		agents.put(BDIAgent1.MY_NAME, new BDIAgent1());
-//		agents.put(BDIAgent2.MY_NAME, new BDIAgent2());
+		agents.put(HelloWorldAgent.class.getSimpleName(), new HelloWorldAgent());
+		// agents.put(BDIAgent1.MY_NAME, new BDIAgent1());
+		// agents.put(BDIAgent2.MY_NAME, new BDIAgent2());
 	};
 
 	public static void main(String[] args) {
