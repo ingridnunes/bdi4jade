@@ -115,6 +115,7 @@ public class BDIAgent extends Agent {
 			synchronized (intentions) {
 				Map<Goal, GoalStatus> goalStatus = new HashMap<Goal, GoalStatus>();
 				Iterator<Intention> it = intentions.iterator();
+				List<Intention> doneIntentions = new LinkedList<>();
 				while (it.hasNext()) {
 					Intention intention = it.next();
 					GoalStatus status = intention.getStatus();
@@ -122,13 +123,16 @@ public class BDIAgent extends Agent {
 					case ACHIEVED:
 					case NO_LONGER_DESIRED:
 					case UNACHIEVABLE:
-						intention.fireGoalFinishedEvent();
+						doneIntentions.add(intention);
 						it.remove();
 						break;
 					default:
 						goalStatus.put(intention.getGoal(), status);
 						break;
 					}
+				}
+				for (Intention intention : doneIntentions) {
+					intention.fireGoalFinishedEvent();
 				}
 
 				Set<Goal> generatedGoals = optionGenerationFunction

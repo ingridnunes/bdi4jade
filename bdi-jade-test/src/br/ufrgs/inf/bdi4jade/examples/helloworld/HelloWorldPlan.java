@@ -17,13 +17,15 @@ public class HelloWorldPlan extends OneShotBehaviour implements PlanBody {
 	private static final long serialVersionUID = -9039447524062487795L;
 
 	private String name;
+	private EndState endState;
 
 	public void action() {
 		System.out.println("Hello, " + name + "!");
+		this.endState = EndState.SUCCESSFUL;
 	}
 
 	public EndState getEndState() {
-		return EndState.SUCCESSFUL;
+		return endState;
 	}
 
 	public void init(PlanInstance planInstance) {

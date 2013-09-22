@@ -43,6 +43,7 @@ public class PongPlan extends OneShotBehaviour implements PlanBody {
 
 	private Log log;
 	private ACLMessage pingMsg;
+	private EndState endState;
 
 	@Override
 	public void action() {
@@ -52,11 +53,12 @@ public class PongPlan extends OneShotBehaviour implements PlanBody {
 		reply.setContent(PingPongCapability.PONG);
 		this.myAgent.send(reply);
 		log.info("Pong sent to agent" + pingMsg.getSender().getName() + "!");
+		this.endState = EndState.SUCCESSFUL;
 	}
 
 	@Override
 	public EndState getEndState() {
-		return EndState.SUCCESSFUL;
+		return endState;
 	}
 
 	@Override

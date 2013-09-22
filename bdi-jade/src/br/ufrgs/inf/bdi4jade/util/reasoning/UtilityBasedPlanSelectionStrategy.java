@@ -23,7 +23,11 @@
 package br.ufrgs.inf.bdi4jade.util.reasoning;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import br.ufrgs.inf.bdi4jade.core.BDIAgent;
 import br.ufrgs.inf.bdi4jade.goal.Goal;
@@ -42,16 +46,18 @@ import br.ufrgs.inf.bdi4jade.softgoal.Softgoal;
  */
 public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy {
 
+	private final Log log;
 	private final BDIAgent myAgent;
 
 	public UtilityBasedPlanSelectionStrategy(BDIAgent myAgent) {
+		this.log = LogFactory.getLog(getClass());
 		this.myAgent = myAgent;
 	}
 
 	@SuppressWarnings("unchecked")
 	private double calculateExpectedUtility(Plan plan, Softgoal softgoal) {
-		List<PlanContribution> contributions = (List<PlanContribution>) plan
-				.getMetadata(Plan.DefaultMetadata.CONTRIBUTIONS);
+		List<PlanContribution> contributions = ((Map<Softgoal, List<PlanContribution>>) plan
+				.getMetadata(Plan.DefaultMetadata.CONTRIBUTIONS)).get(softgoal);
 
 		double expectedUtility = 0;
 		if (contributions != null) {
@@ -90,13 +96,14 @@ public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy 
 				Double preference = preferences
 						.getPreferenceForSoftgoal(softgoal);
 				if (preference != null) {
-
 					double expectedUtility = calculateExpectedUtility(plan,
 							softgoal);
 					utility += preference * expectedUtility;
-
 				}
 			}
+
+			log.debug("EU[" + plan.getId() + "] = " + utility);
+
 			if (selectedPlan == null || maxUtility < utility) {
 				selectedPlan = plan;
 				maxUtility = utility;
