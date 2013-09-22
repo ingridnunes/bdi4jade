@@ -49,6 +49,7 @@ import br.ufrgs.inf.bdi4jade.reasoning.BeliefRevisionStrategy;
 import br.ufrgs.inf.bdi4jade.reasoning.DeliberationFunction;
 import br.ufrgs.inf.bdi4jade.reasoning.OptionGenerationFunction;
 import br.ufrgs.inf.bdi4jade.reasoning.PlanSelectionStrategy;
+import br.ufrgs.inf.bdi4jade.softgoal.Softgoal;
 import br.ufrgs.inf.bdi4jade.util.DefaultCapability;
 import br.ufrgs.inf.bdi4jade.util.reasoning.DefaultBeliefRevisionStrategy;
 import br.ufrgs.inf.bdi4jade.util.reasoning.DefaultDeliberationFunction;
@@ -185,18 +186,20 @@ public class BDIAgent extends Agent {
 	private static final long serialVersionUID = -841774495336214256L;
 	private final BDIInterpreter bdiInterpreter;
 	private BeliefRevisionStrategy beliefRevisionStrategy;
-	private final Set<Capability> capabilities;
 	private DeliberationFunction deliberationFunction;
 	private final List<Intention> intentions;
 	private OptionGenerationFunction optionGenerationFunction;
 	private PlanSelectionStrategy planSelectionStrategy;
+	private final Capability rootCapability;
+	private final Set<Softgoal> softgoals;
 
 	/**
 	 * Default constructor.
 	 */
 	public BDIAgent() {
-		this.capabilities = new HashSet<Capability>();
+		this.rootCapability = new Capability();
 		this.intentions = new LinkedList<Intention>();
+		this.softgoals = new HashSet<Softgoal>();
 		this.bdiInterpreter = new BDIInterpreter(this);
 		this.beliefRevisionStrategy = new DefaultBeliefRevisionStrategy();
 		this.optionGenerationFunction = new DefaultOptionGenerationFunction();
@@ -211,9 +214,14 @@ public class BDIAgent extends Agent {
 	 *            capability to be added.
 	 */
 	public void addCapability(Capability capability) {
-		synchronized (capabilities) {
+		synchronized (rootCapability) {
+			if (capability.getParent() != null) {
+				throw new RuntimeException(
+						"Capability already binded to another capability!");
+			}
+
+			this.rootCapability.addChild(capability);
 			capability.setMyAgent(this);
-			this.capabilities.add(capability);
 		}
 	}
 
@@ -248,8 +256,18 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Adds a new softgoal to this agent.
+	 * 
+	 * @param softgoal
+	 *            the softgoal to be pursued.
+	 */
+	public void addSoftgoal(Softgoal softgoal) {
+		this.softgoals.add(softgoal);
+	}
+
+	/**
 	 * Drops a given goal of this agent. If the goal is not part of the agent's
-	 * current goal, no action is performed.
+	 * current goals, no action is performed.
 	 * 
 	 * @param goal
 	 *            the goal to be dropped.
@@ -266,22 +284,56 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Drops a given softgoal of this agent. If the softgoal is not part of the
+	 * agent's current softgoals, no action is performed.
+	 * 
+	 * @param softgoal
+	 *            the softgoal to be dropped.
+	 */
+
+	public void dropSoftoal(Softgoal softgoal) {
+		this.softgoals.remove(softgoal);
+	}
+
+	/**
 	 * Returns a collection of all beliefs from all capabilities of this agent.
 	 * It may have two equivalent beliefs, i.e. beliefs with the same name.
 	 * 
 	 * @return the collection of all beliefs of this agent.
 	 */
 	public Collection<Belief<?>> getAllBeliefs() {
-		synchronized (capabilities) {
-			int size = 0;
-			for (Capability capability : capabilities) {
-				size += capability.getBeliefBase().size();
-			}
-			Collection<Belief<?>> beliefs = new ArrayList<Belief<?>>(size);
-			for (Capability capability : capabilities) {
-				beliefs.addAll(capability.getBeliefBase().getBeliefs());
-			}
+		synchronized (rootCapability) {
+			Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
+			getAllBeliefs(beliefs, rootCapability);
 			return beliefs;
+		}
+	}
+
+	private void getAllBeliefs(final Collection<Belief<?>> beliefs,
+			Capability capability) {
+		beliefs.addAll(capability.getBeliefBase().getBeliefs());
+		for (Capability child : capability.getChildren()) {
+			getAllBeliefs(beliefs, child);
+		}
+	}
+
+	/**
+	 * @return the capabilities
+	 */
+	public List<Capability> getAllCapabilities() {
+		synchronized (rootCapability) {
+			List<Capability> capabilities = new ArrayList<>();
+			getAllCapabilities(capabilities, rootCapability);
+			return capabilities;
+		}
+	}
+
+	private void getAllCapabilities(final List<Capability> capabilities,
+			Capability capability) {
+		capabilities.add(capability);
+		Set<Capability> children = capability.getChildren();
+		for (Capability child : children) {
+			getAllCapabilities(capabilities, child);
 		}
 	}
 
@@ -302,19 +354,19 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Gets all softgoals of this agent.
+	 * 
+	 * @return the set of softgoals.
+	 */
+	public Set<Softgoal> getAllSoftgoals() {
+		return this.softgoals;
+	}
+
+	/**
 	 * @return the beliefRevisionStrategy
 	 */
 	public BeliefRevisionStrategy getBeliefRevisionStrategy() {
 		return beliefRevisionStrategy;
-	}
-
-	/**
-	 * @return the capabilities
-	 */
-	public Set<Capability> getCapabilities() {
-		synchronized (capabilities) {
-			return capabilities;
-		}
 	}
 
 	/**
@@ -353,6 +405,15 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Returns the root capability of this agent.
+	 * 
+	 * @return the rootCapability
+	 */
+	public Capability getRootCapability() {
+		return rootCapability;
+	}
+
+	/**
 	 * This method initializes the BDI agent. It is invoked by the
 	 * {@link #setup()} method.
 	 */
@@ -369,8 +430,8 @@ public class BDIAgent extends Agent {
 	 * @return true if the capability exists and was removed.
 	 */
 	public boolean removeCapability(Capability capability) {
-		synchronized (capabilities) {
-			boolean removed = this.capabilities.remove(capability);
+		synchronized (rootCapability) {
+			boolean removed = this.rootCapability.removeChild(capability);
 			if (removed) {
 				capability.setMyAgent(null);
 			}
@@ -468,9 +529,13 @@ public class BDIAgent extends Agent {
 	 */
 	@Override
 	protected void takeDown() {
-		while (!capabilities.isEmpty()) {
-			this.removeCapability(capabilities.iterator().next());
+		synchronized (rootCapability) {
+			Set<Capability> capabilities = rootCapability.getChildren();
+			for (Capability capability : capabilities) {
+				rootCapability.removeChild(capability);
+			}
 		}
+
 	}
 
 }

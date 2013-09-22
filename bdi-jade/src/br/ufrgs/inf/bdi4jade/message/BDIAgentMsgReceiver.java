@@ -51,16 +51,21 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 
 		private BDIAgentMsgReceiver bdiAgentMsgReceiver;
 
+		private void getCanProcessCapabilities(final ACLMessage msg,
+				final Set<Capability> capabilities, Capability capability) {
+			if (capability.canProcess(msg)) {
+				capabilities.add(capability);
+			}
+			for (Capability child : capability.getChildren()) {
+				getCanProcessCapabilities(msg, capabilities, child);
+			}
+		}
+
 		@Override
 		public boolean match(ACLMessage msg) {
 			Set<Capability> capabilities = new HashSet<Capability>();
-
-			for (Capability capability : bdiAgentMsgReceiver.getMyAgent()
-					.getCapabilities()) {
-				if (capability.canProcess(msg)) {
-					capabilities.add(capability);
-				}
-			}
+			getCanProcessCapabilities(msg, capabilities, bdiAgentMsgReceiver
+					.getMyAgent().getRootCapability());
 
 			if (!capabilities.isEmpty()) {
 				bdiAgentMsgReceiver.messageMatched(msg, capabilities);

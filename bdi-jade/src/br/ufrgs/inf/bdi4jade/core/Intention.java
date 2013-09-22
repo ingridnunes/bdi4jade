@@ -166,6 +166,9 @@ public class Intention {
 			this.executedPlans.add(this.currentPlan.getPlan());
 			this.currentPlan = null;
 			break;
+		default:
+			assert false : status;
+			break;
 		}
 	}
 
@@ -201,10 +204,15 @@ public class Intention {
 	 */
 	private Set<Plan> getCanAchievePlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		for (Capability capability : myAgent.getCapabilities()) {
-			plans.addAll(capability.getPlanLibrary().canAchievePlans(goal));
-		}
+		getCanAchievePlans(plans, myAgent.getRootCapability());
 		return plans;
+	}
+
+	private void getCanAchievePlans(final Set<Plan> plans, Capability capability) {
+		plans.addAll(capability.getPlanLibrary().canAchievePlans(goal));
+		for (Capability child : capability.getChildren()) {
+			getCanAchievePlans(plans, child);
+		}
 	}
 
 	/**
@@ -279,6 +287,9 @@ public class Intention {
 			this.executedPlans.add(this.currentPlan.getPlan());
 			this.currentPlan = null;
 			break;
+		default:
+			assert false : status;
+			break;
 		}
 	}
 
@@ -313,6 +324,9 @@ public class Intention {
 			this.executedPlans.add(this.currentPlan.getPlan());
 			this.currentPlan = null;
 			dispatchPlan();
+			break;
+		default:
+			assert false : status;
 			break;
 		}
 	}

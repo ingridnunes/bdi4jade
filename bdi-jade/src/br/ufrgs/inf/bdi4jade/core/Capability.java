@@ -22,14 +22,16 @@
 
 package br.ufrgs.inf.bdi4jade.core;
 
-import java.io.Serializable;
-
 import jade.lang.acl.ACLMessage;
+
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This capability represents a component that aggregates the mental attitudes
  * defined by the BDI architecture. It has a belief base with the associated
- * beliefs (knowledge) and a plan library. *
+ * beliefs (knowledge) and a plan library.
  * 
  * @author ingrid
  */
@@ -38,8 +40,10 @@ public class Capability implements Serializable {
 	private static final long serialVersionUID = -4922359927943108421L;
 
 	protected final BeliefBase beliefBase;
+	protected final Set<Capability> children;
 	protected final String id;
 	protected BDIAgent myAgent;
+	protected Capability parent;
 	protected final PlanLibrary planLibrary;
 	private boolean start;
 
@@ -50,7 +54,7 @@ public class Capability implements Serializable {
 	public Capability() {
 		this(null);
 	}
-	
+
 	/**
 	 * Creates a new capability.
 	 * 
@@ -59,8 +63,7 @@ public class Capability implements Serializable {
 	 * @param planLibrary
 	 *            the plan library of this capability.
 	 */
-	public Capability(BeliefBase beliefBase,
-			PlanLibrary planLibrary) {
+	public Capability(BeliefBase beliefBase, PlanLibrary planLibrary) {
 		this(null, beliefBase, planLibrary);
 	}
 
@@ -87,7 +90,38 @@ public class Capability implements Serializable {
 	 * @param planLibrary
 	 *            the plan library of this capability.
 	 */
-	public Capability(String id, BeliefBase beliefBase,
+	public Capability(String id, BeliefBase beliefBase, PlanLibrary planLibrary) {
+		this(id, null, beliefBase, planLibrary);
+	}
+
+	/**
+	 * Creates a new capability. It uses {@link BeliefBase} and
+	 * {@link PlanLibrary} as belief base and plan library respectively.
+	 * 
+	 * @param id
+	 *            the capability id. If it is null, the class name is going to
+	 *            be used.
+	 * @param parent
+	 *            the parent of this capability.
+	 */
+	public Capability(String id, Capability parent) {
+		this(id, parent, new BeliefBase(), new PlanLibrary());
+	}
+
+	/**
+	 * Creates a new capability.
+	 * 
+	 * @param id
+	 *            the capability id. If it is null, the class name is going to
+	 *            be used.
+	 * @param parent
+	 *            the parent of this capability.
+	 * @param beliefBase
+	 *            the belief base of this capability.
+	 * @param planLibrary
+	 *            the plan library of this capability.
+	 */
+	public Capability(String id, Capability parent, BeliefBase beliefBase,
 			PlanLibrary planLibrary) {
 		if (id == null) {
 			if (this.getClass().getCanonicalName() == null
@@ -100,11 +134,23 @@ public class Capability implements Serializable {
 		} else {
 			this.id = id;
 		}
+		this.children = new HashSet<>();
+		if (parent != null) {
+			parent.addChild(this);
+		}
 		beliefBase.setCapability(this);
 		this.beliefBase = beliefBase;
 		planLibrary.setCapability(this);
 		this.planLibrary = planLibrary;
 		this.start = false;
+	}
+
+	public void addChild(Capability capability) {
+		if (capability.parent != null) {
+			capability.parent.removeChild(capability);
+		}
+		capability.parent = this;
+		this.children.add(capability);
 	}
 
 	/**
@@ -127,6 +173,13 @@ public class Capability implements Serializable {
 	}
 
 	/**
+	 * @return the children
+	 */
+	public Set<Capability> getChildren() {
+		return new HashSet<>(children);
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -141,14 +194,34 @@ public class Capability implements Serializable {
 	}
 
 	/**
+	 * @return the parent
+	 */
+	public Capability getParent() {
+		return parent;
+	}
+
+	/**
 	 * @return the planLibrary
 	 */
 	public PlanLibrary getPlanLibrary() {
 		return planLibrary;
 	}
 
+	public boolean hasChildren() {
+		return !this.children.isEmpty();
+	}
+
+	public boolean removeChild(Capability capability) {
+		boolean removed = this.children.remove(capability);
+		if (removed) {
+			capability.parent = null;
+		}
+		return removed;
+	}
+
 	/**
-	 * @param myAgent the myAgent to set
+	 * @param myAgent
+	 *            the myAgent to set
 	 */
 	public void setMyAgent(BDIAgent myAgent) {
 		this.myAgent = myAgent;

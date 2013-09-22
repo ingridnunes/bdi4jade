@@ -44,8 +44,13 @@ public class DefaultBeliefRevisionStrategy implements BeliefRevisionStrategy {
 	 */
 	@Override
 	public void reviewBeliefs(BDIAgent bdiAgent) {
-		for (Capability capability : bdiAgent.getCapabilities()) {
-			capability.getBeliefBase().reviewBeliefs();
+		reviewBeliefs(bdiAgent.getRootCapability());
+	}
+
+	public void reviewBeliefs(Capability capability) {
+		capability.getBeliefBase().reviewBeliefs();
+		for (Capability child : capability.getChildren()) {
+			reviewBeliefs(child);
 		}
 	}
 

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// Copyright (C) 2011  Ingrid Nunes, et al.
+// Copyright (C) 2013  Ingrid Nunes, et al.
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -20,29 +20,24 @@
 //
 //----------------------------------------------------------------------------
 
-package br.ufrgs.inf.bdi4jade.examples;
+package br.ufrgs.inf.bdi4jade.util.agent;
 
 import br.ufrgs.inf.bdi4jade.core.BDIAgent;
-import br.ufrgs.inf.bdi4jade.examples.blocksworld.BlocksWorldCapability;
+import br.ufrgs.inf.bdi4jade.preference.SoftgoalPreferences;
+import br.ufrgs.inf.bdi4jade.util.reasoning.UtilityBasedPlanSelectionStrategy;
 
 /**
  * @author ingrid
  * 
  */
-public class BDIAgent1 extends BDIAgent {
+public class UtilityBasedBDIAgent extends BDIAgent {
 
-	private static final long serialVersionUID = -8505187840524213951L;
-	public static final String MY_NAME = "AGENT_1";
+	private static final long serialVersionUID = -1721751203235905764L;
 
-	@Override
-	protected void init() {
-		this.addCapability(new BlocksWorldCapability());
-		// this.addCapability(new PlanFailedCapability());
-		// this.addCapability(new SubgoalCapability());
-		// this.addCapability(new PingPongCapability(BDIAgent1.MY_NAME,
-		// BDIAgent2.MY_NAME));
-		// this.addCapability(new CompositeGoalCapability(true));
-		// this.addCapability(new CompositeGoalCapability(false));
+	public UtilityBasedBDIAgent() {
+		setPlanSelectionStrategy(new UtilityBasedPlanSelectionStrategy(this));
+		getRootCapability().getBeliefBase()
+				.addBelief(new SoftgoalPreferences());
 	}
 
 }

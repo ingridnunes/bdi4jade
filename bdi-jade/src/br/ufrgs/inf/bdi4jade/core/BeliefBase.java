@@ -24,16 +24,18 @@ package br.ufrgs.inf.bdi4jade.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import br.ufrgs.inf.bdi4jade.belief.Belief;
 import br.ufrgs.inf.bdi4jade.event.BeliefEvent;
-import br.ufrgs.inf.bdi4jade.event.BeliefListener;
 import br.ufrgs.inf.bdi4jade.event.BeliefEvent.Action;
+import br.ufrgs.inf.bdi4jade.event.BeliefListener;
 import br.ufrgs.inf.bdi4jade.exception.BeliefAlreadyExistsException;
 
 /**
@@ -117,14 +119,40 @@ public class BeliefBase implements Serializable {
 	}
 
 	/**
-	 * Retrieves a belief from the belief base.
+	 * Gets all beliefs of this belief base and the belief bases of the parents
+	 * of the capability that this belief base belongs to.
+	 * 
+	 * @return the beliefs
+	 */
+	public Collection<Belief<?>> getAllBeliefs() {
+		Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
+		getAllBeliefs(beliefs);
+		return beliefs;
+	}
+
+	private void getAllBeliefs(final Collection<Belief<?>> beliefs) {
+		beliefs.addAll(this.beliefs.values());
+		if (capability != null && capability.getParent() != null) {
+			capability.getParent().getBeliefBase().getAllBeliefs(beliefs);
+		}
+	}
+
+	/**
+	 * Retrieves a belief from the belief base. If this belief does not contain
+	 * it and this belief base is from a capability, it checks the common belief
+	 * based of the agent, and returns it if it exists.
 	 * 
 	 * @param name
 	 *            the name of the belief to be retrieved.
 	 * @return the belief. Null if no belief is found.
 	 */
 	public Belief<?> getBelief(String name) {
-		return this.beliefs.get(name);
+		Belief<?> belief = this.beliefs.get(name);
+		if (belief == null && capability != null
+				&& capability.getParent() != null) {
+			belief = capability.getParent().getBeliefBase().getBelief(name);
+		}
+		return belief;
 	}
 
 	/**
@@ -135,6 +163,8 @@ public class BeliefBase implements Serializable {
 	}
 
 	/**
+	 * Gets all beliefs of this belief base.
+	 * 
 	 * @return the beliefs
 	 */
 	public Set<Belief<?>> getBeliefs() {
@@ -171,7 +201,11 @@ public class BeliefBase implements Serializable {
 	 * @return true if the belief base contains the belief.
 	 */
 	public boolean hasBelief(String name) {
-		return this.beliefs.containsKey(name);
+		boolean hasBelief = this.beliefs.containsKey(name);
+		if (!hasBelief && capability != null && capability.getParent() != null) {
+			hasBelief = capability.getParent().getBeliefBase().hasBelief(name);
+		}
+		return hasBelief;
 	}
 
 	/**
@@ -191,6 +225,11 @@ public class BeliefBase implements Serializable {
 		for (BeliefListener beliefListener : beliefListeners) {
 			beliefListener.update(beliefChanged);
 		}
+		if (capability != null) {
+			for (Capability child : capability.getChildren()) {
+				child.getBeliefBase().notifyBeliefChanged(beliefChanged);
+			}
+		}
 	}
 
 	/**
@@ -206,6 +245,11 @@ public class BeliefBase implements Serializable {
 		if (belief != null) {
 			belief.removeBeliefBase(this);
 			notifyBeliefChanged(new BeliefEvent(belief, Action.BELIEF_REMOVED));
+		} else {
+			if (capability != null && capability.getParent() != null) {
+				belief = capability.getParent().getBeliefBase()
+						.removeBelief(name);
+			}
 		}
 		return belief;
 	}
@@ -278,14 +322,19 @@ public class BeliefBase implements Serializable {
 	@SuppressWarnings("unchecked")
 	public boolean updateBelief(String name, Object value) {
 		Belief belief = this.beliefs.get(name);
-		if (belief == null) {
-			return false;
+
+		if (belief != null) {
+			Object oldValue = belief.getValue();
+			belief.setValue(value);
+			notifyBeliefChanged(new BeliefEvent(belief, Action.BELIEF_UPDATED,
+					oldValue));
+			return true;
+		} else if (capability != null && capability.getParent() != null) {
+			return capability.getParent().getBeliefBase()
+					.updateBelief(name, value);
 		}
-		Object oldValue = belief.getValue();
-		belief.setValue(value);
-		notifyBeliefChanged(new BeliefEvent(belief, Action.BELIEF_UPDATED,
-				oldValue));
-		return true;
+
+		return false;
 	}
 
 }
