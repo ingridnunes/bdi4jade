@@ -13,13 +13,9 @@ import br.ufrgs.inf.bdi4jade.softgoal.Softgoal;
 public interface Constants {
 
 	// Softgoals
-	public static final Softgoal COMFORT = new NamedSoftgoal("COMFORT");
-	public static final Softgoal COST = new NamedSoftgoal("COST");
-	public static final Softgoal PERFORMANCE = new NamedSoftgoal("PERFORMANCE");
-	public static final Softgoal SAFETY = new NamedSoftgoal("SAFETY");
-	public static final Softgoal SECURITY = new NamedSoftgoal("SECURITY");
+	public static final Softgoal Softgoal1 = new NamedSoftgoal("Softgoal1");
+	public static final Softgoal Softgoal2 = new NamedSoftgoal("Softgoal2");
 
-	public static final Softgoal ALL_SOFTGOALS[] = { COMFORT, COST,
-			PERFORMANCE, SAFETY, SECURITY };
+	public static final Softgoal ALL_SOFTGOALS[] = { Softgoal1, Softgoal2 };
 
 }

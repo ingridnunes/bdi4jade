@@ -31,7 +31,7 @@ public class MyAgent extends UtilityBasedBDIAgent {
 		this.getRootCapability().getPlanLibrary().addPlan(new MyPlan2());
 
 		initPreferences();
-		
+
 		addGoal(new MyGoal());
 	}
 
@@ -40,11 +40,9 @@ public class MyAgent extends UtilityBasedBDIAgent {
 				.getRootCapability().getBeliefBase()
 				.getBelief(SoftgoalPreferences.NAME);
 
-		preferences.setPreferenceForSoftgoal(Constants.COMFORT, 0.1);
-		preferences.setPreferenceForSoftgoal(Constants.COST, 0.2);
-		preferences.setPreferenceForSoftgoal(Constants.PERFORMANCE, 0.15);
-		preferences.setPreferenceForSoftgoal(Constants.SAFETY, 0.4);
-		preferences.setPreferenceForSoftgoal(Constants.SECURITY, 0.15);
+		preferences.setPreferenceForSoftgoal(Constants.Softgoal1, 0.1);
+		preferences.setPreferenceForSoftgoal(Constants.Softgoal2, 0.2);
+
 	}
 
 }
