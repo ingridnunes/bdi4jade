@@ -129,5 +129,6 @@ public class TransportationPlanBody extends OneShotBehaviour implements
 				.getValue();
 		this.preferences = (SoftgoalPreferences) planInstance.getBeliefBase()
 				.getBelief(SoftgoalPreferences.NAME);
+		this.endState = null;
 	}
 }

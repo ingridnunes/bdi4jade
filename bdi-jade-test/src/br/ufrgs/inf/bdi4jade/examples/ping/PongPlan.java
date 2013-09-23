@@ -66,6 +66,7 @@ public class PongPlan extends OneShotBehaviour implements PlanBody {
 		this.log = LogFactory.getLog(this.getClass());
 		MessageGoal goal = (MessageGoal) planInstance.getGoal();
 		pingMsg = goal.getMessage();
+		this.endState = null;
 	}
 
 }

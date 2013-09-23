@@ -1,7 +1,7 @@
-/*
- * Created on 19 Oct 2011 15:00:34 
+/**
+ * 
  */
-package br.ufrgs.inf.bdi4jade.examples.helloworld;
+package br.ufrgs.inf.bdi4jade.examples.template.plan;
 
 import jade.core.behaviours.OneShotBehaviour;
 import br.ufrgs.inf.bdi4jade.plan.PlanBody;
@@ -9,27 +9,31 @@ import br.ufrgs.inf.bdi4jade.plan.PlanInstance;
 import br.ufrgs.inf.bdi4jade.plan.PlanInstance.EndState;
 
 /**
- * @author ingridn
+ * @author ingrid
  * 
  */
-public class HelloWorldPlan extends OneShotBehaviour implements PlanBody {
+public class MyPlan1Body extends OneShotBehaviour implements PlanBody {
 
-	private static final long serialVersionUID = -9039447524062487795L;
+	private static final long serialVersionUID = -3947024373151941681L;
 
-	private String name;
 	private EndState endState;
 
+	@Override
 	public void action() {
-		System.out.println("Hello, " + name + "!");
+		// TODO Auto-generated method stub
 		this.endState = EndState.SUCCESSFUL;
 	}
 
+	@Override
 	public EndState getEndState() {
+		// TODO Auto-generated method stub
 		return endState;
 	}
 
+	@Override
 	public void init(PlanInstance planInstance) {
-		this.name = ((HelloWorldGoal) planInstance.getGoal()).getName();
+		// TODO Auto-generated method stub
 		this.endState = null;
 	}
+
 }
