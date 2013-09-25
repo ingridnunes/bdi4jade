@@ -91,6 +91,49 @@ public class PlanInstance implements GoalListener {
 	}
 
 	/**
+	 * Dispatches a goal to be achieved, using the capability (or its children
+	 * capabilities) associated with the plan.
+	 * 
+	 * @param goal
+	 *            the goal to be dispatched.
+	 */
+	public void dispatchProtectedGoal(Goal goal) {
+		this.intention.getMyAgent().addGoal(
+				this.plan.getPlanLibrary().getCapability(), goal);
+	}
+
+	/**
+	 * Dispatches a subgoal to be achieved, using the capability (or its
+	 * children capabilities) associated with the plan.
+	 * 
+	 * @param subgoal
+	 *            the subgoal to be dispatched.
+	 */
+	public void dispatchProtectedSubgoal(Goal subgoal) {
+		this.intention.getMyAgent().addGoal(
+				this.plan.getPlanLibrary().getCapability(), subgoal);
+		synchronized (subgoals) {
+			this.subgoals.add(subgoal);
+		}
+	}
+
+	/**
+	 * Dispatches a subgoal to be achieved, using the capability (or its
+	 * children capabilities) associated with the plan, and registers itself as
+	 * a listener to receive a notification of the end of execution of the goal.
+	 * 
+	 * @param subgoal
+	 *            the subgoal to be dispatched.
+	 */
+	public void dispatchProtectedSubgoalAndListen(Goal subgoal) {
+		this.intention.getMyAgent().addGoal(
+				this.plan.getPlanLibrary().getCapability(), subgoal, this);
+		synchronized (subgoals) {
+			this.subgoals.add(subgoal);
+		}
+	}
+
+	/**
 	 * Dispatches a goal to be achieved.
 	 * 
 	 * @param goal

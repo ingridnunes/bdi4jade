@@ -61,7 +61,7 @@ public class Intention {
 	private final Log log;
 	private final BDIAgent myAgent;
 	private boolean noLongerDesired;
-	private final Capability owner;// XXX Intention - owner (Capability)
+	private final Capability owner;
 	private boolean unachievable;
 	private boolean waiting;
 
@@ -74,7 +74,7 @@ public class Intention {
 	 * @param bdiAgent
 	 *            the bdiAgent associated with this intention.
 	 */
-	public Intention(BDIAgent bdiAgent, Goal goal) {
+	public Intention(Goal goal, BDIAgent bdiAgent) {
 		this(goal, bdiAgent, null);
 	}
 
@@ -198,13 +198,18 @@ public class Intention {
 	}
 
 	/**
-	 * Returns all plans from all capabilities that can achieve the goal.
+	 * Returns all plans from the capabilities that can achieve the goal. If the
+	 * goal is associated with a capability, only the capability and its
+	 * children capabilities will be searched. Otherwise, all plan libraries
+	 * will be considered.
 	 * 
 	 * @return the set of plans that can achieve the goal.
 	 */
 	private Set<Plan> getCanAchievePlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		getCanAchievePlans(plans, myAgent.getRootCapability());
+		Capability capability = owner == null ? myAgent.getRootCapability()
+				: owner;
+		getCanAchievePlans(plans, capability);
 		return plans;
 	}
 

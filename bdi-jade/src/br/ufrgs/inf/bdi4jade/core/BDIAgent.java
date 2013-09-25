@@ -236,7 +236,7 @@ public class BDIAgent extends Agent {
 	 *            the goal to be achieved.
 	 */
 	public void addGoal(Goal goal) {
-		this.addGoal(goal, null);
+		this.addGoal(null, goal, null);
 	}
 
 	/**
@@ -249,8 +249,37 @@ public class BDIAgent extends Agent {
 	 *            the listener to be notified.
 	 */
 	public void addGoal(Goal goal, GoalListener goalListener) {
+		this.addGoal(null, goal, goalListener);
+	}
+
+	/**
+	 * Adds a new goal to this agent to be achieved.
+	 * 
+	 * @param owner
+	 *            the Capability that is owner of the goal.
+	 * @param goal
+	 *            the goal to be achieved.
+	 */
+	public void addGoal(Capability owner, Goal goal) {
+		this.addGoal(owner, goal, null);
+	}
+
+	/**
+	 * Adds a new goal to this agent to be achieved and adds a listener to
+	 * observe its end. If this goal has a capability that owns it, only plans
+	 * of this capability and its children capabilities will be considered to
+	 * achieve this goal.
+	 * 
+	 * @param owner
+	 *            the Capability that is owner of the goal.
+	 * @param goal
+	 *            the goal to be achieved.
+	 * @param goalListener
+	 *            the listener to be notified.
+	 */
+	public void addGoal(Capability owner, Goal goal, GoalListener goalListener) {
 		synchronized (intentions) {
-			Intention intention = new Intention(this, goal);
+			Intention intention = new Intention(goal, this, owner);
 			this.intentions.add(intention);
 			this.bdiInterpreter.restart();
 			if (goalListener != null) {
