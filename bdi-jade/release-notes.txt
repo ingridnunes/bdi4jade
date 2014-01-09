@@ -1,4 +1,20 @@
 -----------
+version 1.0
+-----------
+
+- Implementation of the UtilityBasedBDIAgent, which is an agent that uses the UtilityBasedPlanSelectionStrategy to select plans. It uses other concepts as soft goals and plan contributions. See the template for learning how to use it.
+
+- Implementation of the management of nested capabilities. Goals can be dispatched in plans within the scope of a capability, so that only the plans of that capability or its children will be considered to achieve the goal.
+
+- New examples provided
+
+	* Hello World example
+	* Nested capabilities example
+	* Agent based on utility-based plan selection example/template
+
+- Refactoring of the BDI4JADE packages
+
+-----------
 version 0.1
 -----------
 
