@@ -46,7 +46,7 @@ import bdi4jade.examples.AgentStarter;
  */
 public class ExperimentRunner implements GoalListener {
 
-	public static final int ITERATIONS = 5;
+	public static final int ITERATIONS = 5000;
 
 	public static void main(String[] args) {
 		ExperimentRunner runner = new ExperimentRunner();
@@ -107,7 +107,7 @@ public class ExperimentRunner implements GoalListener {
 	}
 
 	public void run() {
-		transportationAgent.updatedPreferences();
+		transportationAgent.updatePreferences();
 		transportationAgent.addGoal(new TransportationGoal(), this);
 		iteration++;
 	}

@@ -65,7 +65,7 @@ public class TransportationAgent extends UtilityBasedBDIAgent {
 								new GenericValueFunction<Integer>()));
 	}
 
-	public void updatedPreferences() {
+	public void updatePreferences() {
 		SoftgoalPreferences preferences = (SoftgoalPreferences) this
 				.getRootCapability().getBeliefBase()
 				.getBelief(SoftgoalPreferences.NAME);
