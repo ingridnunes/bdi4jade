@@ -42,7 +42,7 @@ public class MyAgent extends UtilityBasedBDIAgent {
 	}
 
 	protected void init() {
-		for (Softgoal softgoal : Constants.ALL_SOFTGOALS) {
+		for (Softgoal softgoal : MyAgentSoftgoals.ALL_SOFTGOALS) {
 			this.addSoftgoal(softgoal);
 		}
 
@@ -59,8 +59,8 @@ public class MyAgent extends UtilityBasedBDIAgent {
 				.getRootCapability().getBeliefBase()
 				.getBelief(SoftgoalPreferences.NAME);
 
-		preferences.setPreferenceForSoftgoal(Constants.Softgoal1, 0.1);
-		preferences.setPreferenceForSoftgoal(Constants.Softgoal2, 0.2);
+		preferences.setPreferenceForSoftgoal(MyAgentSoftgoals.Softgoal1, 0.3);
+		preferences.setPreferenceForSoftgoal(MyAgentSoftgoals.Softgoal2, 0.7);
 
 	}
 
