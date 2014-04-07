@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.core.BDIAgent;
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.AbstractPlan;
 import bdi4jade.plan.Plan;
 import bdi4jade.preference.SoftgoalPreferences;
 import bdi4jade.reasoning.PlanSelectionStrategy;
@@ -57,7 +58,8 @@ public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy 
 	@SuppressWarnings("unchecked")
 	private double calculateExpectedUtility(Plan plan, Softgoal softgoal) {
 		List<PlanContribution> contributions = ((Map<Softgoal, List<PlanContribution>>) plan
-				.getMetadata(Plan.DefaultMetadata.CONTRIBUTIONS)).get(softgoal);
+				.getMetadata(AbstractPlan.DefaultMetadata.CONTRIBUTIONS))
+				.get(softgoal);
 
 		double expectedUtility = 0;
 		if (contributions != null) {

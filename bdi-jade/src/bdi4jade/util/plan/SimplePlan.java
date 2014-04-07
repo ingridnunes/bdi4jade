@@ -26,7 +26,7 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.MessageTemplate;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.Plan;
+import bdi4jade.plan.AbstractPlan;
 import bdi4jade.plan.PlanBodyInterface;
 
 /**
@@ -37,7 +37,7 @@ import bdi4jade.plan.PlanBodyInterface;
  * 
  * @author ingrid
  */
-public class SimplePlan extends Plan {
+public class SimplePlan extends AbstractPlan {
 
 	protected final Class<? extends PlanBodyInterface> planBodyClass;
 
