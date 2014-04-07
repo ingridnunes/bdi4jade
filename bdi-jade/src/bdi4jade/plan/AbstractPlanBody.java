@@ -153,7 +153,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	/**
 	 * Drops all current subgoals dispatched by this plan.
 	 */
-	private void dropSubgoals() {
+	void dropSubgoals() {
 		synchronized (subgoals) {
 			Iterator<Goal> it = subgoals.iterator();
 			while (it.hasNext()) {
@@ -266,6 +266,13 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
+	 * @return the intention
+	 */
+	Intention getIntention() {
+		return intention;
+	}
+
+	/**
 	 * Returns the {@link Plan} that is associated with this plan instance.
 	 * 
 	 * @return the plan.
@@ -335,7 +342,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	public final void start() {
 		this.intention.getMyAgent().addBehaviour(this);
 	}
-
+	
 	/**
 	 * Stops the plan body, a {@link Behaviour}, associated with this plan. If
 	 * the body implements the {@link DisposablePlanBody}, it invokes the method
