@@ -33,12 +33,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.PropertyConfigurator;
 
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
-import bdi4jade.examples.AgentStarter;
 
 /**
  * @author ingrid
@@ -61,8 +59,6 @@ public class ExperimentRunner implements GoalListener {
 	private final TransportationAgent transportationAgent;
 
 	public ExperimentRunner() {
-		PropertyConfigurator.configure(AgentStarter.class
-				.getResource("log4j.properties"));
 		this.log = LogFactory.getLog(this.getClass());
 
 		List<String> params = new ArrayList<String>();

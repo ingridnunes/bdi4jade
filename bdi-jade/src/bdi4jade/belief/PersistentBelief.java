@@ -22,16 +22,11 @@
 
 package bdi4jade.belief;
 
-import jade.content.Concept;
-
-import java.io.Serializable;
-
 /**
  * @author ingrid
  * 
  */
-public class PersistentBelief<T> extends Belief<T> implements Serializable,
-		Concept {
+public class PersistentBelief<T> extends AbstractBelief<T> {
 
 	private static final long serialVersionUID = 2893517209462636003L;
 
@@ -48,19 +43,19 @@ public class PersistentBelief<T> extends Belief<T> implements Serializable,
 	}
 
 	/**
-	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
-	 */
-	public void setValue(T value) {
-		// XXX PersistentBelief.setValue(T value)
-	}
-
-	/**
 	 * @see bdi4jade.belief.Belief#getValue()
 	 */
 	@Override
 	public T getValue() {
 		// XXX PersistentBelief.getValue()
 		return null;
+	}
+
+	/**
+	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
+	 */
+	public void setValue(T value) {
+		// XXX PersistentBelief.setValue(T value)
 	}
 
 }

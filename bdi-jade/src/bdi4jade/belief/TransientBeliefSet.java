@@ -27,26 +27,25 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * This class extends the {@link BeliefSet} and represents a transient belief
- * set, which is not persisted in a permanent memory.
+ * This class extends the {@link TransientBeliefSet} and implements
+ * {@link BeliefSet} and represents a transient belief set, which is not
+ * persisted in a permanent memory.
  * 
  * @author ingrid
  */
-public class TransientBeliefSet<T> extends BeliefSet<T> {
+public class TransientBeliefSet<T> extends TransientBelief<Set<T>> implements
+		BeliefSet<T> {
 
 	private static final long serialVersionUID = 8345025506647930L;
 
-	protected Set<T> values;
-
 	/**
-	 * Creates a transient belief set.
+	 * Creates a new transient belief set with the provided name.
 	 * 
 	 * @param name
-	 *            the name of the belief set.
+	 *            the name of this belief set.
 	 */
 	public TransientBeliefSet(String name) {
-		super(name);
-		this.values = new HashSet<T>();
+		super(name, new HashSet<T>());
 	}
 
 	/**
@@ -58,58 +57,39 @@ public class TransientBeliefSet<T> extends BeliefSet<T> {
 	 *            the initial values of this belief set.
 	 */
 	public TransientBeliefSet(String name, Set<T> values) {
-		super(name);
-		this.values = values;
+		super(name, values);
 	}
 
 	/**
 	 * @see bdi4jade.belief.BeliefSet#addValue(java.lang.Object)
 	 */
-	public void addValue(T value) {
-		this.values.add(value);
-	}
-
-	/**
-	 * @see bdi4jade.belief.Belief#getValue()
-	 */
 	@Override
-	public Set<T> getValue() {
-		return values;
-	};
+	public void addValue(T value) {
+		this.value.add(value);
+	}
 
 	/**
 	 * @see bdi4jade.belief.BeliefSet#hasValue(java.lang.Object)
 	 */
+	@Override
 	public boolean hasValue(T value) {
-		return this.values.contains(value);
+		return this.value.contains(value);
 	}
 
 	/**
 	 * @see bdi4jade.belief.BeliefSet#iterator()
 	 */
+	@Override
 	public Iterator<T> iterator() {
-		return this.values.iterator();
+		return this.value.iterator();
 	}
 
 	/**
 	 * @see bdi4jade.belief.BeliefSet#removeValue(java.lang.Object)
 	 */
+	@Override
 	public boolean removeValue(T value) {
-		return this.values.remove(value);
-	}
-
-	/**
-	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
-	 */
-	public void setValue(Set<T> values) {
-		this.values = values;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return this.values.toString();
+		return this.value.remove(value);
 	}
 
 }

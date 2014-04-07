@@ -22,18 +22,13 @@
 
 package bdi4jade.belief;
 
-import jade.content.Concept;
-
-import java.io.Serializable;
-
 /**
  * This class extends the {@link Belief} and represents a transient belief,
  * which is not persisted in a permanent memory.
  * 
  * @author ingrid
  */
-public class TransientBelief<T> extends Belief<T> implements Serializable,
-		Concept {
+public class TransientBelief<T> extends AbstractBelief<T> {
 
 	private static final long serialVersionUID = 2893517209462636003L;
 

@@ -28,6 +28,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This capability represents a component that aggregates the mental attitudes
  * defined by the BDI architecture. It has a belief base with the associated
@@ -46,6 +49,7 @@ public class Capability implements Serializable {
 	protected Capability parent;
 	protected final PlanLibrary planLibrary;
 	private boolean start;
+	private final Log log;
 
 	/**
 	 * Creates a new capability. It uses {@link BeliefBase} and
@@ -123,6 +127,9 @@ public class Capability implements Serializable {
 	 */
 	public Capability(String id, Capability parent, BeliefBase beliefBase,
 			PlanLibrary planLibrary) {
+		this.log = LogFactory.getLog(getClass());
+
+		// Id initialization
 		if (id == null) {
 			if (this.getClass().getCanonicalName() == null
 					|| Capability.class.equals(this.getClass())) {
@@ -134,14 +141,21 @@ public class Capability implements Serializable {
 		} else {
 			this.id = id;
 		}
+
+		// Setting up parent
 		this.children = new HashSet<>();
 		if (parent != null) {
 			parent.addChild(this);
 		}
+
+		// Initializing belief base
 		beliefBase.setCapability(this);
 		this.beliefBase = beliefBase;
+
+		// Initializing plan library
 		planLibrary.setCapability(this);
 		this.planLibrary = planLibrary;
+
 		this.start = false;
 	}
 

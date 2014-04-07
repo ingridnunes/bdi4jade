@@ -22,18 +22,28 @@
 
 package bdi4jade.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author ingrid
  * 
  */
-public interface MetadataElement {
+public abstract class MetadataElementImpl implements MetadataElement {
+
+	protected Map<Object, Object> metadata;
+
+	public MetadataElementImpl() {
+		this.metadata = new HashMap<>();
+	}
 
 	/**
 	 * @return the metadata
 	 */
-	public Map<?, ?> getMetadata();
+	@Override
+	public Map<?, ?> getMetadata() {
+		return metadata;
+	}
 
 	/**
 	 * Gets a value of a metadata.
@@ -42,7 +52,10 @@ public interface MetadataElement {
 	 *            the name of the metadata.
 	 * @return the existing value of this metadata.
 	 */
-	public Object getMetadata(Object name);
+	@Override
+	public Object getMetadata(Object name) {
+		return this.metadata.get(name);
+	}
 
 	/**
 	 * Verifies if a metadata is associated with this element.
@@ -51,7 +64,10 @@ public interface MetadataElement {
 	 *            the name of the metadata.
 	 * @return true if the element has this metadata.
 	 */
-	public boolean hasMetadata(Object name);
+	@Override
+	public boolean hasMetadata(Object name) {
+		return this.hasMetadata(name);
+	}
 
 	/**
 	 * Put a metadata in this element. If it does not exists, it is added, and
@@ -62,7 +78,10 @@ public interface MetadataElement {
 	 * @param value
 	 *            the value associated with this metadata.
 	 */
-	public void putMetadata(Object name, Object value);
+	@Override
+	public void putMetadata(Object name, Object value) {
+		this.metadata.put(name, value);
+	}
 
 	/**
 	 * Removes a metadata of this element.
@@ -71,6 +90,9 @@ public interface MetadataElement {
 	 *            the name of the metadata.
 	 * @return the existing value of this metadata.
 	 */
-	public Object removeMetadata(Object name);
+	@Override
+	public Object removeMetadata(Object name) {
+		return this.metadata.remove(name);
+	}
 
 }

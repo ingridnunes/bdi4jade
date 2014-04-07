@@ -201,7 +201,14 @@ public class BDIAgent extends Agent {
 	 * Default constructor.
 	 */
 	public BDIAgent() {
-		this.rootCapability = new Capability();
+		this(new Capability());
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public BDIAgent(Capability rootCapability) {
+		this.rootCapability = rootCapability;
 		this.intentions = new LinkedList<Intention>();
 		this.softgoals = new HashSet<Softgoal>();
 		this.bdiInterpreter = new BDIInterpreter(this);

@@ -37,7 +37,7 @@ import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;
 import bdi4jade.softgoal.Softgoal;
-import bdi4jade.util.MetadataElement;
+import bdi4jade.util.MetadataElementImpl;
 
 /**
  * This class represents the plan abstraction. It defines the goals that the
@@ -45,7 +45,7 @@ import bdi4jade.util.MetadataElement;
  * 
  * @author ingrid
  */
-public abstract class Plan extends MetadataElement {
+public abstract class Plan extends MetadataElementImpl {
 
 	public enum DefaultMetadata {
 
