@@ -27,7 +27,7 @@ import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.PlanBodyInterface;
-import bdi4jade.util.plan.SimplePlan;
+import bdi4jade.plan.SimplePlan;
 
 class ChildGoal implements Goal {
 	private static final long serialVersionUID = 7656633869373580240L;

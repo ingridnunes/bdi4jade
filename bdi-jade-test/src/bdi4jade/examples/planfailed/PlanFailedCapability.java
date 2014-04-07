@@ -36,7 +36,7 @@ import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
-import bdi4jade.util.plan.SimplePlan;
+import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid

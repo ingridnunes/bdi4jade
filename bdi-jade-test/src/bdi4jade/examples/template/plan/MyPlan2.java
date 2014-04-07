@@ -28,9 +28,10 @@ import java.util.Map;
 
 import bdi4jade.examples.template.MyAgentSoftgoals;
 import bdi4jade.examples.template.goal.MyGoal;
-import bdi4jade.softgoal.PlanContribution;
-import bdi4jade.softgoal.Softgoal;
-import bdi4jade.util.plan.SimplePlan;
+import bdi4jade.extension.softgoal.core.Softgoal;
+import bdi4jade.extension.softgoal.plan.AnnotatedPlan.DefaultMetadata;
+import bdi4jade.extension.softgoal.plan.PlanContribution;
+import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid
@@ -45,13 +46,17 @@ public class MyPlan2 extends SimplePlan {
 		List<PlanContribution> sgContributions = null;
 
 		sgContributions = new ArrayList<PlanContribution>();
-		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal1, 0.3, 0.0));
-		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal1, 0.7, 1.0));
+		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal1,
+				0.3, 0.0));
+		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal1,
+				0.7, 1.0));
 		contributions.put(MyAgentSoftgoals.Softgoal1, sgContributions);
 
 		sgContributions = new ArrayList<PlanContribution>();
-		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal2, 0.5, 0.0));
-		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal2, 0.5, 1.0));
+		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal2,
+				0.5, 0.0));
+		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal2,
+				0.5, 1.0));
 		contributions.put(MyAgentSoftgoals.Softgoal2, sgContributions);
 	}
 

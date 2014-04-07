@@ -24,11 +24,11 @@ package bdi4jade.util;
 
 import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
+import bdi4jade.plan.SimplePlan;
 import bdi4jade.util.goal.ParallelGoal;
 import bdi4jade.util.goal.SequentialGoal;
 import bdi4jade.util.plan.ParallelGoalPlanBody;
 import bdi4jade.util.plan.SequentialGoalPlanBody;
-import bdi4jade.util.plan.SimplePlan;
 
 /**
  * This capability is added in all {@link BDIAgent}. It provides default plans.

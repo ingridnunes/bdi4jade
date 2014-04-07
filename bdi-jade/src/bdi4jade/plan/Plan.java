@@ -37,12 +37,6 @@ import bdi4jade.util.MetadataElement;
  */
 public interface Plan extends MetadataElement {
 
-	public enum DefaultMetadata {
-
-		CONTRIBUTIONS, DEPENDENCIES;
-
-	}
-
 	/**
 	 * This enumuration represents the possible end states of a plan execution.
 	 * 

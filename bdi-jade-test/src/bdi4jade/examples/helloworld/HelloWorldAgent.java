@@ -24,7 +24,7 @@ package bdi4jade.examples.helloworld;
 
 import bdi4jade.core.BDIAgent;
 import bdi4jade.goal.Goal;
-import bdi4jade.util.plan.SimplePlan;
+import bdi4jade.plan.SimplePlan;
 
 public class HelloWorldAgent extends BDIAgent {
 

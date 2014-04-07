@@ -26,9 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import bdi4jade.softgoal.PlanContribution;
-import bdi4jade.softgoal.Softgoal;
-import bdi4jade.util.plan.SimplePlan;
+import bdi4jade.extension.softgoal.core.Softgoal;
+import bdi4jade.extension.softgoal.plan.AnnotatedPlan.DefaultMetadata;
+import bdi4jade.extension.softgoal.plan.PlanContribution;
+import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid

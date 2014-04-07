@@ -28,9 +28,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.TransientBelief;
+import bdi4jade.extension.softgoal.core.SoftgoalPreferences;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.preference.SoftgoalPreferences;
 
 /**
  * @author ingrid
@@ -139,5 +139,5 @@ public class TransportationPlanBody extends PlanBody {
 		this.preferences = (SoftgoalPreferences) getBeliefBase().getBelief(
 				SoftgoalPreferences.NAME);
 	}
-	
+
 }

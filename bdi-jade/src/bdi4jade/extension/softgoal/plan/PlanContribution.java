@@ -20,25 +20,69 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.template;
+package bdi4jade.extension.softgoal.plan;
 
-import bdi4jade.extension.softgoal.core.NamedSoftgoal;
 import bdi4jade.extension.softgoal.core.Softgoal;
 
+
 /**
+ * This class stores the probability of a plan promoting a value with respect to
+ * a softgoal.
+ * 
  * @author ingrid
  * 
  */
-public class MyAgentSoftgoals {
+public class PlanContribution {
 
-	// Softgoals
-	public static final Softgoal Softgoal1 = new NamedSoftgoal("Softgoal1");
-	public static final Softgoal Softgoal2 = new NamedSoftgoal("Softgoal2");
+	private Double probability;
+	private final Softgoal softgoal;
+	private Double value;
 
-	public static final Softgoal ALL_SOFTGOALS[] = { Softgoal1, Softgoal2 };
+	public PlanContribution(Softgoal softgoal) {
+		this(softgoal, 0.0, 0.0);
+	}
 
-	private MyAgentSoftgoals() {
+	public PlanContribution(Softgoal softgoal, Double probability, Double value) {
+		this.softgoal = softgoal;
+		this.probability = probability;
+		this.value = value;
+	}
 
+	/**
+	 * @return the probability
+	 */
+	public Double getProbability() {
+		return probability;
+	}
+
+	/**
+	 * @return the softgoal
+	 */
+	public Softgoal getSoftgoal() {
+		return softgoal;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public Double getValue() {
+		return value;
+	}
+
+	/**
+	 * @param probability
+	 *            the probability to set
+	 */
+	public void setProbability(Double probability) {
+		this.probability = probability;
+	}
+
+	/**
+	 * @param value
+	 *            the value to set
+	 */
+	public void setValue(Double value) {
+		this.value = value;
 	}
 
 }

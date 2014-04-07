@@ -22,8 +22,8 @@
 
 package bdi4jade.examples.planselection;
 
-import bdi4jade.softgoal.NamedSoftgoal;
-import bdi4jade.softgoal.Softgoal;
+import bdi4jade.extension.softgoal.core.NamedSoftgoal;
+import bdi4jade.extension.softgoal.core.Softgoal;
 
 /**
  * @author ingrid

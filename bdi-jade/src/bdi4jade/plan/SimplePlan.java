@@ -20,14 +20,12 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.plan;
+package bdi4jade.plan;
 
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.MessageTemplate;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.AbstractPlan;
-import bdi4jade.plan.PlanBodyInterface;
 
 /**
  * This class represents a plan whose plan body is a class that can be

@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.reasoning;
+package bdi4jade.extension.softgoal.reasoning;
 
 import java.util.List;
 import java.util.Map;
@@ -30,13 +30,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.core.BDIAgent;
+import bdi4jade.extension.softgoal.core.SoftGoalBDIAgent;
+import bdi4jade.extension.softgoal.core.Softgoal;
+import bdi4jade.extension.softgoal.core.SoftgoalPreferences;
+import bdi4jade.extension.softgoal.plan.PlanContribution;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.AbstractPlan;
 import bdi4jade.plan.Plan;
-import bdi4jade.preference.SoftgoalPreferences;
 import bdi4jade.reasoning.PlanSelectionStrategy;
-import bdi4jade.softgoal.PlanContribution;
-import bdi4jade.softgoal.Softgoal;
 
 /**
  * A utility-based implementation of the {@link PlanSelectionStrategy}. It
@@ -48,9 +49,9 @@ import bdi4jade.softgoal.Softgoal;
 public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy {
 
 	private final Log log;
-	private final BDIAgent myAgent;
+	private final SoftGoalBDIAgent myAgent;
 
-	public UtilityBasedPlanSelectionStrategy(BDIAgent myAgent) {
+	public UtilityBasedPlanSelectionStrategy(SoftGoalBDIAgent myAgent) {
 		this.log = LogFactory.getLog(getClass());
 		this.myAgent = myAgent;
 	}

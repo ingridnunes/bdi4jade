@@ -33,11 +33,11 @@ import java.util.Set;
 
 import bdi4jade.core.PlanLibrary;
 import bdi4jade.exception.PlanInstantiationException;
+import bdi4jade.extension.softgoal.core.Softgoal;
+import bdi4jade.extension.softgoal.plan.PlanContribution;
+import bdi4jade.extension.softgoal.plan.PlanGoalDependency;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;
-import bdi4jade.softgoal.PlanContribution;
-import bdi4jade.softgoal.PlanGoalDependency;
-import bdi4jade.softgoal.Softgoal;
 import bdi4jade.util.MetadataElementImpl;
 
 /**

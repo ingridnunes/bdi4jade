@@ -31,7 +31,7 @@ import bdi4jade.core.BeliefBase;
 import bdi4jade.core.Capability;
 import bdi4jade.core.PlanLibrary;
 import bdi4jade.plan.Plan;
-import bdi4jade.util.plan.SimplePlan;
+import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid

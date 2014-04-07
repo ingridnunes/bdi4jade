@@ -20,56 +20,51 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.softgoal;
+package bdi4jade.extension.softgoal.plan;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
 
 /**
- * This class represents an OR dependency between a plan and a set of goals. It
- * means that this plan needs that one of these goals that it depends on must be
- * achieved so that the plan can be completed. As solely one of the goals must
- * be achieved, this class stores the probability of each particular goal to be
- * achieved during the plan execution.
+ * This class represents an AND dependency between a plan and a set of goals. It
+ * means that this plan needs that all goals that it depends on must be achieved
+ * so that the plan can be completed.
  * 
  * @author ingrid
  */
-public class OrPlanGoalDependency extends PlanGoalDependency {
+public class AndPlanGoalDependency extends PlanGoalDependency {
 
-	private Map<Goal, Double> goals;
+	private List<Goal> goals;
 
-	public OrPlanGoalDependency(Plan root) {
-		this(root, new HashMap<Goal, Double>());
+	public AndPlanGoalDependency(Plan root) {
+		this(root, new ArrayList<Goal>());
 	}
 
-	public OrPlanGoalDependency(Plan root, Map<Goal, Double> goals) {
+	public AndPlanGoalDependency(Plan root, List<Goal> goals) {
 		super(root);
 		this.goals = goals;
 	}
 
 	/**
 	 * Adds a goal to this dependency, indicating that the root plan depends on
-	 * it, with a certain probability.
+	 * it.
 	 * 
 	 * @param goal
 	 *            a goal that the root plan depends on.
-	 * @param probability
-	 *            the probability of the goal
 	 */
-	public void addGoal(Goal goal, Double probability) {
-		this.goals.put(goal, probability);
+	public void addGoal(Goal goal) {
+		this.goals.add(goal);
 	}
 
 	/**
-	 * Returns the map of goals with their probabilities that the root plan
-	 * depends on.
+	 * Returns the set of goals that the root plan depends on.
 	 * 
 	 * @return the goals the goal that the root plan depends on.
 	 */
-	public Map<Goal, Double> getGoals() {
+	public List<Goal> getGoals() {
 		return goals;
 	}
 

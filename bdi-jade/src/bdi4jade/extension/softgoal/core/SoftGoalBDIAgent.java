@@ -20,24 +20,61 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.agent;
+package bdi4jade.extension.softgoal.core;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import bdi4jade.core.BDIAgent;
-import bdi4jade.preference.SoftgoalPreferences;
-import bdi4jade.util.reasoning.UtilityBasedPlanSelectionStrategy;
+import bdi4jade.extension.softgoal.reasoning.UtilityBasedPlanSelectionStrategy;
 
 /**
  * @author ingrid
  * 
  */
-public class UtilityBasedBDIAgent extends BDIAgent {
+public class SoftGoalBDIAgent extends BDIAgent {
 
 	private static final long serialVersionUID = -1721751203235905764L;
 
-	public UtilityBasedBDIAgent() {
+	private final Set<Softgoal> softgoals;
+
+	public SoftGoalBDIAgent() {
+
+		this.softgoals = new HashSet<Softgoal>();
 		setPlanSelectionStrategy(new UtilityBasedPlanSelectionStrategy(this));
 		getRootCapability().getBeliefBase()
 				.addBelief(new SoftgoalPreferences());
+	}
+
+	/**
+	 * Adds a new softgoal to this agent.
+	 * 
+	 * @param softgoal
+	 *            the softgoal to be pursued.
+	 */
+	public void addSoftgoal(Softgoal softgoal) {
+		this.softgoals.add(softgoal);
+	}
+
+	/**
+	 * Drops a given softgoal of this agent. If the softgoal is not part of the
+	 * agent's current softgoals, no action is performed.
+	 * 
+	 * @param softgoal
+	 *            the softgoal to be dropped.
+	 */
+
+	public void dropSoftoal(Softgoal softgoal) {
+		this.softgoals.remove(softgoal);
+	}
+
+	/**
+	 * Gets all softgoals of this agent.
+	 * 
+	 * @return the set of softgoals.
+	 */
+	public Set<Softgoal> getAllSoftgoals() {
+		return this.softgoals;
 	}
 
 }

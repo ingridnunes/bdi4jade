@@ -36,10 +36,10 @@ import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
+import bdi4jade.plan.SimplePlan;
 import bdi4jade.util.goal.CompositeGoal;
 import bdi4jade.util.goal.ParallelGoal;
 import bdi4jade.util.goal.SequentialGoal;
-import bdi4jade.util.plan.SimplePlan;
 
 /**
  * @author ingrid

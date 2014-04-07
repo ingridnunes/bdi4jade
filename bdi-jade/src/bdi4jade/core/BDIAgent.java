@@ -49,7 +49,6 @@ import bdi4jade.reasoning.BeliefRevisionStrategy;
 import bdi4jade.reasoning.DeliberationFunction;
 import bdi4jade.reasoning.OptionGenerationFunction;
 import bdi4jade.reasoning.PlanSelectionStrategy;
-import bdi4jade.softgoal.Softgoal;
 import bdi4jade.util.DefaultCapability;
 import bdi4jade.util.reasoning.DefaultBeliefRevisionStrategy;
 import bdi4jade.util.reasoning.DefaultDeliberationFunction;
@@ -195,7 +194,6 @@ public class BDIAgent extends Agent {
 	private OptionGenerationFunction optionGenerationFunction;
 	private PlanSelectionStrategy planSelectionStrategy;
 	private final Capability rootCapability;
-	private final Set<Softgoal> softgoals;
 
 	/**
 	 * Default constructor.
@@ -210,7 +208,6 @@ public class BDIAgent extends Agent {
 	public BDIAgent(Capability rootCapability) {
 		this.rootCapability = rootCapability;
 		this.intentions = new LinkedList<Intention>();
-		this.softgoals = new HashSet<Softgoal>();
 		this.bdiInterpreter = new BDIInterpreter(this);
 		this.beliefRevisionStrategy = new DefaultBeliefRevisionStrategy();
 		this.optionGenerationFunction = new DefaultOptionGenerationFunction();
@@ -234,29 +231,6 @@ public class BDIAgent extends Agent {
 			this.rootCapability.addChild(capability);
 			capability.setMyAgent(this);
 		}
-	}
-
-	/**
-	 * Adds a new goal to this agent to be achieved.
-	 * 
-	 * @param goal
-	 *            the goal to be achieved.
-	 */
-	public void addGoal(Goal goal) {
-		this.addGoal(null, goal, null);
-	}
-
-	/**
-	 * Adds a new goal to this agent to be achieved and adds a listener to
-	 * observe its end.
-	 * 
-	 * @param goal
-	 *            the goal to be achieved.
-	 * @param goalListener
-	 *            the listener to be notified.
-	 */
-	public void addGoal(Goal goal, GoalListener goalListener) {
-		this.addGoal(null, goal, goalListener);
 	}
 
 	/**
@@ -296,13 +270,26 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
-	 * Adds a new softgoal to this agent.
+	 * Adds a new goal to this agent to be achieved.
 	 * 
-	 * @param softgoal
-	 *            the softgoal to be pursued.
+	 * @param goal
+	 *            the goal to be achieved.
 	 */
-	public void addSoftgoal(Softgoal softgoal) {
-		this.softgoals.add(softgoal);
+	public void addGoal(Goal goal) {
+		this.addGoal(null, goal, null);
+	}
+
+	/**
+	 * Adds a new goal to this agent to be achieved and adds a listener to
+	 * observe its end.
+	 * 
+	 * @param goal
+	 *            the goal to be achieved.
+	 * @param goalListener
+	 *            the listener to be notified.
+	 */
+	public void addGoal(Goal goal, GoalListener goalListener) {
+		this.addGoal(null, goal, goalListener);
 	}
 
 	/**
@@ -321,18 +308,6 @@ public class BDIAgent extends Agent {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Drops a given softgoal of this agent. If the softgoal is not part of the
-	 * agent's current softgoals, no action is performed.
-	 * 
-	 * @param softgoal
-	 *            the softgoal to be dropped.
-	 */
-
-	public void dropSoftoal(Softgoal softgoal) {
-		this.softgoals.remove(softgoal);
 	}
 
 	/**
@@ -391,15 +366,6 @@ public class BDIAgent extends Agent {
 			}
 			return goals;
 		}
-	}
-
-	/**
-	 * Gets all softgoals of this agent.
-	 * 
-	 * @return the set of softgoals.
-	 */
-	public Set<Softgoal> getAllSoftgoals() {
-		return this.softgoals;
 	}
 
 	/**

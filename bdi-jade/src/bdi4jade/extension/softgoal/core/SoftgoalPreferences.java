@@ -20,67 +20,50 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.softgoal;
+package bdi4jade.extension.softgoal.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import bdi4jade.belief.TransientBelief;
 
 /**
- * This class stores the probability of a plan promoting a value with respect to
- * a softgoal.
+ * This is an agent transient belief (@see {@link TransientBelief}) that stores
+ * the preferences for softgoals.
  * 
  * @author ingrid
- * 
  */
-public class PlanContribution {
+public class SoftgoalPreferences extends TransientBelief<Map<Softgoal, Double>> {
 
-	private Double probability;
-	private final Softgoal softgoal;
-	private Double value;
+	public static final String NAME = SoftgoalPreferences.class.getSimpleName();
 
-	public PlanContribution(Softgoal softgoal) {
-		this(softgoal, 0.0, 0.0);
-	}
+	private static final long serialVersionUID = 1802540697397519283L;
 
-	public PlanContribution(Softgoal softgoal, Double probability, Double value) {
-		this.softgoal = softgoal;
-		this.probability = probability;
-		this.value = value;
+	public SoftgoalPreferences() {
+		super(NAME, new HashMap<Softgoal, Double>());
 	}
 
 	/**
-	 * @return the probability
+	 * Returns the preference for a softgoal.
+	 * 
+	 * @param softgoal
+	 *            the softgoal
+	 * @return the preference for the softgoal
 	 */
-	public Double getProbability() {
-		return probability;
+	public Double getPreferenceForSoftgoal(Softgoal softgoal) {
+		return this.value.get(softgoal);
 	}
 
 	/**
-	 * @return the softgoal
+	 * Sets the preference for a softgoal.
+	 * 
+	 * @param softgoal
+	 *            the softgoal to which the preference is set.
+	 * @param preference
+	 *            the preference value.
 	 */
-	public Softgoal getSoftgoal() {
-		return softgoal;
-	}
-
-	/**
-	 * @return the value
-	 */
-	public Double getValue() {
-		return value;
-	}
-
-	/**
-	 * @param probability
-	 *            the probability to set
-	 */
-	public void setProbability(Double probability) {
-		this.probability = probability;
-	}
-
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public void setValue(Double value) {
-		this.value = value;
+	public void setPreferenceForSoftgoal(Softgoal softgoal, Double preference) {
+		this.value.put(softgoal, preference);
 	}
 
 }

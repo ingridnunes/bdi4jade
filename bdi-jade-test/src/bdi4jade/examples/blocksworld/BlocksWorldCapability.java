@@ -47,8 +47,8 @@ import bdi4jade.examples.blocksworld.plan.PerformMovePlanBody;
 import bdi4jade.examples.blocksworld.plan.TopLevelPlanBody;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
+import bdi4jade.plan.SimplePlan;
 import bdi4jade.util.goal.BeliefSetValueGoal;
-import bdi4jade.util.plan.SimplePlan;
 
 /**
  * @author ingrid
