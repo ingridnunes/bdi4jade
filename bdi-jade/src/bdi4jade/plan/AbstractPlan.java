@@ -25,20 +25,14 @@ package bdi4jade.plan;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import bdi4jade.core.MetadataElementImpl;
 import bdi4jade.core.PlanLibrary;
 import bdi4jade.exception.PlanInstantiationException;
-import bdi4jade.extension.softgoal.core.Softgoal;
-import bdi4jade.extension.softgoal.plan.PlanContribution;
-import bdi4jade.extension.softgoal.plan.PlanGoalDependency;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;
-import bdi4jade.util.MetadataElementImpl;
 
 /**
  * This class represents the plan abstraction. It defines the goals that the
@@ -108,12 +102,6 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 			this.messageTemplates.add(messageTemplate);
 		}
 		initMessageTemplates();
-
-		// Metadata
-		putMetadata(DefaultMetadata.CONTRIBUTIONS,
-				new HashMap<Softgoal, List<PlanContribution>>());
-		putMetadata(DefaultMetadata.DEPENDENCIES,
-				new ArrayList<PlanGoalDependency>());
 	}
 
 	/**
@@ -190,23 +178,22 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 
 	/**
 	 * Instantiate the plan body of this plan. It must implement the
-	 * {@link PlanBodyInterface} interface.
+	 * {@link PlanBody} interface.
 	 * 
 	 * @return the instantiated plan body.
 	 * @throws PlanInstantiationException
 	 *             if an error occurred during the instantiation process.
 	 */
-	public abstract PlanBodyInterface createPlanBody()
-			throws PlanInstantiationException;
+	public abstract PlanBody createPlanBody() throws PlanInstantiationException;
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof AbstractPlan))
+		if (!(obj instanceof Plan))
 			return false;
-		return this.id.equals(((AbstractPlan) obj).id);
+		return this.id.equals(((Plan) obj).getId());
 	}
 
 	/**

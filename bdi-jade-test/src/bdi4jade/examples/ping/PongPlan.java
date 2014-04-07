@@ -29,13 +29,13 @@ import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.message.MessageGoal;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 
 /**
  * @author ingrid
  * 
  */
-public class PongPlan extends PlanBody {
+public class PongPlan extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -3352874506241004611L;
 

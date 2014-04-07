@@ -38,7 +38,7 @@ import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBodyInterface;
+import bdi4jade.plan.PlanBody;
 
 /**
  * This class represents the intention abstraction from the BDI model. It
@@ -54,7 +54,7 @@ import bdi4jade.plan.PlanBodyInterface;
  */
 public class Intention {
 
-	private PlanBodyInterface currentPlan;
+	private PlanBody currentPlan;
 	private final Set<Plan> executedPlans;
 	private final Goal goal;
 	private final List<GoalListener> goalListeners;

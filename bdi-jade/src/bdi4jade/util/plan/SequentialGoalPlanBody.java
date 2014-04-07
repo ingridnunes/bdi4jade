@@ -32,9 +32,9 @@ import org.apache.commons.logging.LogFactory;
 import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
+import bdi4jade.plan.AbstractPlanBody;
 import bdi4jade.plan.OutputPlanBody;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
 import bdi4jade.util.goal.SequentialGoal;
 
 /**
@@ -42,7 +42,8 @@ import bdi4jade.util.goal.SequentialGoal;
  * 
  * @author ingrid
  */
-public class SequentialGoalPlanBody extends PlanBody implements OutputPlanBody {
+public class SequentialGoalPlanBody extends AbstractPlanBody implements
+		OutputPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 

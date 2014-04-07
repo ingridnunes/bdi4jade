@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// Copyright (C) 2011  Ingrid Nunes
+// Copyright (C) 2013  Ingrid Nunes
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -20,34 +20,17 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util;
+package bdi4jade.goal;
 
-import bdi4jade.core.BDIAgent;
-import bdi4jade.core.Capability;
-import bdi4jade.plan.SimplePlan;
-import bdi4jade.util.goal.ParallelGoal;
-import bdi4jade.util.goal.SequentialGoal;
-import bdi4jade.util.plan.ParallelGoalPlanBody;
-import bdi4jade.util.plan.SequentialGoalPlanBody;
+import jade.content.Concept;
+import jade.content.ContentElement;
 
 /**
- * This capability is added in all {@link BDIAgent}. It provides default plans.
+ * This interface defines the abstraction of a Softgoal. A class that implements
+ * this class can be used in the process of goal reasoning and plan selection.
  * 
  * @author ingrid
  */
-public class DefaultCapability extends Capability {
-
-	private static final long serialVersionUID = -2230280269621396198L;
-
-	/**
-	 * @see bdi4jade.core.Capability#setup()
-	 */
-	@Override
-	protected void setup() {
-		this.getPlanLibrary().addPlan(
-				new SimplePlan(SequentialGoal.class, SequentialGoalPlanBody.class));
-		this.getPlanLibrary().addPlan(
-				new SimplePlan(ParallelGoal.class, ParallelGoalPlanBody.class));
-	}
+public interface Softgoal extends ContentElement, Concept {
 
 }

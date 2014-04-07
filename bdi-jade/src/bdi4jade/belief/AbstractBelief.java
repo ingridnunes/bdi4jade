@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bdi4jade.core.BeliefBase;
-import bdi4jade.util.MetadataElementImpl;
+import bdi4jade.core.MetadataElementImpl;
 
 /**
  * @author ingrid

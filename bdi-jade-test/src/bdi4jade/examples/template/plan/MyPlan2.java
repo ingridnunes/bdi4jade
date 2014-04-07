@@ -23,14 +23,14 @@
 package bdi4jade.examples.template.plan;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import bdi4jade.examples.template.MyAgentSoftgoals;
 import bdi4jade.examples.template.goal.MyGoal;
-import bdi4jade.extension.softgoal.core.Softgoal;
-import bdi4jade.extension.softgoal.plan.AnnotatedPlan.DefaultMetadata;
-import bdi4jade.extension.softgoal.plan.PlanContribution;
+import bdi4jade.extension.planselection.utilitybased.PlanContribution;
+import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.SimplePlan;
 
 /**
@@ -42,7 +42,7 @@ public class MyPlan2 extends SimplePlan {
 	public MyPlan2() {
 		super(MyGoal.class, MyPlan2Body.class);
 
-		Map<Softgoal, List<PlanContribution>> contributions = (Map<Softgoal, List<PlanContribution>>) getMetadata(DefaultMetadata.CONTRIBUTIONS);
+		Map<Softgoal, List<PlanContribution>> contributions = new HashMap<Softgoal, List<PlanContribution>>();
 		List<PlanContribution> sgContributions = null;
 
 		sgContributions = new ArrayList<PlanContribution>();
@@ -58,6 +58,8 @@ public class MyPlan2 extends SimplePlan {
 		sgContributions.add(new PlanContribution(MyAgentSoftgoals.Softgoal2,
 				0.5, 1.0));
 		contributions.put(MyAgentSoftgoals.Softgoal2, sgContributions);
+
+		putMetadata(PlanContribution.METADATA_NAME, contributions);
 	}
 
 }

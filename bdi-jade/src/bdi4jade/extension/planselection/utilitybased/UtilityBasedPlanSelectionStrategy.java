@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.extension.softgoal.reasoning;
+package bdi4jade.extension.planselection.utilitybased;
 
 import java.util.List;
 import java.util.Map;
@@ -30,12 +30,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.core.BDIAgent;
-import bdi4jade.extension.softgoal.core.SoftGoalBDIAgent;
-import bdi4jade.extension.softgoal.core.Softgoal;
-import bdi4jade.extension.softgoal.core.SoftgoalPreferences;
-import bdi4jade.extension.softgoal.plan.PlanContribution;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.AbstractPlan;
+import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
 import bdi4jade.reasoning.PlanSelectionStrategy;
 
@@ -49,9 +45,9 @@ import bdi4jade.reasoning.PlanSelectionStrategy;
 public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy {
 
 	private final Log log;
-	private final SoftGoalBDIAgent myAgent;
+	private final UtilityBasedBDIAgent myAgent;
 
-	public UtilityBasedPlanSelectionStrategy(SoftGoalBDIAgent myAgent) {
+	public UtilityBasedPlanSelectionStrategy(UtilityBasedBDIAgent myAgent) {
 		this.log = LogFactory.getLog(getClass());
 		this.myAgent = myAgent;
 	}
@@ -59,8 +55,7 @@ public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy 
 	@SuppressWarnings("unchecked")
 	private double calculateExpectedUtility(Plan plan, Softgoal softgoal) {
 		List<PlanContribution> contributions = ((Map<Softgoal, List<PlanContribution>>) plan
-				.getMetadata(AbstractPlan.DefaultMetadata.CONTRIBUTIONS))
-				.get(softgoal);
+				.getMetadata(PlanContribution.METADATA_NAME)).get(softgoal);
 
 		double expectedUtility = 0;
 		if (contributions != null) {

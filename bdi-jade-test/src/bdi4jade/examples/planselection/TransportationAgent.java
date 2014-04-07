@@ -28,16 +28,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.TransientBelief;
-import bdi4jade.extension.softgoal.core.SoftGoalBDIAgent;
-import bdi4jade.extension.softgoal.core.Softgoal;
-import bdi4jade.extension.softgoal.core.SoftgoalPreferences;
+import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
+import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
+import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
 
 /**
  * @author ingrid
  * 
  */
-public class TransportationAgent extends SoftGoalBDIAgent {
+public class TransportationAgent extends UtilityBasedBDIAgent {
 	
 	static final long serialVersionUID = 2712019445290687786L;
 	

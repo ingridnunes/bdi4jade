@@ -26,13 +26,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.plan.DisposablePlanBody;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 
 /**
  * @author ingrid
  * 
  */
-public class ChildPlan extends PlanBody implements DisposablePlanBody {
+public class ChildPlan extends AbstractPlanBody implements DisposablePlanBody {
 
 	private static final long serialVersionUID = -5432560989511973914L;
 

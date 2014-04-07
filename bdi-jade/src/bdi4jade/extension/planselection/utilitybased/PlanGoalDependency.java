@@ -20,17 +20,35 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.extension.softgoal.core;
+package bdi4jade.extension.planselection.utilitybased;
 
-import jade.content.Concept;
-import jade.content.ContentElement;
+import bdi4jade.plan.Plan;
 
 /**
- * This interface defines the abstraction of a Softgoal. A class that implements
- * this class can be used in the process of goal reasoning and plan selection.
+ * This abstract class has the common properties and operations of all kinds of
+ * plan-goal dependency.
  * 
  * @author ingrid
  */
-public interface Softgoal extends ContentElement, Concept {
+public abstract class PlanGoalDependency {
+
+	public static final String METADATA_NAME = PlanGoalDependency.class
+			.getSimpleName();
+
+	protected Plan root;
+
+	public PlanGoalDependency(Plan root) {
+		this.root = root;
+	}
+
+	/**
+	 * Returns the plan that is the root of the plan-goal dependency, i.e. the
+	 * plan that depends on one or more goals.
+	 * 
+	 * @return the root the plan that is the root of this dependency.
+	 */
+	public Plan getRoot() {
+		return root;
+	}
 
 }

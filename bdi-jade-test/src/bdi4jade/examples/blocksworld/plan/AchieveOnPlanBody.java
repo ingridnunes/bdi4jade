@@ -28,14 +28,14 @@ import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.examples.blocksworld.goal.PerformMove;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 import bdi4jade.util.goal.BeliefSetValueGoal;
 
 /**
  * @author ingrid
  * 
  */
-public class AchieveOnPlanBody extends PlanBody {
+public class AchieveOnPlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 

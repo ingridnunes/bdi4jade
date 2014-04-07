@@ -23,11 +23,11 @@
 package bdi4jade.plan;
 
 import jade.lang.acl.ACLMessage;
+import bdi4jade.core.MetadataElement;
 import bdi4jade.core.PlanLibrary;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;
-import bdi4jade.util.MetadataElement;
 
 /**
  * This interfaces represents the plan abstraction. It defines the goals that
@@ -77,8 +77,7 @@ public interface Plan extends MetadataElement {
 	 * @throws PlanInstantiationException
 	 *             if an error occurred during the instantiation process.
 	 */
-	public abstract PlanBodyInterface createPlanBody()
-			throws PlanInstantiationException;
+	public abstract PlanBody createPlanBody() throws PlanInstantiationException;
 
 	/**
 	 * @return the id

@@ -28,7 +28,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import bdi4jade.core.BeliefBase;
-import bdi4jade.util.MetadataElement;
+import bdi4jade.core.MetadataElement;
 
 /**
  * Represents a belief of the belief base. It has a name and a value associate

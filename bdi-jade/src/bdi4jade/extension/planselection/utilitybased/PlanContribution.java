@@ -20,10 +20,9 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.extension.softgoal.plan;
+package bdi4jade.extension.planselection.utilitybased;
 
-import bdi4jade.extension.softgoal.core.Softgoal;
-
+import bdi4jade.goal.Softgoal;
 
 /**
  * This class stores the probability of a plan promoting a value with respect to
@@ -33,6 +32,9 @@ import bdi4jade.extension.softgoal.core.Softgoal;
  * 
  */
 public class PlanContribution {
+
+	public static final String METADATA_NAME = PlanContribution.class
+			.getSimpleName();
 
 	private Double probability;
 	private final Softgoal softgoal;

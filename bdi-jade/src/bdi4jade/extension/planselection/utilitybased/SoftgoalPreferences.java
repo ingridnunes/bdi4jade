@@ -20,12 +20,13 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.extension.softgoal.core;
+package bdi4jade.extension.planselection.utilitybased;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import bdi4jade.belief.TransientBelief;
+import bdi4jade.goal.Softgoal;
 
 /**
  * This is an agent transient belief (@see {@link TransientBelief}) that stores

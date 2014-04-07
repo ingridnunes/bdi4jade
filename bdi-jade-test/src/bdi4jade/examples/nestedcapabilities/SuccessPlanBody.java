@@ -26,9 +26,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 
-public class SuccessPlanBody extends PlanBody {
+public class SuccessPlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -9039447524062487795L;
 

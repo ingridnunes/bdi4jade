@@ -45,11 +45,11 @@ public class Capability implements Serializable {
 	protected final BeliefBase beliefBase;
 	protected final Set<Capability> children;
 	protected final String id;
+	private final Log log;
 	protected BDIAgent myAgent;
 	protected Capability parent;
 	protected final PlanLibrary planLibrary;
 	private boolean start;
-	private final Log log;
 
 	/**
 	 * Creates a new capability. It uses {@link BeliefBase} and

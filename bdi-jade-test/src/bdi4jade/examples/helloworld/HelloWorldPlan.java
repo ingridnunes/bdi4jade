@@ -23,13 +23,13 @@
 package bdi4jade.examples.helloworld;
 
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 
 /**
  * @author ingridn
  * 
  */
-public class HelloWorldPlan extends PlanBody {
+public class HelloWorldPlan extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -9039447524062487795L;
 

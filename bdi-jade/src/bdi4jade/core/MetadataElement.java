@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util;
+package bdi4jade.core;
 
 import java.util.Map;
 

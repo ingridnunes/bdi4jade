@@ -23,12 +23,12 @@
 package bdi4jade.examples.planselection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bdi4jade.extension.softgoal.core.Softgoal;
-import bdi4jade.extension.softgoal.plan.AnnotatedPlan.DefaultMetadata;
-import bdi4jade.extension.softgoal.plan.PlanContribution;
+import bdi4jade.extension.planselection.utilitybased.PlanContribution;
+import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.SimplePlan;
 
 /**
@@ -60,7 +60,7 @@ public class TransportationPlan extends SimplePlan {
 		this.maxTime = maxTime;
 		this.minTime = minTime;
 
-		Map<Softgoal, List<PlanContribution>> contributions = (Map<Softgoal, List<PlanContribution>>) getMetadata(DefaultMetadata.CONTRIBUTIONS);
+		Map<Softgoal, List<PlanContribution>> contributions = new HashMap<Softgoal, List<PlanContribution>>();
 
 		List<PlanContribution> sgContributions = new ArrayList<PlanContribution>();
 		sgContributions.add(new PlanContribution(Softgoals.SAFETY,
@@ -101,6 +101,8 @@ public class TransportationPlan extends SimplePlan {
 		sgContributions.add(new PlanContribution(Softgoals.PERFORMANCE,
 				(1 - crashProbability) * 0.5, 1 - (maxTime / MAX_TIME_TAKEN)));
 		contributions.put(Softgoals.PERFORMANCE, sgContributions);
+
+		putMetadata(PlanContribution.METADATA_NAME, contributions);
 	}
 
 	/**

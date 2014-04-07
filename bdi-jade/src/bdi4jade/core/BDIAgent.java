@@ -43,13 +43,13 @@ import bdi4jade.belief.Belief;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
+import bdi4jade.goal.Softgoal;
 import bdi4jade.message.BDIAgentMsgReceiver;
 import bdi4jade.message.BDIAgentMsgReceiver.BDIAgentMatchExpression;
 import bdi4jade.reasoning.BeliefRevisionStrategy;
 import bdi4jade.reasoning.DeliberationFunction;
 import bdi4jade.reasoning.OptionGenerationFunction;
 import bdi4jade.reasoning.PlanSelectionStrategy;
-import bdi4jade.util.DefaultCapability;
 import bdi4jade.util.reasoning.DefaultBeliefRevisionStrategy;
 import bdi4jade.util.reasoning.DefaultDeliberationFunction;
 import bdi4jade.util.reasoning.DefaultOptionGenerationFunction;
@@ -194,6 +194,7 @@ public class BDIAgent extends Agent {
 	private OptionGenerationFunction optionGenerationFunction;
 	private PlanSelectionStrategy planSelectionStrategy;
 	private final Capability rootCapability;
+	private final Set<Softgoal> softgoals;
 
 	/**
 	 * Default constructor.
@@ -213,6 +214,7 @@ public class BDIAgent extends Agent {
 		this.optionGenerationFunction = new DefaultOptionGenerationFunction();
 		this.deliberationFunction = new DefaultDeliberationFunction();
 		this.planSelectionStrategy = new DefaultPlanSelectionStrategy();
+		this.softgoals = new HashSet<Softgoal>();
 	}
 
 	/**
@@ -293,6 +295,16 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Adds a new softgoal to this agent.
+	 * 
+	 * @param softgoal
+	 *            the softgoal to be pursued.
+	 */
+	public void addSoftgoal(Softgoal softgoal) {
+		this.softgoals.add(softgoal);
+	}
+
+	/**
 	 * Drops a given goal of this agent. If the goal is not part of the agent's
 	 * current goals, no action is performed.
 	 * 
@@ -308,6 +320,18 @@ public class BDIAgent extends Agent {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Drops a given softgoal of this agent. If the softgoal is not part of the
+	 * agent's current softgoals, no action is performed.
+	 * 
+	 * @param softgoal
+	 *            the softgoal to be dropped.
+	 */
+
+	public void dropSoftoal(Softgoal softgoal) {
+		this.softgoals.remove(softgoal);
 	}
 
 	/**
@@ -366,6 +390,15 @@ public class BDIAgent extends Agent {
 			}
 			return goals;
 		}
+	}
+
+	/**
+	 * Gets all softgoals of this agent.
+	 * 
+	 * @return the set of softgoals.
+	 */
+	public Set<Softgoal> getAllSoftgoals() {
+		return this.softgoals;
 	}
 
 	/**
@@ -526,7 +559,6 @@ public class BDIAgent extends Agent {
 		this.addBehaviour(new BDIAgentMsgReceiver(this,
 				new BDIAgentMatchExpression()));
 		this.addBehaviour(bdiInterpreter);
-		this.addCapability(new DefaultCapability());
 		init();
 	}
 
@@ -541,7 +573,6 @@ public class BDIAgent extends Agent {
 				rootCapability.removeChild(capability);
 			}
 		}
-
 	}
 
 }

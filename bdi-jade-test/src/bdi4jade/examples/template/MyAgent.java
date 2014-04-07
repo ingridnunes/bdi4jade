@@ -25,15 +25,15 @@ package bdi4jade.examples.template;
 import bdi4jade.examples.template.goal.MyGoal;
 import bdi4jade.examples.template.plan.MyPlan1;
 import bdi4jade.examples.template.plan.MyPlan2;
-import bdi4jade.extension.softgoal.core.SoftGoalBDIAgent;
-import bdi4jade.extension.softgoal.core.Softgoal;
-import bdi4jade.extension.softgoal.core.SoftgoalPreferences;
+import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
+import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
+import bdi4jade.goal.Softgoal;
 
 /**
  * @author ingrid
  * 
  */
-public class MyAgent extends SoftGoalBDIAgent {
+public class MyAgent extends UtilityBasedBDIAgent {
 
 	static final long serialVersionUID = 2712019445290687786L;
 

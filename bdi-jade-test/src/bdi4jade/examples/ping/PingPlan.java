@@ -30,13 +30,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 
 /**
  * @author ingrid
  * 
  */
-public class PingPlan extends PlanBody {
+public class PingPlan extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -6288758975856575305L;
 

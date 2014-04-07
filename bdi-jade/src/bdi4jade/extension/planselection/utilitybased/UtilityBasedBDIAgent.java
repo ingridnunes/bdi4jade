@@ -20,32 +20,22 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.extension.softgoal.plan;
+package bdi4jade.extension.planselection.utilitybased;
 
-import bdi4jade.plan.Plan;
+import bdi4jade.core.BDIAgent;
 
 /**
- * This abstract class has the common properties and operations of all kinds of
- * plan-goal dependency.
- * 
  * @author ingrid
+ * 
  */
-public abstract class PlanGoalDependency {
+public class UtilityBasedBDIAgent extends BDIAgent {
 
-	protected Plan root;
+	private static final long serialVersionUID = -1721751203235905764L;
 
-	public PlanGoalDependency(Plan root) {
-		this.root = root;
-	}
-
-	/**
-	 * Returns the plan that is the root of the plan-goal dependency, i.e. the
-	 * plan that depends on one or more goals.
-	 * 
-	 * @return the root the plan that is the root of this dependency.
-	 */
-	public Plan getRoot() {
-		return root;
+	public UtilityBasedBDIAgent() {
+		setPlanSelectionStrategy(new UtilityBasedPlanSelectionStrategy(this));
+		getRootCapability().getBeliefBase()
+				.addBelief(new SoftgoalPreferences());
 	}
 
 }

@@ -30,6 +30,11 @@ import java.util.Set;
 
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
+import bdi4jade.plan.SimplePlan;
+import bdi4jade.util.goal.ParallelGoal;
+import bdi4jade.util.goal.SequentialGoal;
+import bdi4jade.util.plan.ParallelGoalPlanBody;
+import bdi4jade.util.plan.SequentialGoalPlanBody;
 
 /**
  * This class represents the plan library of a capability. It aggregates the
@@ -67,7 +72,19 @@ public class PlanLibrary implements Serializable {
 				addPlan(plan);
 			}
 		}
+		addDefaultPlans();
 		init();
+	}
+
+	/**
+	 * Adds a set of default plans to this library. It adds plans to achieve the
+	 * sequential and parallel goals. This method may be overriden by children
+	 * capabilities.
+	 */
+	protected void addDefaultPlans() {
+		addPlan(new SimplePlan(SequentialGoal.class,
+				SequentialGoalPlanBody.class));
+		addPlan(new SimplePlan(ParallelGoal.class, ParallelGoalPlanBody.class));
 	}
 
 	/**

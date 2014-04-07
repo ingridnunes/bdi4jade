@@ -28,15 +28,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.TransientBelief;
-import bdi4jade.extension.softgoal.core.SoftgoalPreferences;
+import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 
 /**
  * @author ingrid
  * 
  */
-public class TransportationPlanBody extends PlanBody {
+public class TransportationPlanBody extends AbstractPlanBody {
 
 	class Scenario {
 

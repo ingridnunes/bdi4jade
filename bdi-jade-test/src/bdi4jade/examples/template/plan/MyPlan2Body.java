@@ -23,13 +23,13 @@
 package bdi4jade.examples.template.plan;
 
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.AbstractPlanBody;
 
 /**
  * @author ingrid
  * 
  */
-public class MyPlan2Body extends PlanBody {
+public class MyPlan2Body extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -3947024373151941681L;
 

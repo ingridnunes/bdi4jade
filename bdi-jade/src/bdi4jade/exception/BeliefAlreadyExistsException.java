@@ -60,4 +60,5 @@ public class BeliefAlreadyExistsException extends RuntimeException {
 	public String toString() {
 		return "Belief already exists exception: " + belief;
 	}
+	
 }

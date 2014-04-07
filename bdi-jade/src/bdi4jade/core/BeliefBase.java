@@ -34,8 +34,8 @@ import java.util.Set;
 
 import bdi4jade.belief.Belief;
 import bdi4jade.event.BeliefEvent;
-import bdi4jade.event.BeliefListener;
 import bdi4jade.event.BeliefEvent.Action;
+import bdi4jade.event.BeliefListener;
 import bdi4jade.exception.BeliefAlreadyExistsException;
 
 /**

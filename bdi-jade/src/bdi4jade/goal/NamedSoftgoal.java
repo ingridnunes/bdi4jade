@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.extension.softgoal.core;
+package bdi4jade.goal;
 
 /**
  * @author ingrid

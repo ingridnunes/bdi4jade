@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.extension.softgoal.plan;
+package bdi4jade.extension.planselection.utilitybased;
 
 import java.util.ArrayList;
 import java.util.List;
