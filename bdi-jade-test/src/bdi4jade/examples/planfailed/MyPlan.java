@@ -22,46 +22,33 @@
 
 package bdi4jade.examples.planfailed;
 
-import jade.core.behaviours.Behaviour;
-
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
 /**
  * @author ingrid
  * 
  */
-public class MyPlan extends Behaviour implements PlanBody {
+public class MyPlan extends PlanBody {
 
 	private static final long serialVersionUID = -220345270457161508L;
-	
-	private EndState endState = null;
-	private PlanInstance planInstance;
+
 	private Log log = LogFactory.getLog(this.getClass());
 
 	public void action() {
 		long random = new Random().nextLong();
 		log.info("Random: " + random);
-		endState = (random % 3 == 0) ? EndState.SUCCESSFUL : EndState.FAILED;
-		log.info(planInstance.getGoal() + " Plan#"
-				+ planInstance.getPlan().getId() + " EndState: " + endState);
+		if (random % 3 == 0)
+			setEndState(EndState.SUCCESSFUL);
+		else
+			setEndState(EndState.FAILED);
+		log.info(getGoal() + " Plan#" + getPlan().getId() + " EndState: "
+				+ getEndState());
 	}
-
-	public boolean done() {
-		return true;
-	}
-
-	public EndState getEndState() {
-		return endState;
-	}
-
-	public void init(PlanInstance planInstance) {
-		this.planInstance = planInstance;
-	}
+	
 }

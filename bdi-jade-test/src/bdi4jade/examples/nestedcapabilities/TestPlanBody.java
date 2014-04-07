@@ -22,19 +22,16 @@
 
 package bdi4jade.examples.nestedcapabilities;
 
-import jade.core.behaviours.Behaviour;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.examples.nestedcapabilities.NestedCapabilitiesAgent.Belief;
 import bdi4jade.goal.GoalStatus;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
-public class TestPlanBody extends Behaviour implements PlanBody {
+public class TestPlanBody extends PlanBody {
 
 	enum TestStep {
 		BELIEF, CHILD_GOAL, COMPLETED, MY_GOAL, PARENT_GOAL, PARENT_PROTECTED_GOAL, SIBLING_GOAL, SIBLING_PROTECTED_GOAL;
@@ -42,7 +39,6 @@ public class TestPlanBody extends Behaviour implements PlanBody {
 
 	private static final long serialVersionUID = -9039447524062487795L;
 
-	private PlanInstance instance;
 	private Log log;
 	private TestStep step;
 
@@ -58,65 +54,65 @@ public class TestPlanBody extends Behaviour implements PlanBody {
 			printBelief(Belief.CHILD_BELIEF);
 
 			log.info("Testing plans...");
-			instance.dispatchProtectedSubgoalAndListen(new MyGoal());
+			dispatchProtectedSubgoalAndListen(new MyGoal());
 			this.step = TestStep.MY_GOAL;
 			break;
 		case MY_GOAL:
-			GoalFinishedEvent goalEvent = instance.getGoalEvent();
+			GoalFinishedEvent goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				instance.dispatchProtectedSubgoalAndListen(new ChildGoal());
+				dispatchProtectedSubgoalAndListen(new ChildGoal());
 			}
 			this.step = TestStep.CHILD_GOAL;
 			break;
 		case CHILD_GOAL:
-			goalEvent = instance.getGoalEvent();
+			goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				instance.dispatchSubgoalAndListen(new ParentGoal());
+				dispatchSubgoalAndListen(new ParentGoal());
 			}
 
 			this.step = TestStep.PARENT_GOAL;
 			break;
 		case PARENT_GOAL:
-			goalEvent = instance.getGoalEvent();
+			goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				instance.dispatchSubgoalAndListen(new SiblingGoal());
+				dispatchSubgoalAndListen(new SiblingGoal());
 			}
 
 			this.step = TestStep.SIBLING_GOAL;
 			break;
 		case SIBLING_GOAL:
-			goalEvent = instance.getGoalEvent();
+			goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				instance.dispatchProtectedSubgoalAndListen(new ParentGoal());
+				dispatchProtectedSubgoalAndListen(new ParentGoal());
 			}
 
 			this.step = TestStep.PARENT_PROTECTED_GOAL;
 			break;
 		case PARENT_PROTECTED_GOAL:
-			goalEvent = instance.getGoalEvent();
+			goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
 				printGoal(goalEvent, false);
-				instance.dispatchProtectedSubgoalAndListen(new SiblingGoal());
+				dispatchProtectedSubgoalAndListen(new SiblingGoal());
 			}
 
 			this.step = TestStep.SIBLING_PROTECTED_GOAL;
 			break;
 		case SIBLING_PROTECTED_GOAL:
-			goalEvent = instance.getGoalEvent();
+			goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
@@ -128,26 +124,18 @@ public class TestPlanBody extends Behaviour implements PlanBody {
 		case COMPLETED:
 			break;
 		}
+
+		if (TestStep.COMPLETED.equals(step))
+			setEndState(EndState.SUCCESSFUL);
 	}
 
-	@Override
-	public boolean done() {
-		return getEndState() != null;
-	}
-
-	public EndState getEndState() {
-		return TestStep.COMPLETED.equals(step) ? EndState.SUCCESSFUL : null;
-	}
-
-	public void init(PlanInstance planInstance) {
+	public void onStart() {
 		this.log = LogFactory.getLog(this.getClass());
-		this.instance = planInstance;
 		this.step = TestStep.BELIEF;
 	}
 
 	private void printBelief(Belief belief) {
-		log.info(belief + ": "
-				+ instance.getBeliefBase().getBelief(belief.name()));
+		log.info(belief + ": " + getBeliefBase().getBelief(belief.name()));
 
 	}
 
@@ -163,4 +151,5 @@ public class TestPlanBody extends Behaviour implements PlanBody {
 		}
 
 	}
+
 }

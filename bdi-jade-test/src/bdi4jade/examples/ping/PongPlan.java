@@ -22,28 +22,25 @@
 
 package bdi4jade.examples.ping;
 
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.message.MessageGoal;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
 /**
  * @author ingrid
  * 
  */
-public class PongPlan extends OneShotBehaviour implements PlanBody {
+public class PongPlan extends PlanBody {
 
 	private static final long serialVersionUID = -3352874506241004611L;
 
 	private Log log;
 	private ACLMessage pingMsg;
-	private EndState endState;
 
 	@Override
 	public void action() {
@@ -53,20 +50,14 @@ public class PongPlan extends OneShotBehaviour implements PlanBody {
 		reply.setContent(PingPongCapability.PONG);
 		this.myAgent.send(reply);
 		log.info("Pong sent to agent" + pingMsg.getSender().getName() + "!");
-		this.endState = EndState.SUCCESSFUL;
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 	@Override
-	public EndState getEndState() {
-		return endState;
-	}
-
-	@Override
-	public void init(PlanInstance planInstance) {
+	public void onStart() {
 		this.log = LogFactory.getLog(this.getClass());
-		MessageGoal goal = (MessageGoal) planInstance.getGoal();
+		MessageGoal goal = (MessageGoal) getGoal();
 		pingMsg = goal.getMessage();
-		this.endState = null;
 	}
 
 }

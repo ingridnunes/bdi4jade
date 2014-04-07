@@ -27,7 +27,7 @@ import jade.lang.acl.MessageTemplate;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.PlanBodyInterface;
 
 /**
  * This class represents a plan whose plan body is a class that can be
@@ -39,39 +39,24 @@ import bdi4jade.plan.PlanBody;
  */
 public class SimplePlan extends Plan {
 
-	protected final Class<? extends Behaviour> planBodyClass;
+	protected final Class<? extends PlanBodyInterface> planBodyClass;
 
 	/**
 	 * Creates a new Simple Plan. It is a plan whose body is the specified class
 	 * and its id is the plan body class name. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process.
-	 * 
-	 * @param planBodyClass
-	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
-	 */
-	public SimplePlan(Class<? extends Behaviour> planBodyClass) {
-		super(planBodyClass.getSimpleName());
-		this.planBodyClass = planBodyClass;
-	}
-
-	/**
-	 * Creates a new Simple Plan. It is a plan whose body is the specified class
-	 * and its id is the plan body class name. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process. It sets that this plan can achieve the
-	 * specified goal class, but more goals can be specified by overriding the
-	 * initGoals() method.
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process. It sets that this plan can
+	 * achieve the specified goal class, but more goals can be specified by
+	 * overriding the initGoals() method.
 	 * 
 	 * @param goalClass
 	 *            the goal that this plan can achieve.
 	 * @param planBodyClass
 	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
+	 *            class and implement the {@link PlanBodyInterface} interface.
 	 */
 	public SimplePlan(Class<? extends Goal> goalClass,
-			Class<? extends Behaviour> planBodyClass) {
+			Class<? extends PlanBodyInterface> planBodyClass) {
 		super(planBodyClass.getSimpleName(), goalClass);
 		this.planBodyClass = planBodyClass;
 	}
@@ -79,11 +64,11 @@ public class SimplePlan extends Plan {
 	/**
 	 * Creates a new Simple Plan. It is a plan whose body is the specified class
 	 * and its id is the plan body class name. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process. It sets that this plan can achieve the
-	 * specified goal class, but more goals can be specified by overriding the
-	 * initGoals() method. The message templates is initialized with the
-	 * provided template.
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process. It sets that this plan can
+	 * achieve the specified goal class, but more goals can be specified by
+	 * overriding the initGoals() method. The message templates is initialized
+	 * with the provided template.
 	 * 
 	 * @param goalClass
 	 *            the goal that this plan can achieve.
@@ -91,11 +76,11 @@ public class SimplePlan extends Plan {
 	 *            the template of messages that this plan can process.
 	 * @param planBodyClass
 	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
+	 *            class and implement the {@link PlanBodyInterface} interface.
 	 */
 	public SimplePlan(Class<? extends Goal> goalClass,
 			MessageTemplate messageTemplate,
-			Class<? extends Behaviour> planBodyClass) {
+			Class<? extends PlanBodyInterface> planBodyClass) {
 		super(planBodyClass.getSimpleName(), goalClass, messageTemplate);
 		this.planBodyClass = planBodyClass;
 	}
@@ -103,18 +88,33 @@ public class SimplePlan extends Plan {
 	/**
 	 * Creates a new Simple Plan. It is a plan whose body is the specified class
 	 * and its id is the plan body class name. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process. The message templates is initialized
-	 * with the provided template.
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process.
+	 * 
+	 * @param planBodyClass
+	 *            the class of the plan body. It must have the Behavior as super
+	 *            class and implement the {@link PlanBodyInterface} interface.
+	 */
+	public SimplePlan(Class<? extends PlanBodyInterface> planBodyClass) {
+		super(planBodyClass.getSimpleName());
+		this.planBodyClass = planBodyClass;
+	}
+
+	/**
+	 * Creates a new Simple Plan. It is a plan whose body is the specified class
+	 * and its id is the plan body class name. The class must also implement the
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process. The message templates is
+	 * initialized with the provided template.
 	 * 
 	 * @param messageTemplate
 	 *            the template of messages that this plan can process.
 	 * @param planBodyClass
 	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
+	 *            class and implement the {@link PlanBodyInterface} interface.
 	 */
 	public SimplePlan(MessageTemplate messageTemplate,
-			Class<? extends Behaviour> planBodyClass) {
+			Class<? extends PlanBodyInterface> planBodyClass) {
 		super(planBodyClass.getSimpleName(), messageTemplate);
 		this.planBodyClass = planBodyClass;
 	}
@@ -122,27 +122,10 @@ public class SimplePlan extends Plan {
 	/**
 	 * Creates a new Simple Plan. It is a plan that has the provided id and
 	 * whose body is the specified class. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process.
-	 * 
-	 * @param id
-	 *            the id of this plan.
-	 * @param planBodyClass
-	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
-	 */
-	public SimplePlan(String id, Class<? extends Behaviour> planBodyClass) {
-		super(id);
-		this.planBodyClass = planBodyClass;
-	}
-
-	/**
-	 * Creates a new Simple Plan. It is a plan that has the provided id and
-	 * whose body is the specified class. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process. It sets that this plan can achieve the
-	 * specified goal class, but more goals can be specified by overriding the
-	 * initGoals() method.
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process. It sets that this plan can
+	 * achieve the specified goal class, but more goals can be specified by
+	 * overriding the initGoals() method.
 	 * 
 	 * @param id
 	 *            the id of this plan.
@@ -150,10 +133,10 @@ public class SimplePlan extends Plan {
 	 *            the goal that this plan can achieve.
 	 * @param planBodyClass
 	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
+	 *            class and implement the {@link PlanBodyInterface} interface.
 	 */
 	public SimplePlan(String id, Class<? extends Goal> goalClass,
-			Class<? extends Behaviour> planBodyClass) {
+			Class<? extends PlanBodyInterface> planBodyClass) {
 		super(id, goalClass);
 		this.planBodyClass = planBodyClass;
 	}
@@ -161,11 +144,11 @@ public class SimplePlan extends Plan {
 	/**
 	 * Creates a new Simple Plan. It is a plan that has the provided id and
 	 * whose body is the specified class. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process. It sets that this plan can achieve the
-	 * specified goal class, but more goals can be specified by overriding the
-	 * initGoals() method. The message templates is initialized with the
-	 * provided template.
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process. It sets that this plan can
+	 * achieve the specified goal class, but more goals can be specified by
+	 * overriding the initGoals() method. The message templates is initialized
+	 * with the provided template.
 	 * 
 	 * @param id
 	 *            the id of this plan.
@@ -175,11 +158,11 @@ public class SimplePlan extends Plan {
 	 *            the goal that this plan can achieve.
 	 * @param planBodyClass
 	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
+	 *            class and implement the {@link PlanBodyInterface} interface.
 	 */
 	public SimplePlan(String id, Class<? extends Goal> goalClass,
 			MessageTemplate messageTemplate,
-			Class<? extends Behaviour> planBodyClass) {
+			Class<? extends PlanBodyInterface> planBodyClass) {
 		super(id, goalClass, messageTemplate);
 		this.planBodyClass = planBodyClass;
 	}
@@ -187,9 +170,27 @@ public class SimplePlan extends Plan {
 	/**
 	 * Creates a new Simple Plan. It is a plan that has the provided id and
 	 * whose body is the specified class. The class must also implement the
-	 * {@link PlanBody} interface, otherwise an exception is going to be thrown
-	 * during the instantiation process. The message templates is initialized
-	 * with the provided template.
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process.
+	 * 
+	 * @param id
+	 *            the id of this plan.
+	 * @param planBodyClass
+	 *            the class of the plan body. It must have the Behavior as super
+	 *            class and implement the {@link PlanBodyInterface} interface.
+	 */
+	public SimplePlan(String id,
+			Class<? extends PlanBodyInterface> planBodyClass) {
+		super(id);
+		this.planBodyClass = planBodyClass;
+	}
+
+	/**
+	 * Creates a new Simple Plan. It is a plan that has the provided id and
+	 * whose body is the specified class. The class must also implement the
+	 * {@link PlanBodyInterface} interface, otherwise an exception is going to
+	 * be thrown during the instantiation process. The message templates is
+	 * initialized with the provided template.
 	 * 
 	 * @param id
 	 *            the id of this plan.
@@ -197,10 +198,10 @@ public class SimplePlan extends Plan {
 	 *            the template of messages that this plan can process.
 	 * @param planBodyClass
 	 *            the class of the plan body. It must have the Behavior as super
-	 *            class and implement the {@link PlanBody} interface.
+	 *            class and implement the {@link PlanBodyInterface} interface.
 	 */
 	public SimplePlan(String id, MessageTemplate messageTemplate,
-			Class<? extends Behaviour> planBodyClass) {
+			Class<? extends PlanBodyInterface> planBodyClass) {
 		super(id, messageTemplate);
 		this.planBodyClass = planBodyClass;
 	}
@@ -212,7 +213,7 @@ public class SimplePlan extends Plan {
 	 * @see bdi4jade.plan.Plan#createPlanBody()
 	 */
 	@Override
-	public Behaviour createPlanBody() throws PlanInstantiationException {
+	public PlanBodyInterface createPlanBody() throws PlanInstantiationException {
 		try {
 			return this.planBodyClass.newInstance();
 		} catch (Exception e) {
@@ -223,7 +224,7 @@ public class SimplePlan extends Plan {
 	/**
 	 * @return the planBodyClass
 	 */
-	public Class<? extends Behaviour> getPlanBodyClass() {
+	public Class<? extends PlanBodyInterface> getPlanBodyClass() {
 		return planBodyClass;
 	}
 

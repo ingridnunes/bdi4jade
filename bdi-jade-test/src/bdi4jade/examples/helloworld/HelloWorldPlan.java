@@ -22,33 +22,21 @@
 
 package bdi4jade.examples.helloworld;
 
-import jade.core.behaviours.OneShotBehaviour;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
 /**
  * @author ingridn
  * 
  */
-public class HelloWorldPlan extends OneShotBehaviour implements PlanBody {
+public class HelloWorldPlan extends PlanBody {
 
 	private static final long serialVersionUID = -9039447524062487795L;
 
-	private String name;
-	private EndState endState;
-
 	public void action() {
-		System.out.println("Hello, " + name + "!");
-		this.endState = EndState.SUCCESSFUL;
+		System.out.println("Hello, " + ((HelloWorldGoal) getGoal()).getName()
+				+ "!");
+		setEndState(EndState.SUCCESSFUL);
 	}
 
-	public EndState getEndState() {
-		return endState;
-	}
-
-	public void init(PlanInstance planInstance) {
-		this.name = ((HelloWorldGoal) planInstance.getGoal()).getName();
-		this.endState = null;
-	}
 }

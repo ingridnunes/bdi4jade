@@ -33,10 +33,12 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
 
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
+import bdi4jade.examples.AgentStarter;
 
 /**
  * @author ingrid
@@ -47,6 +49,8 @@ public class ExperimentRunner implements GoalListener {
 	public static final int ITERATIONS = 5000;
 
 	public static void main(String[] args) {
+		PropertyConfigurator.configure(AgentStarter.class
+				.getResource("log4j.properties"));
 		ExperimentRunner runner = new ExperimentRunner();
 		runner.run();
 	}

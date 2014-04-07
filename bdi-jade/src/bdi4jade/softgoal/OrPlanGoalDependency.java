@@ -20,12 +20,13 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.softgoal;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.Plan;
 
 /**
  * This class represents an OR dependency between a plan and a set of goals. It

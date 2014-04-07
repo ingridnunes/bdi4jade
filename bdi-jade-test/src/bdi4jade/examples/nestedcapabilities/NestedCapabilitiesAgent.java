@@ -22,11 +22,11 @@
 
 package bdi4jade.examples.nestedcapabilities;
 
-import jade.core.behaviours.Behaviour;
 import bdi4jade.belief.TransientBelief;
 import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.PlanBodyInterface;
 import bdi4jade.util.plan.SimplePlan;
 
 class ChildGoal implements Goal {
@@ -53,7 +53,7 @@ public class NestedCapabilitiesAgent extends BDIAgent {
 	}
 
 	private void addPlan(Capability capability, Class<? extends Goal> goal,
-			Class<? extends Behaviour> planBody) {
+			Class<? extends PlanBodyInterface> planBody) {
 		capability.getPlanLibrary().addPlan(new SimplePlan(goal, planBody));
 	}
 

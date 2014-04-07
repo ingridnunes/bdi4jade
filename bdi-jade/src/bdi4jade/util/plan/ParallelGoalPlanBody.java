@@ -22,8 +22,6 @@
 
 package bdi4jade.util.plan;
 
-import jade.core.behaviours.Behaviour;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,17 +32,15 @@ import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.OutputPlanBody;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 import bdi4jade.util.goal.ParallelGoal;
 
 /**
  * @author ingrid
  * 
  */
-public class ParallelGoalPlanBody extends Behaviour implements PlanBody,
-		OutputPlanBody {
+public class ParallelGoalPlanBody extends PlanBody implements OutputPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
@@ -53,8 +49,6 @@ public class ParallelGoalPlanBody extends Behaviour implements PlanBody,
 	protected GoalFinishedEvent failedGoal;
 	protected Log log;
 	protected ParallelGoal parallelGoal;
-	protected PlanInstance planInstance;
-	protected Boolean success;
 
 	/**
 	 * Created a new ParallelGoalPlan.
@@ -69,7 +63,7 @@ public class ParallelGoalPlanBody extends Behaviour implements PlanBody,
 	@Override
 	public void action() {
 		if (this.dispatched) {
-			GoalFinishedEvent goalEvent = planInstance.getGoalEvent();
+			GoalFinishedEvent goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
@@ -77,18 +71,18 @@ public class ParallelGoalPlanBody extends Behaviour implements PlanBody,
 					this.completedGoals.add(goalEvent.getGoal());
 					log.debug("Goal " + goalEvent.getGoal() + " completed!");
 					if (completedGoals.size() == parallelGoal.getGoals().size()) {
-						this.success = Boolean.TRUE;
+						setEndState(EndState.SUCCESSFUL);
 						log.debug("All goals completed.");
 					}
 				} else {
 					this.failedGoal = goalEvent;
-					this.success = Boolean.FALSE;
+					setEndState(EndState.FAILED);
 					log.debug("A goal has failed: " + goalEvent.getGoal());
 				}
 			}
 		} else {
 			for (Goal goal : parallelGoal.getGoals()) {
-				planInstance.dispatchSubgoalAndListen(goal);
+				dispatchSubgoalAndListen(goal);
 			}
 			this.dispatched = true;
 			log.debug("Goals dispatched!");
@@ -96,39 +90,14 @@ public class ParallelGoalPlanBody extends Behaviour implements PlanBody,
 	}
 
 	/**
-	 * @see jade.core.behaviours.Behaviour#done()
-	 */
-	@Override
-	public boolean done() {
-		return (this.success != null);
-	}
-
-	/**
-	 * @see bdi4jade.plan.PlanBody#getEndState()
-	 */
-	@Override
-	public EndState getEndState() {
-		if (this.success == null) {
-			return null;
-		} else {
-			return this.success ? EndState.SUCCESSFUL : EndState.FAILED;
-		}
-	}
-
-	/**
 	 * Initializes this plan.
-	 * 
-	 * @param planInstance
-	 *            the plan instance associated with this plan.
 	 */
 	@Override
-	public void init(PlanInstance planInstance) {
-		this.planInstance = planInstance;
-		this.parallelGoal = (ParallelGoal) planInstance.getGoal();
+	public void onStart() {
+		this.parallelGoal = (ParallelGoal) getGoal();
 		this.completedGoals = new ArrayList<Goal>(parallelGoal.getGoals()
 				.size());
 		this.failedGoal = null;
-		this.success = null;
 		this.dispatched = false;
 	}
 

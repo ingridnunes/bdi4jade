@@ -22,44 +22,39 @@
 
 package bdi4jade.examples.subgoal;
 
-import jade.core.behaviours.CyclicBehaviour;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.plan.DisposablePlanBody;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
 /**
  * @author ingrid
  * 
  */
-public class ChildPlan extends CyclicBehaviour implements PlanBody {
+public class ChildPlan extends PlanBody implements DisposablePlanBody {
 
 	private static final long serialVersionUID = -5432560989511973914L;
 
 	private int counter;
 	private Log log = LogFactory.getLog(this.getClass());
-	private PlanInstance planInstance;
 
 	@Override
 	public void action() {
 		if (counter == 0) {
-			this.planInstance.dispatchSubgoal(new Subgoal());
+			dispatchSubgoal(new Subgoal());
 		}
 		log.info("ChildPlan executing... counter " + counter);
 		counter++;
 	}
 
 	@Override
-	public EndState getEndState() {
-		return null;
+	public void onAbort() {
+		log.info("ChildPlan aborted.");
 	}
 
 	@Override
-	public void init(PlanInstance planInstance) {
-		this.planInstance = planInstance;
+	public void onStart() {
 		this.counter = 0;
 	}
 

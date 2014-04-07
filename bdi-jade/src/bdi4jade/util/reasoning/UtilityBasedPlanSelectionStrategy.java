@@ -32,9 +32,9 @@ import org.apache.commons.logging.LogFactory;
 import bdi4jade.core.BDIAgent;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.PlanContribution;
 import bdi4jade.preference.SoftgoalPreferences;
 import bdi4jade.reasoning.PlanSelectionStrategy;
+import bdi4jade.softgoal.PlanContribution;
 import bdi4jade.softgoal.Softgoal;
 
 /**

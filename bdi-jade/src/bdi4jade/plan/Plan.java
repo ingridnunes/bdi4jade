@@ -36,6 +36,8 @@ import bdi4jade.core.PlanLibrary;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;
+import bdi4jade.softgoal.PlanContribution;
+import bdi4jade.softgoal.PlanGoalDependency;
 import bdi4jade.softgoal.Softgoal;
 import bdi4jade.util.MetadataElementImpl;
 
@@ -51,6 +53,15 @@ public abstract class Plan extends MetadataElementImpl {
 
 		CONTRIBUTIONS, DEPENDENCIES;
 
+	}
+
+	/**
+	 * This enumuration represents the possible end states of a plan execution.
+	 * 
+	 * @author ingrid
+	 */
+	public enum EndState {
+		FAILED, SUCCESSFUL;
 	}
 
 	private final Set<Class<? extends Goal>> goals;
@@ -194,14 +205,14 @@ public abstract class Plan extends MetadataElementImpl {
 	}
 
 	/**
-	 * Instantiate the plan body of this plan. It must be an instance of
-	 * {@link Behaviour} and also implements the {@link PlanBody} interface.
+	 * Instantiate the plan body of this plan. It must implement the
+	 * {@link PlanBodyInterface} interface.
 	 * 
 	 * @return the instantiated plan body.
 	 * @throws PlanInstantiationException
 	 *             if an error occurred during the instantiation process.
 	 */
-	public abstract Behaviour createPlanBody()
+	public abstract PlanBodyInterface createPlanBody()
 			throws PlanInstantiationException;
 
 	/**

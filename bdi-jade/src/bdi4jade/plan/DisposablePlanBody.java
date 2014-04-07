@@ -25,7 +25,7 @@ package bdi4jade.plan;
 import bdi4jade.core.Intention;
 
 /**
- * This interface indicates that a {@link PlanBody} should be finalized in case
+ * This interface indicates that a {@link PlanBodyInterface} should be finalized in case
  * of being terminated.
  * 
  * @author ingrid *

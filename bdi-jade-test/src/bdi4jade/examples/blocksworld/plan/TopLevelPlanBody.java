@@ -22,30 +22,26 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
-import jade.core.behaviours.Behaviour;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.goal.AchieveBlocksStacked;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 import bdi4jade.util.goal.BeliefSetValueGoal;
 
 /**
  * @author ingrid
  * 
  */
-public class TopLevelPlanBody extends Behaviour implements PlanBody {
+public class TopLevelPlanBody extends PlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	private int counter;
 	private Log log;
-	private PlanInstance planInstance;
 	private On[] target;
 
 	public TopLevelPlanBody() {
@@ -56,45 +52,33 @@ public class TopLevelPlanBody extends Behaviour implements PlanBody {
 	@Override
 	public void action() {
 		if (counter != 0) {
-			if ((planInstance.getGoalEvent() == null)) {
+			if ((getGoalEvent() == null)) {
 				return;
 			}
 		}
 		if (counter != target.length) {
-			planInstance.dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
+			dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
 					BlocksWorldCapability.BELIEF_ON, target[counter]));
 		}
 		counter++;
-	}
 
-	@Override
-	public boolean done() {
-		return counter > target.length;
-	}
-
-	@Override
-	public EndState getEndState() {
-		return (counter > target.length) ? EndState.SUCCESSFUL : null;
-	}
-
-	@Override
-	public void init(PlanInstance planInstance) {
-		this.planInstance = planInstance;
-		this.target = ((AchieveBlocksStacked) planInstance.getGoal())
-				.getTarget();
+		if (counter > target.length)
+			setEndState(EndState.SUCCESSFUL);
 	}
 
 	@Override
 	public int onEnd() {
 		log.info("World Model at end is:");
-		log.info(planInstance.getBeliefBase());
+		log.info(getBeliefBase());
 		return super.onEnd();
 	}
 
 	@Override
 	public void onStart() {
 		log.info("World Model at start is:");
-		log.info(planInstance.getBeliefBase());
+		this.target = ((AchieveBlocksStacked) getGoal())
+				.getTarget();
+		log.info(getBeliefBase());
 	}
 
 }

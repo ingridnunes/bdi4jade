@@ -22,34 +22,27 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
-import jade.core.behaviours.Behaviour;
 import bdi4jade.belief.BeliefSet;
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.examples.blocksworld.goal.PerformMove;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
 /**
  * @author ingrid
  * 
  */
-public class PerformMovePlanBody extends Behaviour implements PlanBody {
+public class PerformMovePlanBody extends PlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	private BeliefSet<Clear> clearSet;
-	private boolean done;
 	private BeliefSet<On> onSet;
 	private Thing thing1;
 	private Thing thing2;
-
-	public PerformMovePlanBody() {
-		this.done = false;
-	}
 
 	@Override
 	public void action() {
@@ -68,27 +61,17 @@ public class PerformMovePlanBody extends Behaviour implements PlanBody {
 		}
 
 		onSet.addValue(new On(thing1, thing2));
-		this.done = true;
-	}
-
-	@Override
-	public boolean done() {
-		return done;
-	}
-
-	@Override
-	public EndState getEndState() {
-		return done ? EndState.SUCCESSFUL : null;
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void init(PlanInstance planInstance) {
-		this.onSet = (BeliefSet<On>) planInstance.getBeliefBase().getBelief(
+	public void onStart() {
+		this.onSet = (BeliefSet<On>) getBeliefBase().getBelief(
 				BlocksWorldCapability.BELIEF_ON);
-		this.clearSet = (BeliefSet<Clear>) planInstance.getBeliefBase()
-				.getBelief(BlocksWorldCapability.BELIEF_CLEAR);
-		PerformMove goal = (PerformMove) planInstance.getGoal();
+		this.clearSet = (BeliefSet<Clear>) getBeliefBase().getBelief(
+				BlocksWorldCapability.BELIEF_CLEAR);
+		PerformMove goal = (PerformMove) getGoal();
 		this.thing1 = goal.getThing1();
 		this.thing2 = goal.getThing2();
 	}

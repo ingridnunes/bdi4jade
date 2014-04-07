@@ -20,12 +20,13 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.softgoal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.Plan;
 
 /**
  * This class represents an AND dependency between a plan and a set of goals. It

@@ -28,7 +28,7 @@ import java.util.Map;
 
 import bdi4jade.examples.template.MyAgentSoftgoals;
 import bdi4jade.examples.template.goal.MyGoal;
-import bdi4jade.plan.PlanContribution;
+import bdi4jade.softgoal.PlanContribution;
 import bdi4jade.softgoal.Softgoal;
 import bdi4jade.util.plan.SimplePlan;
 

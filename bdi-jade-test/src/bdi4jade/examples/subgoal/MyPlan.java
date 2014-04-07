@@ -22,20 +22,17 @@
 
 package bdi4jade.examples.subgoal;
 
-import jade.core.behaviours.Behaviour;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
 /**
  * @author ingrid
  * 
  */
-public class MyPlan extends Behaviour implements PlanBody {
+public class MyPlan extends PlanBody {
 
 	private static final long serialVersionUID = -5432560989511973914L;
 
@@ -46,20 +43,14 @@ public class MyPlan extends Behaviour implements PlanBody {
 	public void action() {
 		log.info("Plan executing... counter " + counter);
 		counter++;
+
+		if (counter >= 10) {
+			setEndState(EndState.SUCCESSFUL);
+		}
 	}
 
 	@Override
-	public boolean done() {
-		return counter >= 10;
-	}
-
-	@Override
-	public EndState getEndState() {
-		return done() ? EndState.SUCCESSFUL : null;
-	}
-
-	@Override
-	public void init(PlanInstance planInstance) {
+	public void onStart() {
 		this.counter = 0;
 	}
 

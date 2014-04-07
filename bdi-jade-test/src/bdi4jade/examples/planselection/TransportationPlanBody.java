@@ -22,25 +22,21 @@
 
 package bdi4jade.examples.planselection;
 
-import jade.core.behaviours.OneShotBehaviour;
-
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.TransientBelief;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 import bdi4jade.preference.SoftgoalPreferences;
 
 /**
  * @author ingrid
  * 
  */
-public class TransportationPlanBody extends OneShotBehaviour implements
-		PlanBody {
+public class TransportationPlanBody extends PlanBody {
 
 	class Scenario {
 
@@ -123,7 +119,6 @@ public class TransportationPlanBody extends OneShotBehaviour implements
 	private TransportationPlan plan;
 	private SoftgoalPreferences preferences;
 	private GenericValueFunction<Integer> satisfaction;
-	private EndState endState = null;
 
 	public void action() {
 		log.debug("Plan executed: " + this.plan.getId());
@@ -132,22 +127,17 @@ public class TransportationPlanBody extends OneShotBehaviour implements
 		this.satisfaction.addValue(this.satisfaction.getCount() + 1,
 				satisfaction);
 		log.debug("Plan finished!");
-		this.endState = EndState.SUCCESSFUL;
-	}
-
-	public EndState getEndState() {
-		return endState;
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 	@SuppressWarnings("unchecked")
-	public void init(PlanInstance planInstance) {
+	public void onStart() {
 		this.log = LogFactory.getLog(this.getClass());
-		this.plan = (TransportationPlan) planInstance.getPlan();
-		this.satisfaction = ((TransientBelief<GenericValueFunction<Integer>>) planInstance
-				.getBeliefBase().getBelief(TransportationAgent.SATISFACTION))
-				.getValue();
-		this.preferences = (SoftgoalPreferences) planInstance.getBeliefBase()
-				.getBelief(SoftgoalPreferences.NAME);
-		this.endState = null;
+		this.plan = (TransportationPlan) getPlan();
+		this.satisfaction = ((TransientBelief<GenericValueFunction<Integer>>) getBeliefBase()
+				.getBelief(TransportationAgent.SATISFACTION)).getValue();
+		this.preferences = (SoftgoalPreferences) getBeliefBase().getBelief(
+				SoftgoalPreferences.NAME);
 	}
+	
 }

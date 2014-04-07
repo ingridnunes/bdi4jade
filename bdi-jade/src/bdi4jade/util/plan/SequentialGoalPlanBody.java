@@ -22,8 +22,6 @@
 
 package bdi4jade.util.plan;
 
-import jade.core.behaviours.Behaviour;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,9 +33,8 @@ import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.OutputPlanBody;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 import bdi4jade.util.goal.SequentialGoal;
 
 /**
@@ -45,8 +42,7 @@ import bdi4jade.util.goal.SequentialGoal;
  * 
  * @author ingrid
  */
-public class SequentialGoalPlanBody extends Behaviour implements PlanBody,
-		OutputPlanBody {
+public class SequentialGoalPlanBody extends PlanBody implements OutputPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
@@ -55,8 +51,6 @@ public class SequentialGoalPlanBody extends Behaviour implements PlanBody,
 	protected GoalFinishedEvent failedGoal;
 	protected Iterator<Goal> it;
 	protected Log log;
-	protected PlanInstance planInstance;
-	protected Boolean success;
 
 	/**
 	 * Created a new SequentialGoalPlan.
@@ -72,7 +66,7 @@ public class SequentialGoalPlanBody extends Behaviour implements PlanBody,
 	public void action() {
 		if (this.currentGoal == null) {
 			if (!it.hasNext()) {
-				this.success = Boolean.TRUE;
+				setEndState(EndState.SUCCESSFUL);
 				log.debug("All goals completed.");
 			} else {
 				this.currentGoal = it.next();
@@ -80,11 +74,11 @@ public class SequentialGoalPlanBody extends Behaviour implements PlanBody,
 					setNextGoal(this.completedGoals.get(this.completedGoals
 							.size() - 1), this.currentGoal);
 				}
-				planInstance.dispatchSubgoalAndListen(currentGoal);
+				dispatchSubgoalAndListen(currentGoal);
 				log.debug("Dispatching goal: " + currentGoal);
 			}
 		} else {
-			GoalFinishedEvent goalEvent = planInstance.getGoalEvent();
+			GoalFinishedEvent goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
@@ -94,7 +88,7 @@ public class SequentialGoalPlanBody extends Behaviour implements PlanBody,
 					log.debug("Goal " + goalEvent.getGoal() + " completed!");
 				} else {
 					this.failedGoal = goalEvent;
-					this.success = Boolean.FALSE;
+					setEndState(EndState.FAILED);
 					log.debug("A goal has failed: " + goalEvent.getGoal());
 				}
 			}
@@ -102,37 +96,12 @@ public class SequentialGoalPlanBody extends Behaviour implements PlanBody,
 	}
 
 	/**
-	 * @see jade.core.behaviours.Behaviour#done()
-	 */
-	@Override
-	public boolean done() {
-		return (this.success != null);
-	}
-
-	/**
-	 * @see bdi4jade.plan.PlanBody#getEndState()
-	 */
-	@Override
-	public EndState getEndState() {
-		if (this.success == null) {
-			return null;
-		} else {
-			return this.success ? EndState.SUCCESSFUL : EndState.FAILED;
-		}
-	}
-
-	/**
 	 * Initializes this plan. Starts the goals iterator.
-	 * 
-	 * @param planInstance
-	 *            the plan instance associated with this plan.
 	 */
 	@Override
-	public void init(PlanInstance planInstance) {
-		this.planInstance = planInstance;
-		SequentialGoal goal = (SequentialGoal) planInstance.getGoal();
+	public void onStart() {
+		SequentialGoal goal = (SequentialGoal) getGoal();
 		this.it = goal.getGoals().iterator();
-		this.success = null;
 		this.currentGoal = null;
 		this.failedGoal = null;
 		this.completedGoals = new ArrayList<Goal>(goal.getGoals().size());

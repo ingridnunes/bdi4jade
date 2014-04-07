@@ -20,9 +20,8 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.softgoal;
 
-import bdi4jade.softgoal.Softgoal;
 
 /**
  * This class stores the probability of a plan promoting a value with respect to

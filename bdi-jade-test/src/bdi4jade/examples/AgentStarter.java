@@ -36,6 +36,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  * @author ingrid
@@ -50,13 +51,15 @@ public class AgentStarter {
 		// agents.put(HelloWorldAgent.class.getSimpleName(), new
 		// HelloWorldAgent());
 		agents.put(BDIAgent1.MY_NAME, new BDIAgent1());
-		agents.put(BDIAgent2.MY_NAME, new BDIAgent2());
+		// agents.put(BDIAgent2.MY_NAME, new BDIAgent2());
 		// agents.put(MyAgent.class.getSimpleName(), new MyAgent());
 		// agents.put(NestedCapabilitiesAgent.class.getSimpleName(),
 		// new NestedCapabilitiesAgent());
 	};
 
 	public static void main(String[] args) {
+		PropertyConfigurator.configure(AgentStarter.class
+				.getResource("log4j.properties"));
 		new AgentStarter();
 	}
 

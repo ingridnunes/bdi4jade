@@ -20,7 +20,9 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.softgoal;
+
+import bdi4jade.plan.Plan;
 
 /**
  * This abstract class has the common properties and operations of all kinds of

@@ -37,8 +37,8 @@ import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
+import bdi4jade.plan.Plan.EndState;
+import bdi4jade.plan.PlanBodyInterface;
 
 /**
  * This class represents the intention abstraction from the BDI model. It
@@ -54,7 +54,7 @@ import bdi4jade.plan.PlanInstance.EndState;
  */
 public class Intention {
 
-	private PlanInstance currentPlan;
+	private PlanBodyInterface currentPlan;
 	private final Set<Plan> executedPlans;
 	private final Goal goal;
 	private final List<GoalListener> goalListeners;
@@ -129,7 +129,8 @@ public class Intention {
 			Plan selectedPlan = myAgent.getPlanSelectionStrategy().selectPlan(
 					goal, options);
 			try {
-				this.currentPlan = new PlanInstance(selectedPlan, this);
+				this.currentPlan = selectedPlan.createPlanBody();
+				currentPlan.init(selectedPlan, this);
 			} catch (PlanInstantiationException e) {
 				log.error("Plan " + selectedPlan.getId()
 						+ " could not be instantiated.");
@@ -142,7 +143,7 @@ public class Intention {
 		if (options.isEmpty()) {
 			this.unachievable = true;
 		} else {
-			this.currentPlan.startPlan();
+			this.currentPlan.start();
 		}
 	}
 
@@ -158,7 +159,7 @@ public class Intention {
 			break;
 		case TRYING_TO_ACHIEVE:
 			this.waiting = true;
-			this.currentPlan.stopPlan();
+			this.currentPlan.stop();
 			this.currentPlan = null;
 			break;
 		case PLAN_FAILED:
@@ -284,7 +285,7 @@ public class Intention {
 			break;
 		case TRYING_TO_ACHIEVE:
 			this.noLongerDesired = true;
-			this.currentPlan.stopPlan();
+			this.currentPlan.stop();
 			this.currentPlan = null;
 			break;
 		case PLAN_FAILED:

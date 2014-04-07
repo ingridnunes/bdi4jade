@@ -22,34 +22,30 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
-import jade.core.behaviours.Behaviour;
 import bdi4jade.belief.BeliefSet;
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 import bdi4jade.util.goal.BeliefSetValueGoal;
 
 /**
  * @author ingrid
  * 
  */
-public class ClearPlanBody extends Behaviour implements PlanBody {
+public class ClearPlanBody extends PlanBody {
+
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private boolean done;
 	private int index;
-	private Thing thing;
-	private PlanInstance planInstance;
 	private On on;
-	private boolean waiting;
 	private BeliefSet<On> onSet;
+	private Thing thing;
+	private boolean waiting;
 
 	public ClearPlanBody() {
-		this.done = false;
 		this.waiting = false;
 		this.index = 0;
 	}
@@ -61,15 +57,15 @@ public class ClearPlanBody extends Behaviour implements PlanBody {
 				Thing t = Thing.THINGS[index];
 				on = new On(t, thing);
 				if (onSet.hasValue(on)) {
-					planInstance
-							.dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
-									BlocksWorldCapability.BELIEF_ON, new On(t,
-											Thing.TABLE)));
+
+					dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
+							BlocksWorldCapability.BELIEF_ON, new On(t,
+									Thing.TABLE)));
 					waiting = true;
 					break;
 				}
 			}
-		} else if (planInstance.getGoalEvent() != null) {
+		} else if (getGoalEvent() != null) {
 			onSet.removeValue(on);
 			on = null;
 			waiting = false;
@@ -77,28 +73,16 @@ public class ClearPlanBody extends Behaviour implements PlanBody {
 		}
 
 		if (index >= Thing.THINGS.length) {
-			done = true;
+			setEndState(EndState.SUCCESSFUL);
 		}
 	}
 
 	@Override
-	public boolean done() {
-		return done;
-	}
-
-	@Override
-	public EndState getEndState() {
-		return done ? EndState.SUCCESSFUL : null;
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
-	public void init(PlanInstance planInstance) {
-		this.onSet = (BeliefSet<On>) planInstance.getBeliefBase().getBelief(
+	public void onStart() {
+		this.onSet = (BeliefSet<On>) getBeliefBase().getBelief(
 				BlocksWorldCapability.BELIEF_ON);
-		this.planInstance = planInstance;
-		BeliefSetValueGoal<Clear> achieveClear = (BeliefSetValueGoal<Clear>) planInstance
-				.getGoal();
+		BeliefSetValueGoal<Clear> achieveClear = (BeliefSetValueGoal<Clear>) getGoal();
 		this.thing = achieveClear.getValue().getThing();
 	}
 

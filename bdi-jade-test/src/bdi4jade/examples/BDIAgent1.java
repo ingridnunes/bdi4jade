@@ -23,7 +23,7 @@
 package bdi4jade.examples;
 
 import bdi4jade.core.BDIAgent;
-import bdi4jade.examples.ping.PingPongCapability;
+import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 
 /**
  * @author ingrid
@@ -31,16 +31,16 @@ import bdi4jade.examples.ping.PingPongCapability;
  */
 public class BDIAgent1 extends BDIAgent {
 
-	private static final long serialVersionUID = -8505187840524213951L;
 	public static final String MY_NAME = "AGENT_1";
+	private static final long serialVersionUID = -8505187840524213951L;
 
 	@Override
 	protected void init() {
-		// this.addCapability(new BlocksWorldCapability());
+		this.addCapability(new BlocksWorldCapability());
 		// this.addCapability(new PlanFailedCapability());
 		// this.addCapability(new SubgoalCapability());
-		this.addCapability(new PingPongCapability(BDIAgent1.MY_NAME,
-				BDIAgent2.MY_NAME));
+		// this.addCapability(new PingPongCapability(BDIAgent1.MY_NAME,
+		// BDIAgent2.MY_NAME));
 		// this.addCapability(new CompositeGoalCapability(true));
 		// this.addCapability(new CompositeGoalCapability(false));
 	}

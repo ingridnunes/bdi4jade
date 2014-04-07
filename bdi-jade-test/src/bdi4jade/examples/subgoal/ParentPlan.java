@@ -22,49 +22,45 @@
 
 package bdi4jade.examples.subgoal;
 
-import jade.core.behaviours.Behaviour;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.PlanBody;
-import bdi4jade.plan.PlanInstance;
-import bdi4jade.plan.PlanInstance.EndState;
 
 /**
  * @author ingrid
  * 
  */
-public class ParentPlan extends Behaviour implements PlanBody {
+public class ParentPlan extends PlanBody {
 
 	private static final long serialVersionUID = -5432560989511973914L;
 
 	private int counter;
 	private Log log = LogFactory.getLog(this.getClass());
-	private PlanInstance planInstance;
 
 	@Override
 	public void action() {
 		if (counter == 0) {
-			this.planInstance.dispatchSubgoal(new Subgoal());
+			dispatchSubgoal(new Subgoal());
 		}
 		log.info("ParentPlan executing... counter " + counter);
 		counter++;
+
+		if (counter >= 10) {
+			setEndState(EndState.FAILED);
+			log.info("Finishing ParentPlan.");
+		}
 	}
 
 	@Override
-	public boolean done() {
-		return counter >= 10;
+	public int onEnd() {
+		log.info("ParentPlan ended.");
+		return super.onEnd();
 	}
-
+	
 	@Override
-	public EndState getEndState() {
-		return done() ? EndState.FAILED : null;
-	}
-
-	@Override
-	public void init(PlanInstance planInstance) {
-		this.planInstance = planInstance;
+	public void onStart() {
 		this.counter = 0;
 	}
 
