@@ -45,7 +45,7 @@ public class MyPlan extends AbstractPlanBody {
 		counter++;
 
 		if (counter >= 10) {
-			setEndState(EndState.SUCCESSFUL);
+			setEndState(EndState.SUCCESSFULL);
 		}
 	}
 

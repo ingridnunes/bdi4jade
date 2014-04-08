@@ -29,12 +29,15 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.annotation.Parameter;
 import bdi4jade.event.GoalFinishedEvent;
+import bdi4jade.exception.GoalParameterException;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.AbstractPlanBody;
 import bdi4jade.plan.OutputPlanBody;
 import bdi4jade.plan.Plan.EndState;
+import bdi4jade.util.ReflectionUtils;
 import bdi4jade.util.goal.SequentialGoal;
 
 /**
@@ -67,13 +70,20 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	public void action() {
 		if (this.currentGoal == null) {
 			if (!it.hasNext()) {
-				setEndState(EndState.SUCCESSFUL);
+				setEndState(EndState.SUCCESSFULL);
 				log.debug("All goals completed.");
 			} else {
 				this.currentGoal = it.next();
 				if (!this.completedGoals.isEmpty()) {
-					setNextGoal(this.completedGoals.get(this.completedGoals
-							.size() - 1), this.currentGoal);
+					try {
+						setNextGoal(this.completedGoals.get(this.completedGoals
+								.size() - 1), this.currentGoal);
+					} catch (GoalParameterException gpe) {
+						log.error(gpe);
+						gpe.printStackTrace();
+						setEndState(EndState.FAILED);
+						return;
+					}
 				}
 				dispatchSubgoalAndListen(currentGoal);
 				log.debug("Dispatching goal: " + currentGoal);
@@ -120,15 +130,21 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 
 	/**
 	 * Sets the parameters of the next goal to be executed based on the previous
-	 * goal execution. This is an empty place holder for subclasses.
+	 * goal execution. It should be overridden by subclass of goals are not
+	 * annotated with the {@link Parameter} annotation.
 	 * 
 	 * @param previousGoal
 	 *            the previously executed goal.
 	 * @param goal
 	 *            the goal that is going to be dispatched.
+	 * 
+	 * @throws a
+	 *             @{@link GoalParameterException} if an error occurred during
+	 *             setting up the next goal.
 	 */
-	protected void setNextGoal(Goal previousGoal, Goal goal) {
-
+	protected void setNextGoal(Goal previousGoal, Goal goal)
+			throws GoalParameterException {
+		ReflectionUtils.setupParameters(previousGoal, goal);
 	}
 
 }

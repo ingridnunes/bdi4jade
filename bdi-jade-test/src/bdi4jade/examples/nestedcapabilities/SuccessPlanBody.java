@@ -36,7 +36,7 @@ public class SuccessPlanBody extends AbstractPlanBody {
 
 	public void action() {
 		log.info(this.getClass().getSimpleName() + " executed.");
-		setEndState(EndState.SUCCESSFUL);
+		setEndState(EndState.SUCCESSFULL);
 	}
 
 	public void onStart() {

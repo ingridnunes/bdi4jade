@@ -263,7 +263,7 @@ public class Intention {
 			EndState endState = this.currentPlan.getEndState();
 			if (EndState.FAILED.equals(endState)) {
 				return GoalStatus.PLAN_FAILED;
-			} else if (EndState.SUCCESSFUL.equals(endState)) {
+			} else if (EndState.SUCCESSFULL.equals(endState)) {
 				return GoalStatus.ACHIEVED;
 			} else {
 				return GoalStatus.TRYING_TO_ACHIEVE;

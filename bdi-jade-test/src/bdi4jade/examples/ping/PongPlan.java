@@ -50,7 +50,7 @@ public class PongPlan extends AbstractPlanBody {
 		reply.setContent(PingPongCapability.PONG);
 		this.myAgent.send(reply);
 		log.info("Pong sent to agent" + pingMsg.getSender().getName() + "!");
-		setEndState(EndState.SUCCESSFUL);
+		setEndState(EndState.SUCCESSFULL);
 	}
 
 	@Override

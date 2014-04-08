@@ -68,7 +68,7 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 		counter++;
 
 		if (counter > target.length)
-			setEndState(EndState.SUCCESSFUL);
+			setEndState(EndState.SUCCESSFULL);
 	}
 
 	@Override

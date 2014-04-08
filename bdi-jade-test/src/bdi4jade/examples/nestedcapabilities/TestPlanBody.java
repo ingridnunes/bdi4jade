@@ -126,7 +126,7 @@ public class TestPlanBody extends AbstractPlanBody {
 		}
 
 		if (TestStep.COMPLETED.equals(step))
-			setEndState(EndState.SUCCESSFUL);
+			setEndState(EndState.SUCCESSFULL);
 	}
 
 	public void onStart() {

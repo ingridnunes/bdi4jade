@@ -27,8 +27,8 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.AbstractPlanBody;
+import bdi4jade.plan.Plan.EndState;
 
 /**
  * @author ingrid
@@ -43,8 +43,8 @@ public class MyPlan extends AbstractPlanBody {
 	public void action() {
 		long random = new Random().nextLong();
 		log.info("Random: " + random);
-		if (random % 3 != 0)
-			setEndState(EndState.SUCCESSFUL);
+		if (random % 10 != 0)
+			setEndState(EndState.SUCCESSFULL);
 		else
 			setEndState(EndState.FAILED);
 		log.info(getGoal() + " Plan#" + getPlan().getId() + " EndState: "

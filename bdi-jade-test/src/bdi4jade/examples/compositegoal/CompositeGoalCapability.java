@@ -28,6 +28,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.core.BeliefBase;
 import bdi4jade.core.Capability;
 import bdi4jade.core.PlanLibrary;
@@ -47,16 +49,67 @@ import bdi4jade.util.goal.SequentialGoal;
  */
 public class CompositeGoalCapability extends Capability implements GoalListener {
 
-	class MyGoal1 implements Goal {
+	public class MyGoal1 implements Goal {
 		private static final long serialVersionUID = 3405041038738876061L;
+
+		private String msg;
+
+		public MyGoal1(String msg) {
+			this.msg = msg;
+		}
+
+		@Parameter(direction = Direction.OUT)
+		public String getMsg() {
+			return msg;
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName() + ": " + msg;
+		}
+
 	};
 
-	class MyGoal2 implements Goal {
+	public class MyGoal2 implements Goal {
 		private static final long serialVersionUID = 3405041038738876061L;
+
+		private String message;
+
+		@Parameter(direction = Direction.INOUT)
+		public String getMsg() {
+			return message;
+		}
+
+		public void setMsg(String msg) {
+			this.message = msg;
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName() + ": " + message;
+		}
+
 	};
 
-	class MyGoal3 implements Goal {
+	public class MyGoal3 implements Goal {
 		private static final long serialVersionUID = 3405041038738876061L;
+
+		private String msg;
+
+		@Parameter(direction = Direction.IN)
+		public String getMsg() {
+			return msg;
+		}
+
+		public void setMsg(String msg) {
+			this.msg = msg;
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName() + ": " + msg;
+		}
+
 	};
 
 	private static final Log log = LogFactory
@@ -94,7 +147,8 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 
 	@Override
 	protected void setup() {
-		Goal[] goals = { new MyGoal1(), new MyGoal2(), new MyGoal3() };
+		Goal[] goals = { new MyGoal1("Hello World!"), new MyGoal2(),
+				new MyGoal3() };
 		CompositeGoal compositeGoal = null;
 		if (this.sequential) {
 			compositeGoal = new SequentialGoal(goals);

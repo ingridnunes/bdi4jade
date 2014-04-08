@@ -30,16 +30,19 @@ import java.lang.annotation.Target;
 
 /**
  * @author ingrid
- *
+ * 
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.METHOD)
 public @interface Parameter {
 
-	public enum Direction { IN, OUT, INOUT };
+	public enum Direction {
+		IN, INOUT, OUT
+	};
 
 	Direction direction() default Direction.IN;
+
 	boolean mandatory() default false;
-	
+
 }

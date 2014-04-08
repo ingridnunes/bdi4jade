@@ -36,7 +36,7 @@ public class HelloWorldPlan extends AbstractPlanBody {
 	public void action() {
 		System.out.println("Hello, " + ((HelloWorldGoal) getGoal()).getName()
 				+ "!");
-		setEndState(EndState.SUCCESSFUL);
+		setEndState(EndState.SUCCESSFULL);
 	}
 
 }

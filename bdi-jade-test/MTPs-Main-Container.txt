@@ -1,1 +1,1 @@
-http://ingrid-asus:7778/acc
+http://IngridNunes-PC.inf.ufrgs.br:7778/acc

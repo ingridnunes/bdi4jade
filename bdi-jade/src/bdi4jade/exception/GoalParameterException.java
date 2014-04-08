@@ -20,35 +20,52 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.planfailed;
-
-import java.util.Random;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.AbstractPlanBody;
+package bdi4jade.exception;
 
 /**
- * @author ingrid
+ * @author Ingrid Nunes
  * 
  */
-public class MyPlan extends AbstractPlanBody {
+public class GoalParameterException extends Exception {
 
-	private static final long serialVersionUID = -220345270457161508L;
+	private static final long serialVersionUID = 1L;
 
-	private Log log = LogFactory.getLog(this.getClass());
-
-	public void action() {
-		long random = new Random().nextLong();
-		log.info("Random: " + random);
-		if (random % 3 == 0)
-			setEndState(EndState.SUCCESSFULL);
-		else
-			setEndState(EndState.FAILED);
-		log.info(getGoal() + " Plan#" + getPlan().getId() + " EndState: "
-				+ getEndState());
+	/**
+	 * Creates a new instance of GoalParameterException.
+	 */
+	public GoalParameterException() {
 	}
-	
+
+	/**
+	 * Creates a new instance of GoalParameterException.
+	 * 
+	 * @param _message
+	 *            the message to show.
+	 */
+	public GoalParameterException(final String _message) {
+		super(_message);
+	}
+
+	/**
+	 * Creates a new instance of GoalParameterException.
+	 * 
+	 * @param _message
+	 *            the message to show.
+	 * @param _cause
+	 *            the exception that caused this exception.
+	 */
+	public GoalParameterException(final String _message, final Throwable _cause) {
+		super(_message, _cause);
+	}
+
+	/**
+	 * Creates a new instance of GoalParameterException.
+	 * 
+	 * @param _cause
+	 *            the exception that caused this exception.
+	 */
+	public GoalParameterException(final Throwable _cause) {
+		super(_cause);
+	}
+
 }

@@ -73,7 +73,7 @@ public class PerformMovePlanBody extends AbstractPlanBody {
 		onSet.addValue(new On(thing1, thing2));
 		log.debug(new On(thing1, thing2));
 
-		setEndState(EndState.SUCCESSFUL);
+		setEndState(EndState.SUCCESSFULL);
 	}
 
 	@Override
