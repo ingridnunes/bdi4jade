@@ -22,64 +22,54 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.belief.BeliefSet;
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
-import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.AbstractPlanBody;
+import bdi4jade.goal.Goal;
 import bdi4jade.util.goal.BeliefSetValueGoal;
+import bdi4jade.util.plan.BeliefGoalPlanBody;
 
 /**
  * @author ingrid
  * 
  */
-public class ClearPlanBody extends AbstractPlanBody {
+public class ClearPlanBody extends BeliefGoalPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private int index;
-	private On on;
+	private Log log;
 	private BeliefSet<On> onSet;
 	private Thing thing;
-	private boolean waiting;
 
 	public ClearPlanBody() {
-		this.waiting = false;
-		this.index = 0;
+		this.log = LogFactory.getLog(this.getClass());
 	}
 
 	@Override
-	public void action() {
-		if (!waiting) {
-			for (; index < Thing.THINGS.length; index++) {
-				Thing t = Thing.THINGS[index];
-				on = new On(t, thing);
-				if (onSet.hasValue(on)) {
-
-					dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
-							BlocksWorldCapability.BELIEF_ON, new On(t,
-									Thing.TABLE)));
-					waiting = true;
-					break;
-				}
+	public void execute() {
+		for (int i = 0; i < Thing.THINGS.length; i++) {
+			Thing t = Thing.THINGS[i];
+			On on = new On(t, thing);
+			if (onSet.hasValue(on)) {
+				Goal goal = new BeliefSetValueGoal<On>(
+						BlocksWorldCapability.BELIEF_ON, new On(t, Thing.TABLE));
+				dispatchSubgoalAndListen(goal);
+				log.debug("Goal dispatched: " + goal);
+				getGoalEvent();
+				break;
 			}
-		} else if (getGoalEvent() != null) {
-			onSet.removeValue(on);
-			on = null;
-			waiting = false;
-			index++;
-		}
-
-		if (index >= Thing.THINGS.length) {
-			setEndState(EndState.SUCCESSFUL);
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onStart() {
+		super.onStart();
 		this.onSet = (BeliefSet<On>) getBeliefBase().getBelief(
 				BlocksWorldCapability.BELIEF_ON);
 		BeliefSetValueGoal<Clear> achieveClear = (BeliefSetValueGoal<Clear>) getGoal();

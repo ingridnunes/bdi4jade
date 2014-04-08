@@ -197,10 +197,24 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
+	 * @return the goals
+	 */
+	public Set<Class<? extends Goal>> getGoals() {
+		return goals;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public String getId() {
 		return id;
+	}
+
+	/**
+	 * @return the messageTemplates
+	 */
+	public Set<MessageTemplate> getMessageTemplates() {
+		return messageTemplates;
 	}
 
 	/**

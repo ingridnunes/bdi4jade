@@ -28,8 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.goal.AchieveBlocksStacked;
-import bdi4jade.plan.Plan.EndState;
+import bdi4jade.goal.Goal;
 import bdi4jade.plan.AbstractPlanBody;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.util.goal.BeliefSetValueGoal;
 
 /**
@@ -51,14 +52,18 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 
 	@Override
 	public void action() {
+		// If a subgoal has been dispatched, wait for its completion
 		if (counter != 0) {
 			if ((getGoalEvent() == null)) {
 				return;
 			}
 		}
+		// Dispatch the next subgoal, if there are subgoals left
 		if (counter != target.length) {
-			dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
-					BlocksWorldCapability.BELIEF_ON, target[counter]));
+			Goal goal = new BeliefSetValueGoal<On>(
+					BlocksWorldCapability.BELIEF_ON, target[counter]);
+			dispatchSubgoalAndListen(goal);
+			log.debug("Goal dispatched: " + goal);
 		}
 		counter++;
 
@@ -76,8 +81,7 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 	@Override
 	public void onStart() {
 		log.info("World Model at start is:");
-		this.target = ((AchieveBlocksStacked) getGoal())
-				.getTarget();
+		this.target = ((AchieveBlocksStacked) getGoal()).getTarget();
 		log.info(getBeliefBase());
 	}
 

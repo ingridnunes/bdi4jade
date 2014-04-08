@@ -49,6 +49,7 @@ import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
 import bdi4jade.plan.SimplePlan;
 import bdi4jade.util.goal.BeliefSetValueGoal;
+import bdi4jade.util.plan.BeliefValueGoalPlan;
 
 /**
  * @author ingrid
@@ -99,23 +100,12 @@ public class BlocksWorldCapability extends Capability implements GoalListener {
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
 
-		plans.add(new SimplePlan(BeliefSetValueGoal.class,
-				AchieveOnPlanBody.class) {
-			@Override
-			protected boolean matchesContext(Goal goal) {
-				return BlocksWorldCapability.BELIEF_ON
-						.equals(((BeliefSetValueGoal<?>) goal)
-								.getBeliefSetName());
-			}
-		});
-		plans.add(new SimplePlan(BeliefSetValueGoal.class, ClearPlanBody.class) {
-			@Override
-			protected boolean matchesContext(Goal goal) {
-				return BlocksWorldCapability.BELIEF_CLEAR
-						.equals(((BeliefSetValueGoal<?>) goal)
-								.getBeliefSetName());
-			}
-		});
+		plans.add(new BeliefValueGoalPlan(BeliefSetValueGoal.class,
+				BlocksWorldCapability.BELIEF_ON, On.class,
+				AchieveOnPlanBody.class));
+		plans.add(new BeliefValueGoalPlan(BeliefSetValueGoal.class,
+				BlocksWorldCapability.BELIEF_CLEAR, Clear.class,
+				ClearPlanBody.class));
 		plans.add(new SimplePlan(PerformMove.class, PerformMovePlanBody.class) {
 			@Override
 			@SuppressWarnings("unchecked")

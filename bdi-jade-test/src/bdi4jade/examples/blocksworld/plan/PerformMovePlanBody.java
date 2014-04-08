@@ -22,14 +22,17 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.belief.BeliefSet;
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.examples.blocksworld.goal.PerformMove;
-import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.AbstractPlanBody;
+import bdi4jade.plan.Plan.EndState;
 
 /**
  * @author ingrid
@@ -40,14 +43,20 @@ public class PerformMovePlanBody extends AbstractPlanBody {
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	private BeliefSet<Clear> clearSet;
+	private Log log;
 	private BeliefSet<On> onSet;
 	private Thing thing1;
 	private Thing thing2;
+
+	public PerformMovePlanBody() {
+		this.log = LogFactory.getLog(this.getClass());
+	}
 
 	@Override
 	public void action() {
 		if (!thing2.equals(Thing.TABLE)) {
 			clearSet.removeValue(new Clear(thing2));
+			log.debug("~" + new Clear(thing2));
 		}
 
 		for (Thing thing : Thing.THINGS) {
@@ -56,11 +65,14 @@ public class PerformMovePlanBody extends AbstractPlanBody {
 				onSet.removeValue(on);
 				if (!Thing.TABLE.equals(thing)) {
 					clearSet.addValue(new Clear(thing));
+					log.debug(new Clear(thing));
 				}
 			}
 		}
 
 		onSet.addValue(new On(thing1, thing2));
+		log.debug(new On(thing1, thing2));
+
 		setEndState(EndState.SUCCESSFUL);
 	}
 

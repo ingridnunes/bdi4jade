@@ -22,77 +22,86 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.examples.blocksworld.goal.PerformMove;
-import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.AbstractPlanBody;
+import bdi4jade.goal.Goal;
 import bdi4jade.util.goal.BeliefSetValueGoal;
+import bdi4jade.util.plan.BeliefGoalPlanBody;
 
 /**
  * @author ingrid
  * 
  */
-public class AchieveOnPlanBody extends AbstractPlanBody {
+public class AchieveOnPlanBody extends BeliefGoalPlanBody {
+
+	enum Step {
+		CLEAR_1, CLEAR_2, PERFORM_MOVE, WAIT_CLEAR_1, WAIT_CLEAR_2, WAIT_DONE;
+	}
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private int counter;
+	private Log log;
+	private Step step;
 	private Thing thing1;
 	private Thing thing2;
 
 	public AchieveOnPlanBody() {
-		this.counter = 0;
+		this.log = LogFactory.getLog(this.getClass());
 	}
 
 	@Override
-	public void action() {
-		switch (counter) {
-		case 0:
-			if (new BeliefSetValueGoal<On>(BlocksWorldCapability.BELIEF_ON,
-					new On(thing1, thing2)).isAchieved(getBeliefBase())) {
-				counter = 6;
-			} else {
-				counter = checkClearAndDispatch(thing1) ? 1 : 2;
+	public void execute() {
+		switch (step) {
+		case CLEAR_1:
+			Goal goal = new BeliefSetValueGoal<Clear>(
+					BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing1));
+			dispatchSubgoalAndListen(goal);
+			log.debug("Goal dispatched: " + goal);
+			step = Step.WAIT_CLEAR_1;
+			break;
+		case WAIT_CLEAR_1:
+			if (getGoalEvent() != null) {
+				step = Step.CLEAR_2;
 			}
 			break;
-		case 2:
-			counter = checkClearAndDispatch(thing2) ? 3 : 4;
+		case CLEAR_2:
+			goal = new BeliefSetValueGoal<Clear>(
+					BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing2));
+			dispatchSubgoalAndListen(goal);
+			log.debug("Goal dispatched: " + goal);
+			step = Step.WAIT_CLEAR_2;
 			break;
-		case 4:
-			dispatchSubgoalAndListen(new PerformMove(thing1, thing2));
-			counter = 5;
-		case 1:
-		case 3:
-		case 5:
-			if (getGoalEvent() != null)
-				counter++;
+		case WAIT_CLEAR_2:
+			if (getGoalEvent() != null) {
+				step = Step.PERFORM_MOVE;
+			}
 			break;
-		}
-
-		if (counter == 6)
-			setEndState(EndState.SUCCESSFUL);
-	}
-
-	private boolean checkClearAndDispatch(Thing thing) {
-		BeliefSetValueGoal<Clear> clearBelief = new BeliefSetValueGoal<Clear>(
-				BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing1));
-		if (!clearBelief.isAchieved(getBeliefBase())) {
-			dispatchSubgoalAndListen(clearBelief);
-			return true;
-		} else {
-			return false;
+		case PERFORM_MOVE:
+			goal = new PerformMove(thing1, thing2);
+			dispatchSubgoalAndListen(goal);
+			log.debug("Goal dispatched: " + goal);
+			step = Step.WAIT_DONE;
+			break;
+		case WAIT_DONE:
+			getGoalEvent();
+			break;
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onStart() {
+		super.onStart();
 		BeliefSetValueGoal<On> achieveOn = (BeliefSetValueGoal<On>) getGoal();
 		this.thing1 = achieveOn.getValue().getThing1();
 		this.thing2 = achieveOn.getValue().getThing2();
+		this.step = Step.CLEAR_1;
 	}
 
 }

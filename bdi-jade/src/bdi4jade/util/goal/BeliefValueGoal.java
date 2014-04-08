@@ -22,32 +22,39 @@
 
 package bdi4jade.util.goal;
 
-import bdi4jade.belief.BeliefSet;
+import bdi4jade.belief.Belief;
 import bdi4jade.core.BeliefBase;
 
 /**
- * This class represents the goal of an agent believe in a belief that contains
- * a certain value, i.e. the agent has a belief set whose name is specified in
- * this goal and it contains the specified value..
- * 
  * @author ingrid
+ * 
  */
-public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
+public class BeliefValueGoal<T> extends BeliefGoal {
 
 	private static final long serialVersionUID = 2493877854717226283L;
+
+	private T value;
 
 	/**
 	 * Creates a new BeliefSetValueGoal with the provided belief name and a
 	 * value. This value represents the one that should be part of the belief
 	 * set.
 	 * 
-	 * @param beliefSetName
+	 * @param beliefName
 	 *            the belief name.
 	 * @param value
 	 *            the value that is target of this goal.
 	 */
-	public BeliefSetValueGoal(String beliefSetName, T value) {
-		super(beliefSetName, value);
+	public BeliefValueGoal(String beliefName, T value) {
+		super(beliefName);
+		this.value = value;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public T getValue() {
+		return value;
 	}
 
 	/**
@@ -60,13 +67,20 @@ public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean isAchieved(BeliefBase beliefBase) {
-		BeliefSet<T> beliefSet = (BeliefSet<T>) beliefBase
-				.getBelief(getBeliefName());
-		if (beliefSet == null) {
+		Belief<T> belief = (Belief<T>) beliefBase.getBelief(getBeliefName());
+		if (belief == null) {
 			return false;
 		} else {
-			return beliefSet.hasValue(getValue());
+			return belief.getValue().equals(value);
 		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Belief '" + getBeliefName() + "' has value " + value;
 	}
 
 }
