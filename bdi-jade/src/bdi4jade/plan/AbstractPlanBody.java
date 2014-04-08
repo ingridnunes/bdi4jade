@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import bdi4jade.core.BeliefBase;
+import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalFinishedEvent;

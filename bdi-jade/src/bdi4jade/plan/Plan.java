@@ -24,7 +24,6 @@ package bdi4jade.plan;
 
 import jade.lang.acl.ACLMessage;
 import bdi4jade.core.MetadataElement;
-import bdi4jade.core.PlanLibrary;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;

@@ -23,7 +23,7 @@
 package bdi4jade.examples;
 
 import bdi4jade.core.BDIAgent;
-import bdi4jade.examples.compositegoal.CompositeGoalCapability;
+import bdi4jade.examples.ping.PingPongCapability;
 
 /**
  * @author ingrid
@@ -36,12 +36,11 @@ public class BDIAgent1 extends BDIAgent {
 
 	@Override
 	protected void init() {
-		// this.addCapability(new BlocksWorldCapability());
+		this.addCapability(new PingPongCapability(BDIAgent1.MY_NAME,
+				BDIAgent2.MY_NAME));
 		// this.addCapability(new PlanFailedCapability());
 		// this.addCapability(new SubgoalCapability());
-		// this.addCapability(new PingPongCapability(BDIAgent1.MY_NAME,
-		// BDIAgent2.MY_NAME));
-		this.addCapability(new CompositeGoalCapability(true));
+		// this.addCapability(new CompositeGoalCapability(true));
 		// this.addCapability(new CompositeGoalCapability(false));
 	}
 }

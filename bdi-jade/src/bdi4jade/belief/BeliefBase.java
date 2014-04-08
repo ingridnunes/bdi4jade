@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.core;
+package bdi4jade.belief;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import bdi4jade.belief.Belief;
+import bdi4jade.core.Capability;
 import bdi4jade.event.BeliefEvent;
 import bdi4jade.event.BeliefEvent.Action;
 import bdi4jade.event.BeliefListener;
@@ -221,7 +221,7 @@ public class BeliefBase implements Serializable {
 	 * @param beliefChanged
 	 *            the belief that was changed
 	 */
-	private void notifyBeliefChanged(BeliefEvent beliefChanged) {
+	protected void notifyBeliefChanged(BeliefEvent beliefChanged) {
 		for (BeliefListener beliefListener : beliefListeners) {
 			beliefListener.update(beliefChanged);
 		}
@@ -322,18 +322,13 @@ public class BeliefBase implements Serializable {
 	@SuppressWarnings("unchecked")
 	public boolean updateBelief(String name, Object value) {
 		Belief belief = this.beliefs.get(name);
-
 		if (belief != null) {
-			Object oldValue = belief.getValue();
 			belief.setValue(value);
-			notifyBeliefChanged(new BeliefEvent(belief, Action.BELIEF_UPDATED,
-					oldValue));
 			return true;
 		} else if (capability != null && capability.getParent() != null) {
 			return capability.getParent().getBeliefBase()
 					.updateBelief(name, value);
 		}
-
 		return false;
 	}
 

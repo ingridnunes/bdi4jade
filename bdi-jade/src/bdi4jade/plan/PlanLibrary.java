@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.core;
+package bdi4jade.plan;
 
 import jade.lang.acl.ACLMessage;
 
@@ -28,9 +28,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.Plan;
-import bdi4jade.plan.SimplePlan;
 import bdi4jade.util.goal.ParallelGoal;
 import bdi4jade.util.goal.SequentialGoal;
 import bdi4jade.util.plan.ParallelGoalPlanBody;

@@ -22,7 +22,7 @@
 
 package bdi4jade.util.goal;
 
-import bdi4jade.core.BeliefBase;
+import bdi4jade.belief.BeliefBase;
 import bdi4jade.goal.Goal;
 
 /**

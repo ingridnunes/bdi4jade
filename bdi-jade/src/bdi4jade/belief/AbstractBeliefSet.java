@@ -23,22 +23,19 @@
 package bdi4jade.belief;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
+import bdi4jade.event.BeliefEvent;
+import bdi4jade.event.BeliefEvent.Action;
+
 /**
- * This class extends the {@link TransientBeliefSet} and implements
- * {@link BeliefSet} and represents a transient belief set, which is not
- * persisted in a permanent memory.
- * 
  * @author ingrid
+ * 
  */
-public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
-		BeliefSet<T> {
+public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
+		implements BeliefSet<T> {
 
 	private static final long serialVersionUID = 8345025506647930L;
-
-	private Set<T> value;
 
 	/**
 	 * Creates a new transient belief set with the provided name.
@@ -46,7 +43,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @param name
 	 *            the name of this belief set.
 	 */
-	public TransientBeliefSet(String name) {
+	public AbstractBeliefSet(String name) {
 		super(name, new HashSet<T>());
 	}
 
@@ -58,56 +55,35 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @param values
 	 *            the initial values of this belief set.
 	 */
-	public TransientBeliefSet(String name, Set<T> values) {
+	public AbstractBeliefSet(String name, Set<T> values) {
 		super(name, values);
 	}
+
+	protected abstract void addSetValue(T value);
 
 	/**
 	 * @see bdi4jade.belief.BeliefSet#addValue(java.lang.Object)
 	 */
 	@Override
-	protected void addSetValue(T value) {
-		this.value.add(value);
+	public final void addValue(T value) {
+		if (!hasValue(value)) {
+			addSetValue(value);
+			notifyBeliefBases(new BeliefEvent(this, Action.BELIEF_ADDED, value));
+		}
 	}
 
-	/**
-	 * @see bdi4jade.belief.AbstractBelief#getValue()
-	 */
-	@Override
-	public Set<T> getValue() {
-		return value;
-	}
-
-	/**
-	 * @see bdi4jade.belief.BeliefSet#hasValue(java.lang.Object)
-	 */
-	@Override
-	public boolean hasValue(T value) {
-		return this.value.contains(value);
-	}
-
-	/**
-	 * @see bdi4jade.belief.BeliefSet#iterator()
-	 */
-	@Override
-	public Iterator<T> iterator() {
-		return this.value.iterator();
-	}
+	protected abstract boolean removeSetValue(T value);
 
 	/**
 	 * @see bdi4jade.belief.BeliefSet#removeValue(java.lang.Object)
 	 */
 	@Override
-	protected boolean removeSetValue(T value) {
-		return this.value.remove(value);
-	}
-
-	/**
-	 * @see bdi4jade.belief.AbstractBelief#updateValue(java.lang.Object)
-	 */
-	@Override
-	protected void updateValue(Set<T> value) {
-		this.value = value;
+	public final boolean removeValue(T value) {
+		boolean removed = removeSetValue(value);
+		if (removed) {
+			notifyBeliefBases(new BeliefEvent(this, Action.BELIEF_ADDED, value));
+		}
+		return removed;
 	}
 
 }

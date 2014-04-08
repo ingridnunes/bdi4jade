@@ -23,7 +23,7 @@
 package bdi4jade.plan;
 
 import jade.core.behaviours.Behaviour;
-import bdi4jade.core.BeliefBase;
+import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;

@@ -66,9 +66,10 @@ public class TransientBelief<T> extends AbstractBelief<T> {
 	}
 
 	/**
-	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
+	 * @see bdi4jade.belief.AbstractBelief#updateValue(java.lang.Object)
 	 */
-	public void setValue(T value) {
+	@Override
+	protected void updateValue(T value) {
 		this.value = value;
 	}
 

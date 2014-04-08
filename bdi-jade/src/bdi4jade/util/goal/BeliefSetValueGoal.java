@@ -22,8 +22,8 @@
 
 package bdi4jade.util.goal;
 
+import bdi4jade.belief.BeliefBase;
 import bdi4jade.belief.BeliefSet;
-import bdi4jade.core.BeliefBase;
 
 /**
  * This class represents the goal of an agent believe in a belief that contains

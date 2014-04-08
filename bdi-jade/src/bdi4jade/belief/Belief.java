@@ -27,7 +27,6 @@ import jade.content.Concept;
 import java.io.Serializable;
 import java.util.Set;
 
-import bdi4jade.core.BeliefBase;
 import bdi4jade.core.MetadataElement;
 
 /**

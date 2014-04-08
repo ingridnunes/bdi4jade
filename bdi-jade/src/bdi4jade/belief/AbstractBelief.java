@@ -26,8 +26,9 @@ import java.security.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Set;
 
-import bdi4jade.core.BeliefBase;
 import bdi4jade.core.MetadataElementImpl;
+import bdi4jade.event.BeliefEvent;
+import bdi4jade.event.BeliefEvent.Action;
 
 /**
  * @author ingrid
@@ -121,6 +122,12 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 		return this.name.hashCode();
 	}
 
+	protected void notifyBeliefBases(BeliefEvent beliefEvent) {
+		for (BeliefBase beliefBase : beliefBases) {
+			beliefBase.notifyBeliefChanged(beliefEvent);
+		}
+	}
+
 	/**
 	 * Removes a belief base that does not contain this belief anymore. The
 	 * agent whose capability does not contain this belief in the belief base
@@ -139,7 +146,11 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 * @param value
 	 *            the new value.
 	 */
-	public abstract void setValue(T value);
+	public final void setValue(T value) {
+		Object oldValue = getValue();
+		updateValue(value);
+		notifyBeliefBases(new BeliefEvent(this, Action.BELIEF_UPDATED, oldValue));
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -149,5 +160,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 		return new StringBuffer(name).append(" = ").append(getValue())
 				.toString();
 	}
+
+	protected abstract void updateValue(T value);
 
 }

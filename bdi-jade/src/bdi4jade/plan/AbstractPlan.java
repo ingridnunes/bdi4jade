@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bdi4jade.core.MetadataElementImpl;
-import bdi4jade.core.PlanLibrary;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;

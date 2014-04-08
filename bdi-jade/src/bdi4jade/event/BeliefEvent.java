@@ -39,7 +39,7 @@ public class BeliefEvent implements AgentAction {
 	 * @author ingrid
 	 */
 	public enum Action {
-		BELIEF_ADDED, BELIEF_REMOVED, BELIEF_UPDATED
+		BELIEF_ADDED, BELIEF_REMOVED, BELIEF_SET_VALUE_ADDED, BELIEF_SET_VALUE_REMOVED, BELIEF_UPDATED
 	}
 
 	private static final long serialVersionUID = 1749139390567331926L;

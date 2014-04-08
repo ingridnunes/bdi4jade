@@ -22,8 +22,8 @@
 
 package bdi4jade.util.reasoning;
 
+import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.BDIAgent;
-import bdi4jade.core.BeliefBase;
 import bdi4jade.core.Capability;
 import bdi4jade.reasoning.BeliefRevisionStrategy;
 

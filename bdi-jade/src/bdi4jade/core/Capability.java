@@ -31,6 +31,9 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.belief.BeliefBase;
+import bdi4jade.plan.PlanLibrary;
+
 /**
  * This capability represents a component that aggregates the mental attitudes
  * defined by the BDI architecture. It has a belief base with the associated

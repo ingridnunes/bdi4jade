@@ -54,7 +54,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	/**
 	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
 	 */
-	public void setValue(T value) {
+	protected void updateValue(T value) {
 		// XXX PersistentBelief.setValue(T value)
 	}
 
