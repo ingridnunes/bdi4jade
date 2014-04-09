@@ -22,15 +22,11 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import bdi4jade.examples.blocksworld.BlocksWorldCapability;
+import bdi4jade.examples.blocksworld.BlocksWorldAgent;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.examples.blocksworld.goal.PerformMove;
-import bdi4jade.goal.Goal;
 import bdi4jade.util.goal.BeliefSetValueGoal;
 import bdi4jade.util.plan.BeliefGoalPlanBody;
 
@@ -46,46 +42,33 @@ public class AchieveOnPlanBody extends BeliefGoalPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private Log log;
 	private Step step;
 	private Thing thing1;
 	private Thing thing2;
-
-	public AchieveOnPlanBody() {
-		this.log = LogFactory.getLog(this.getClass());
-	}
 
 	@Override
 	public void execute() {
 		switch (step) {
 		case CLEAR_1:
-			Goal goal = new BeliefSetValueGoal<Clear>(
-					BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing1));
-			dispatchSubgoalAndListen(goal);
-			log.debug("Goal dispatched: " + goal);
+			dispatchSubgoalAndListen(new BeliefSetValueGoal<Clear>(
+					BlocksWorldAgent.BELIEF_CLEAR, new Clear(thing1)));
 			step = Step.WAIT_CLEAR_1;
-			break;
 		case WAIT_CLEAR_1:
 			if (getGoalEvent() != null) {
 				step = Step.CLEAR_2;
 			}
 			break;
 		case CLEAR_2:
-			goal = new BeliefSetValueGoal<Clear>(
-					BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing2));
-			dispatchSubgoalAndListen(goal);
-			log.debug("Goal dispatched: " + goal);
+			dispatchSubgoalAndListen(new BeliefSetValueGoal<Clear>(
+					BlocksWorldAgent.BELIEF_CLEAR, new Clear(thing2)));
 			step = Step.WAIT_CLEAR_2;
-			break;
 		case WAIT_CLEAR_2:
 			if (getGoalEvent() != null) {
 				step = Step.PERFORM_MOVE;
 			}
 			break;
 		case PERFORM_MOVE:
-			goal = new PerformMove(thing1, thing2);
-			dispatchSubgoalAndListen(goal);
-			log.debug("Goal dispatched: " + goal);
+			dispatchSubgoalAndListen(new PerformMove(thing1, thing2));
 			step = Step.WAIT_DONE;
 			break;
 		case WAIT_DONE:

@@ -27,10 +27,10 @@ import jade.lang.acl.MessageTemplate;
 import java.util.HashSet;
 import java.util.Set;
 
-import bdi4jade.core.BeliefBase;
+import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Capability;
-import bdi4jade.core.PlanLibrary;
 import bdi4jade.plan.Plan;
+import bdi4jade.plan.PlanLibrary;
 import bdi4jade.plan.SimplePlan;
 
 /**

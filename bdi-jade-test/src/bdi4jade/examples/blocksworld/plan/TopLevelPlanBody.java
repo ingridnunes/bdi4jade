@@ -25,10 +25,9 @@ package bdi4jade.examples.blocksworld.plan;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.examples.blocksworld.BlocksWorldCapability;
+import bdi4jade.examples.blocksworld.BlocksWorldAgent;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.goal.AchieveBlocksStacked;
-import bdi4jade.goal.Goal;
 import bdi4jade.plan.AbstractPlanBody;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.util.goal.BeliefSetValueGoal;
@@ -60,10 +59,8 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 		}
 		// Dispatch the next subgoal, if there are subgoals left
 		if (counter != target.length) {
-			Goal goal = new BeliefSetValueGoal<On>(
-					BlocksWorldCapability.BELIEF_ON, target[counter]);
-			dispatchSubgoalAndListen(goal);
-			log.debug("Goal dispatched: " + goal);
+			dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
+					BlocksWorldAgent.BELIEF_ON, target[counter]));
 		}
 		counter++;
 

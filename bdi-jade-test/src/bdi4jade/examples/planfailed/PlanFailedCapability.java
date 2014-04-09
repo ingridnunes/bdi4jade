@@ -28,14 +28,14 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.core.BeliefBase;
+import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Capability;
-import bdi4jade.core.PlanLibrary;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
+import bdi4jade.plan.PlanLibrary;
 import bdi4jade.plan.SimplePlan;
 
 /**

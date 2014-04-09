@@ -68,7 +68,8 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	public final void addValue(T value) {
 		if (!hasValue(value)) {
 			addSetValue(value);
-			notifyBeliefBases(new BeliefEvent(this, Action.BELIEF_ADDED, value));
+			notifyBeliefBases(new BeliefEvent(this,
+					Action.BELIEF_SET_VALUE_ADDED, value));
 		}
 	}
 
@@ -81,7 +82,8 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	public final boolean removeValue(T value) {
 		boolean removed = removeSetValue(value);
 		if (removed) {
-			notifyBeliefBases(new BeliefEvent(this, Action.BELIEF_ADDED, value));
+			notifyBeliefBases(new BeliefEvent(this,
+					Action.BELIEF_SET_VALUE_REMOVED, value));
 		}
 		return removed;
 	}

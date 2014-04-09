@@ -138,4 +138,13 @@ public class BeliefEvent implements AgentAction {
 		this.belief = belief;
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getClass().getSimpleName()).append("\n");
+		sb.append("Belief: ").append(belief).append("\n");
+		sb.append("Action: ").append(action).append(" - ").append(args);
+		return sb.toString();
+	}
+
 }
