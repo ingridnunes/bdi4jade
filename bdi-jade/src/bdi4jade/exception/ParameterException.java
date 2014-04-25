@@ -26,45 +26,45 @@ package bdi4jade.exception;
  * @author Ingrid Nunes
  * 
  */
-public class GoalParameterException extends Exception {
+public class ParameterException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Creates a new instance of GoalParameterException.
+	 * Creates a new instance of ParameterException.
 	 */
-	public GoalParameterException() {
+	public ParameterException() {
 	}
 
 	/**
-	 * Creates a new instance of GoalParameterException.
+	 * Creates a new instance of ParameterException.
 	 * 
 	 * @param _message
 	 *            the message to show.
 	 */
-	public GoalParameterException(final String _message) {
+	public ParameterException(final String _message) {
 		super(_message);
 	}
 
 	/**
-	 * Creates a new instance of GoalParameterException.
+	 * Creates a new instance of ParameterException.
 	 * 
 	 * @param _message
 	 *            the message to show.
 	 * @param _cause
 	 *            the exception that caused this exception.
 	 */
-	public GoalParameterException(final String _message, final Throwable _cause) {
+	public ParameterException(final String _message, final Throwable _cause) {
 		super(_message, _cause);
 	}
 
 	/**
-	 * Creates a new instance of GoalParameterException.
+	 * Creates a new instance of ParameterException.
 	 * 
 	 * @param _cause
 	 *            the exception that caused this exception.
 	 */
-	public GoalParameterException(final Throwable _cause) {
+	public ParameterException(final Throwable _cause) {
 		super(_cause);
 	}
 

@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.annotation.Parameter;
 import bdi4jade.event.GoalFinishedEvent;
-import bdi4jade.exception.GoalParameterException;
+import bdi4jade.exception.ParameterException;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.AbstractPlanBody;
@@ -78,7 +78,7 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 					try {
 						setNextGoal(this.completedGoals.get(this.completedGoals
 								.size() - 1), this.currentGoal);
-					} catch (GoalParameterException gpe) {
+					} catch (ParameterException gpe) {
 						log.error(gpe);
 						gpe.printStackTrace();
 						setEndState(EndState.FAILED);
@@ -143,7 +143,7 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	 *             setting up the next goal.
 	 */
 	protected void setNextGoal(Goal previousGoal, Goal goal)
-			throws GoalParameterException {
+			throws ParameterException {
 		ReflectionUtils.setupParameters(previousGoal, goal);
 	}
 

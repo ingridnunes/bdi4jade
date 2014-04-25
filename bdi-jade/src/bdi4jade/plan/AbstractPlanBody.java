@@ -33,9 +33,11 @@ import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalFinishedEvent;
+import bdi4jade.exception.ParameterException;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan.EndState;
+import bdi4jade.util.ReflectionUtils;
 
 /**
  * This class represents a plan that has been instantiated to be executed.
@@ -301,7 +303,8 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 * Initializes this plan body. It associates this plan body with a plan
 	 * definition ({@link Plan}) and an {@link Intention}. If this plan body has
 	 * already been initialized, this method throws a
-	 * {@link PlanInstantiationException}.
+	 * {@link PlanInstantiationException}. It also sets up the plan input
+	 * parameters based on the goal input parameters.
 	 * 
 	 * @param plan
 	 *            the plan associated this this plan body.
@@ -318,6 +321,11 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 		}
 		this.plan = plan;
 		this.intention = intention;
+		try {
+			ReflectionUtils.setPlanBodyInput(this, intention.getGoal());
+		} catch (ParameterException exc) {
+			throw new PlanInstantiationException(exc);
+		}
 	}
 
 	/**
@@ -330,6 +338,13 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 			if (this.endState != null) {
 				if (this instanceof OutputPlanBody) {
 					((OutputPlanBody) this).setGoalOutput(getGoal());
+				} else {
+					try {
+						ReflectionUtils.setPlanBodyOutput(this,
+								intention.getGoal());
+					} catch (ParameterException exc) {
+						// FIXME what to do
+					}
 				}
 				dropSubgoals();
 			}
@@ -342,7 +357,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	public final void start() {
 		this.intention.getMyAgent().addBehaviour(this);
 	}
-	
+
 	/**
 	 * Stops the plan body, a {@link Behaviour}, associated with this plan. If
 	 * the body implements the {@link DisposablePlanBody}, it invokes the method
