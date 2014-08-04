@@ -30,14 +30,12 @@ import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
-import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Capability;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.PlanLibrary;
 import bdi4jade.plan.SimplePlan;
 import bdi4jade.util.goal.CompositeGoal;
 import bdi4jade.util.goal.ParallelGoal;
@@ -129,7 +127,7 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 	private boolean sequential;
 
 	public CompositeGoalCapability(boolean sequential) {
-		super(new BeliefBase(), new PlanLibrary(getPlans()));
+		super(null, getPlans());
 		this.sequential = sequential;
 	}
 

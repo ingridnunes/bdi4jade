@@ -50,7 +50,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 */
 	public AbstractBelief(String name) {
 		if (name == null)
-			throw new InvalidParameterException("Belief name must be not null.");
+			throw new NullPointerException("Belief name must be not null.");
 		this.name = name;
 		this.beliefBases = new HashSet<BeliefBase>();
 	}
@@ -92,10 +92,12 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	}
 
 	/**
-	 * @return the beliefBases
+	 * Returns the belief bases with which this belief is associated.
+	 * 
+	 * @return the beliefBases.
 	 */
 	public Set<BeliefBase> getBeliefBases() {
-		return beliefBases;
+		return new HashSet<BeliefBase>(beliefBases);
 	}
 
 	/**
@@ -108,17 +110,10 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	}
 
 	/**
-	 * Gets the current value of the Belief.
-	 * 
-	 * @return the belief value.
-	 */
-	public abstract T getValue();
-
-	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		return this.name.hashCode();
 	}
 

@@ -225,12 +225,12 @@ public class BDIAgent extends Agent {
 	 */
 	public void addCapability(Capability capability) {
 		synchronized (rootCapability) {
-			if (capability.getParent() != null) {
+			if (capability.getWholeCapability() != null) {
 				throw new RuntimeException(
 						"Capability already binded to another capability!");
 			}
 
-			this.rootCapability.addChild(capability);
+			this.rootCapability.addPartCapability(capability);
 			capability.setMyAgent(this);
 		}
 	}
@@ -351,7 +351,7 @@ public class BDIAgent extends Agent {
 	private void getAllBeliefs(final Collection<Belief<?>> beliefs,
 			Capability capability) {
 		beliefs.addAll(capability.getBeliefBase().getBeliefs());
-		for (Capability child : capability.getChildren()) {
+		for (Capability child : capability.getPartCapabilities()) {
 			getAllBeliefs(beliefs, child);
 		}
 	}
@@ -370,7 +370,7 @@ public class BDIAgent extends Agent {
 	private void getAllCapabilities(final List<Capability> capabilities,
 			Capability capability) {
 		capabilities.add(capability);
-		Set<Capability> children = capability.getChildren();
+		Set<Capability> children = capability.getPartCapabilities();
 		for (Capability child : children) {
 			getAllCapabilities(capabilities, child);
 		}
@@ -470,7 +470,8 @@ public class BDIAgent extends Agent {
 	 */
 	public boolean removeCapability(Capability capability) {
 		synchronized (rootCapability) {
-			boolean removed = this.rootCapability.removeChild(capability);
+			boolean removed = this.rootCapability
+					.removePartCapability(capability);
 			if (removed) {
 				capability.setMyAgent(null);
 			}
@@ -568,9 +569,9 @@ public class BDIAgent extends Agent {
 	@Override
 	protected void takeDown() {
 		synchronized (rootCapability) {
-			Set<Capability> capabilities = rootCapability.getChildren();
+			Set<Capability> capabilities = rootCapability.getPartCapabilities();
 			for (Capability capability : capabilities) {
-				rootCapability.removeChild(capability);
+				rootCapability.removePartCapability(capability);
 			}
 		}
 	}

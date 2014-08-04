@@ -44,30 +44,38 @@ import bdi4jade.exception.BeliefAlreadyExistsException;
  * 
  * @author ingrid
  */
-public class BeliefBase implements Serializable {
+public final class BeliefBase implements Serializable {
 
 	private static final long serialVersionUID = -6411530721625492882L;
 
 	private final Set<BeliefListener> beliefListeners;
 	private final Map<String, Belief<?>> beliefs;
-	private Capability capability;
+	private final Capability capability;
 
 	/**
-	 * Creates a belief base.
+	 * Creates a belief base associated with a capability.
+	 * 
+	 * @param capability
+	 *            the capability to which this belief base belongs
 	 */
-	public BeliefBase() {
-		this(null);
+	public BeliefBase(final Capability capability) {
+		this(capability, null);
 	}
 
 	/**
 	 * Creates a belief base associated with a capability and adds the beliefs
 	 * in the provided belief set.
 	 * 
+	 * @param capability
+	 *            the capability to which this belief base belongs
 	 * @param beliefs
 	 *            the initial beliefs
 	 */
-	public BeliefBase(Set<Belief<?>> beliefs) {
-		this.capability = null;
+	public BeliefBase(final Capability capability, Set<Belief<?>> beliefs) {
+		if (capability == null)
+			throw new NullPointerException("Capability must be not null.");
+
+		this.capability = capability;
 		this.beliefListeners = new HashSet<BeliefListener>();
 		this.beliefs = new HashMap<String, Belief<?>>();
 		if (beliefs != null) {
@@ -132,8 +140,9 @@ public class BeliefBase implements Serializable {
 
 	private void getAllBeliefs(final Collection<Belief<?>> beliefs) {
 		beliefs.addAll(this.beliefs.values());
-		if (capability != null && capability.getParent() != null) {
-			capability.getParent().getBeliefBase().getAllBeliefs(beliefs);
+		if (capability.getWholeCapability() != null) {
+			capability.getWholeCapability().getBeliefBase()
+					.getAllBeliefs(beliefs);
 		}
 	}
 
@@ -148,9 +157,9 @@ public class BeliefBase implements Serializable {
 	 */
 	public Belief<?> getBelief(String name) {
 		Belief<?> belief = this.beliefs.get(name);
-		if (belief == null && capability != null
-				&& capability.getParent() != null) {
-			belief = capability.getParent().getBeliefBase().getBelief(name);
+		if (belief == null && capability.getWholeCapability() != null) {
+			belief = capability.getWholeCapability().getBeliefBase()
+					.getBelief(name);
 		}
 		return belief;
 	}
@@ -159,7 +168,7 @@ public class BeliefBase implements Serializable {
 	 * @return the beliefListeners
 	 */
 	public Set<BeliefListener> getBeliefListeners() {
-		return beliefListeners;
+		return new HashSet<BeliefListener>(beliefListeners);
 	}
 
 	/**
@@ -168,10 +177,7 @@ public class BeliefBase implements Serializable {
 	 * @return the beliefs
 	 */
 	public Set<Belief<?>> getBeliefs() {
-		Set<Belief<?>> beliefValues = new HashSet<Belief<?>>(beliefs.size());
-		for (Belief<?> belief : beliefs.values())
-			beliefValues.add(belief);
-		return beliefValues;
+		return new HashSet<Belief<?>>(beliefs.values());
 	}
 
 	/**
@@ -202,16 +208,11 @@ public class BeliefBase implements Serializable {
 	 */
 	public boolean hasBelief(String name) {
 		boolean hasBelief = this.beliefs.containsKey(name);
-		if (!hasBelief && capability != null && capability.getParent() != null) {
-			hasBelief = capability.getParent().getBeliefBase().hasBelief(name);
+		if (!hasBelief && capability.getWholeCapability() != null) {
+			hasBelief = capability.getWholeCapability().getBeliefBase()
+					.hasBelief(name);
 		}
 		return hasBelief;
-	}
-
-	/**
-	 * Initialize the belief base, adding initial beliefs.
-	 */
-	protected void init() {
 	}
 
 	/**
@@ -225,10 +226,8 @@ public class BeliefBase implements Serializable {
 		for (BeliefListener beliefListener : beliefListeners) {
 			beliefListener.update(beliefChanged);
 		}
-		if (capability != null) {
-			for (Capability child : capability.getChildren()) {
-				child.getBeliefBase().notifyBeliefChanged(beliefChanged);
-			}
+		for (Capability child : capability.getPartCapabilities()) {
+			child.getBeliefBase().notifyBeliefChanged(beliefChanged);
 		}
 	}
 
@@ -246,8 +245,8 @@ public class BeliefBase implements Serializable {
 			belief.removeBeliefBase(this);
 			notifyBeliefChanged(new BeliefEvent(belief, Action.BELIEF_REMOVED));
 		} else {
-			if (capability != null && capability.getParent() != null) {
-				belief = capability.getParent().getBeliefBase()
+			if (capability.getWholeCapability() != null) {
+				belief = capability.getWholeCapability().getBeliefBase()
 						.removeBelief(name);
 			}
 		}
@@ -262,31 +261,6 @@ public class BeliefBase implements Serializable {
 	 */
 	public void removeBeliefListener(BeliefListener beliefListener) {
 		this.beliefListeners.remove(beliefListener);
-	}
-
-	/**
-	 * This method is an empty place holder for subclasses. It may be invoked to
-	 * review beliefs from this belief base.
-	 */
-	public void reviewBeliefs() {
-
-	}
-
-	/**
-	 * Sets the capability of this belief base. If the capability was already
-	 * set, it throws a {@link RuntimeException}. After setting the capability,
-	 * the {@link #init()} method is invoked.
-	 * 
-	 * @param capability
-	 *            the capability to set
-	 */
-	public void setCapability(Capability capability) {
-		if (this.capability != null) {
-			throw new RuntimeException(
-					"BeliefBase already binded to another capability!");
-		}
-		this.capability = capability;
-		this.init();
 	}
 
 	/**
@@ -325,8 +299,8 @@ public class BeliefBase implements Serializable {
 		if (belief != null) {
 			belief.setValue(value);
 			return true;
-		} else if (capability != null && capability.getParent() != null) {
-			return capability.getParent().getBeliefBase()
+		} else if (capability.getWholeCapability() != null) {
+			return capability.getWholeCapability().getBeliefBase()
 					.updateBelief(name, value);
 		}
 		return false;

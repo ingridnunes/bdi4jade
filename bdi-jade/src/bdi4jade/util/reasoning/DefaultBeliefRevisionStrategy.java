@@ -48,8 +48,8 @@ public class DefaultBeliefRevisionStrategy implements BeliefRevisionStrategy {
 	}
 
 	public void reviewBeliefs(Capability capability) {
-		capability.getBeliefBase().reviewBeliefs();
-		for (Capability child : capability.getChildren()) {
+		capability.reviewBeliefs();
+		for (Capability child : capability.getPartCapabilities()) {
 			reviewBeliefs(child);
 		}
 	}

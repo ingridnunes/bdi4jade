@@ -63,7 +63,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	}
 
 	/**
-	 * @see bdi4jade.belief.BeliefSet#addValue(java.lang.Object)
+	 * @see bdi4jade.belief.AbstractBeliefSet#addSetValue(Object)
 	 */
 	@Override
 	protected void addSetValue(T value) {
@@ -71,7 +71,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	}
 
 	/**
-	 * @see bdi4jade.belief.AbstractBelief#getValue()
+	 * @see bdi4jade.belief.Belief#getValue()
 	 */
 	@Override
 	public Set<T> getValue() {
@@ -95,7 +95,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	}
 
 	/**
-	 * @see bdi4jade.belief.BeliefSet#removeValue(java.lang.Object)
+	 * @see bdi4jade.belief.AbstractBeliefSet#removeSetValue(Object)
 	 */
 	@Override
 	protected boolean removeSetValue(T value) {

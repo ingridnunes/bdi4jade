@@ -56,7 +56,7 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 			if (capability.canProcess(msg)) {
 				capabilities.add(capability);
 			}
-			for (Capability child : capability.getChildren()) {
+			for (Capability child : capability.getPartCapabilities()) {
 				getCanProcessCapabilities(msg, capabilities, child);
 			}
 		}

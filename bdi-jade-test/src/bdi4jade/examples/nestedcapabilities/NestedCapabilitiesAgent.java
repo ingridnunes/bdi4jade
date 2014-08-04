@@ -74,9 +74,9 @@ public class NestedCapabilitiesAgent extends BDIAgent {
 		addBelief(child, Belief.CHILD_BELIEF);
 		addPlan(child, ChildGoal.class, SuccessPlanBody.class);
 
-		getRootCapability().addChild(capability);
-		getRootCapability().addChild(sibling);
-		capability.addChild(child);
+		getRootCapability().addPartCapability(capability);
+		getRootCapability().addPartCapability(sibling);
+		capability.addPartCapability(child);
 
 		addGoal(new TestGoal());
 	}

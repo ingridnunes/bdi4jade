@@ -31,7 +31,9 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
+import bdi4jade.plan.Plan;
 import bdi4jade.plan.PlanLibrary;
 
 /**
@@ -46,13 +48,13 @@ public class Capability implements Serializable {
 	private static final long serialVersionUID = -4922359927943108421L;
 
 	protected final BeliefBase beliefBase;
-	protected final Set<Capability> children;
 	protected final String id;
-	private final Log log;
+	protected final Log log;
 	protected BDIAgent myAgent;
-	protected Capability parent;
+	protected final Set<Capability> partCapabilities;
 	protected final PlanLibrary planLibrary;
 	private boolean start;
+	protected Capability wholeCapability;
 
 	/**
 	 * Creates a new capability. It uses {@link BeliefBase} and
@@ -65,13 +67,15 @@ public class Capability implements Serializable {
 	/**
 	 * Creates a new capability.
 	 * 
-	 * @param beliefBase
-	 *            the belief base of this capability.
-	 * @param planLibrary
-	 *            the plan library of this capability.
+	 * @param initialBeliefs
+	 *            the initial set of beliefs to be added to the belief base of
+	 *            this capability.
+	 * @param initialPlans
+	 *            the initial set of plans to be added to the plan library of
+	 *            this capability.
 	 */
-	public Capability(BeliefBase beliefBase, PlanLibrary planLibrary) {
-		this(null, beliefBase, planLibrary);
+	public Capability(Set<Belief<?>> initialBeliefs, Set<Plan> initialPlans) {
+		this(null, initialBeliefs, initialPlans);
 	}
 
 	/**
@@ -83,22 +87,7 @@ public class Capability implements Serializable {
 	 *            be used.
 	 */
 	public Capability(String id) {
-		this(id, new BeliefBase(), new PlanLibrary());
-	}
-
-	/**
-	 * Creates a new capability.
-	 * 
-	 * @param id
-	 *            the capability id. If it is null, the class name is going to
-	 *            be used.
-	 * @param beliefBase
-	 *            the belief base of this capability.
-	 * @param planLibrary
-	 *            the plan library of this capability.
-	 */
-	public Capability(String id, BeliefBase beliefBase, PlanLibrary planLibrary) {
-		this(id, null, beliefBase, planLibrary);
+		this(id, null, null);
 	}
 
 	/**
@@ -108,11 +97,11 @@ public class Capability implements Serializable {
 	 * @param id
 	 *            the capability id. If it is null, the class name is going to
 	 *            be used.
-	 * @param parent
-	 *            the parent of this capability.
+	 * @param wholeCapability
+	 *            the whole-capability that this capability is part of.
 	 */
-	public Capability(String id, Capability parent) {
-		this(id, parent, new BeliefBase(), new PlanLibrary());
+	public Capability(String id, Capability wholeCapability) {
+		this(id, wholeCapability, null, null);
 	}
 
 	/**
@@ -121,15 +110,17 @@ public class Capability implements Serializable {
 	 * @param id
 	 *            the capability id. If it is null, the class name is going to
 	 *            be used.
-	 * @param parent
-	 *            the parent of this capability.
-	 * @param beliefBase
-	 *            the belief base of this capability.
-	 * @param planLibrary
-	 *            the plan library of this capability.
+	 * @param wholeCapability
+	 *            the whole-capability that this capability is part of.
+	 * @param initialBeliefs
+	 *            the initial set of beliefs to be added to the belief base of
+	 *            this capability.
+	 * @param initialPlans
+	 *            the initial set of plans to be added to the plan library of
+	 *            this capability.
 	 */
-	public Capability(String id, Capability parent, BeliefBase beliefBase,
-			PlanLibrary planLibrary) {
+	public Capability(String id, Capability wholeCapability,
+			Set<Belief<?>> initialBeliefs, Set<Plan> initialPlans) {
 		this.log = LogFactory.getLog(getClass());
 
 		// Id initialization
@@ -146,28 +137,44 @@ public class Capability implements Serializable {
 		}
 
 		// Setting up parent
-		this.children = new HashSet<>();
-		if (parent != null) {
-			parent.addChild(this);
+		this.partCapabilities = new HashSet<>();
+		if (wholeCapability != null) {
+			wholeCapability.addPartCapability(this);
 		}
 
 		// Initializing belief base
-		beliefBase.setCapability(this);
-		this.beliefBase = beliefBase;
+		this.beliefBase = new BeliefBase(this, initialBeliefs);
 
 		// Initializing plan library
-		planLibrary.setCapability(this);
-		this.planLibrary = planLibrary;
+		this.planLibrary = new PlanLibrary(this, initialPlans);
 
 		this.start = false;
 	}
 
-	public void addChild(Capability capability) {
-		if (capability.parent != null) {
-			capability.parent.removeChild(capability);
+	/**
+	 * Creates a new capability.
+	 * 
+	 * @param id
+	 *            the capability id. If it is null, the class name is going to
+	 *            be used.
+	 * @param initialBeliefs
+	 *            the initial set of beliefs to be added to the belief base of
+	 *            this capability.
+	 * @param initialPlans
+	 *            the initial set of plans to be added to the plan library of
+	 *            this capability.
+	 */
+	public Capability(String id, Set<Belief<?>> initialBeliefs,
+			Set<Plan> initialPlans) {
+		this(id, null, initialBeliefs, initialPlans);
+	}
+
+	public void addPartCapability(Capability partCapability) {
+		if (partCapability.wholeCapability != null) {
+			partCapability.wholeCapability.removePartCapability(partCapability);
 		}
-		capability.parent = this;
-		this.children.add(capability);
+		partCapability.wholeCapability = this;
+		this.partCapabilities.add(partCapability);
 	}
 
 	/**
@@ -190,13 +197,6 @@ public class Capability implements Serializable {
 	}
 
 	/**
-	 * @return the children
-	 */
-	public Set<Capability> getChildren() {
-		return new HashSet<>(children);
-	}
-
-	/**
 	 * @return the id
 	 */
 	public String getId() {
@@ -211,10 +211,10 @@ public class Capability implements Serializable {
 	}
 
 	/**
-	 * @return the parent
+	 * @return the partCapabilities
 	 */
-	public Capability getParent() {
-		return parent;
+	public Set<Capability> getPartCapabilities() {
+		return partCapabilities;
 	}
 
 	/**
@@ -224,16 +224,31 @@ public class Capability implements Serializable {
 		return planLibrary;
 	}
 
-	public boolean hasChildren() {
-		return !this.children.isEmpty();
+	/**
+	 * @return the wholeCapability
+	 */
+	public Capability getWholeCapability() {
+		return wholeCapability;
 	}
 
-	public boolean removeChild(Capability capability) {
-		boolean removed = this.children.remove(capability);
+	public boolean hasParts() {
+		return !this.partCapabilities.isEmpty();
+	}
+
+	public boolean removePartCapability(Capability partCapability) {
+		boolean removed = this.partCapabilities.remove(partCapability);
 		if (removed) {
-			capability.parent = null;
+			partCapability.wholeCapability = null;
 		}
 		return removed;
+	}
+
+	/**
+	 * This method is an empty place holder for subclasses. It may be invoked to
+	 * review beliefs from this belief base.
+	 */
+	public void reviewBeliefs() {
+
 	}
 
 	/**

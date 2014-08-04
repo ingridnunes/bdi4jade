@@ -27,10 +27,8 @@ import jade.lang.acl.MessageTemplate;
 import java.util.HashSet;
 import java.util.Set;
 
-import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Capability;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.PlanLibrary;
 import bdi4jade.plan.SimplePlan;
 
 /**
@@ -55,7 +53,7 @@ public class PingPongCapability extends Capability {
 	private String otherAgent;
 
 	public PingPongCapability(String id, String otherAgent) {
-		super(id, new BeliefBase(), new PlanLibrary(getPlans()));
+		super(id, null, getPlans());
 		this.otherAgent = otherAgent;
 	}
 

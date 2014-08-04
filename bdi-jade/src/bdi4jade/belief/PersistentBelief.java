@@ -48,7 +48,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	@Override
 	public T getValue() {
 		// XXX PersistentBelief.getValue()
-		return null;
+		throw new RuntimeException("Not implemented yet!");
 	}
 
 	/**
@@ -56,6 +56,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	 */
 	protected void updateValue(T value) {
 		// XXX PersistentBelief.setValue(T value)
+		throw new RuntimeException("Not implemented yet!");
 	}
 
 }

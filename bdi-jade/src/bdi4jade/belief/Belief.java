@@ -47,10 +47,17 @@ public interface Belief<T> extends MetadataElement, Serializable, Concept {
 	public void addBeliefBase(BeliefBase beliefBase);
 
 	/**
-	 * @return the beliefBases
+	 * Returns the belief bases with which this belief is associated.
+	 * 
+	 * @return the beliefBases.
 	 */
 	public Set<BeliefBase> getBeliefBases();
 
+	/**
+	 * Returns the name of this belief.
+	 * 
+	 * @return the string that is the belief name.
+	 */
 	public String getName();
 
 	/**
@@ -65,7 +72,7 @@ public interface Belief<T> extends MetadataElement, Serializable, Concept {
 	 * agent whose capability does not contain this belief in the belief base
 	 * does not believe in this belief anymore.
 	 * 
-	 * @param beliefBases
+	 * @param beliefBase
 	 *            the belief base to be removed.
 	 */
 	public void removeBeliefBase(BeliefBase beliefBase);

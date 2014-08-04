@@ -216,7 +216,7 @@ public class Intention {
 
 	private void getCanAchievePlans(final Set<Plan> plans, Capability capability) {
 		plans.addAll(capability.getPlanLibrary().canAchievePlans(goal));
-		for (Capability child : capability.getChildren()) {
+		for (Capability child : capability.getPartCapabilities()) {
 			getCanAchievePlans(plans, child);
 		}
 	}

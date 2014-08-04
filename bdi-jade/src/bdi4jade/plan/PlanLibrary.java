@@ -42,18 +42,18 @@ import bdi4jade.util.plan.SequentialGoalPlanBody;
  * @author ingrid
  */
 // XXX PlanLibrary - create indexes to optimize plan matches
-public class PlanLibrary implements Serializable {
+public final class PlanLibrary implements Serializable {
 
 	private static final long serialVersionUID = 3038533629659859857L;
 
-	private Capability capability;
+	private final Capability capability;
 	private final Set<Plan> plans;
 
 	/**
 	 * Creates a plan library.
 	 */
-	public PlanLibrary() {
-		this(null);
+	public PlanLibrary(final Capability capability) {
+		this(capability, null);
 	}
 
 	/**
@@ -63,8 +63,11 @@ public class PlanLibrary implements Serializable {
 	 * @param plans
 	 *            the initial plans
 	 */
-	public PlanLibrary(Set<Plan> plans) {
-		this.capability = null;
+	public PlanLibrary(final Capability capability, Set<Plan> plans) {
+		if (capability == null)
+			throw new NullPointerException("Capability must be not null.");
+
+		this.capability = capability;
 		this.plans = new HashSet<Plan>();
 		if (plans != null) {
 			for (Plan plan : plans) {
@@ -72,7 +75,6 @@ public class PlanLibrary implements Serializable {
 			}
 		}
 		addDefaultPlans();
-		init();
 	}
 
 	/**
@@ -156,12 +158,6 @@ public class PlanLibrary implements Serializable {
 	}
 
 	/**
-	 * Initialize the plan library, adding initial plans.
-	 */
-	protected void init() {
-	}
-
-	/**
 	 * Removes a plan from the plan library.
 	 * 
 	 * @param plan
@@ -174,23 +170,6 @@ public class PlanLibrary implements Serializable {
 			plan.setPlanLibrary(null);
 		}
 		return removed;
-	}
-
-	/**
-	 * Sets the capability of this plan library. If the capability was already
-	 * set, it throws a {@link RuntimeException}. After setting the capability,
-	 * the {@link #init()} method is invoked.
-	 * 
-	 * @param capability
-	 *            the capability to set
-	 */
-	public void setCapability(Capability capability) {
-		if (this.capability != null) {
-			throw new RuntimeException(
-					"PlanLibrary already binded to another capability!");
-		}
-		this.capability = capability;
-		this.init();
 	}
 
 }
