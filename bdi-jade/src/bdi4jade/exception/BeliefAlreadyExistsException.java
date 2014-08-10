@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ import bdi4jade.belief.Belief;
  * This class represents an exception that a belief that already exists in the
  * belief base is trying to be added.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class BeliefAlreadyExistsException extends RuntimeException {
 
@@ -60,5 +60,5 @@ public class BeliefAlreadyExistsException extends RuntimeException {
 	public String toString() {
 		return "Belief already exists exception: " + belief;
 	}
-	
+
 }
