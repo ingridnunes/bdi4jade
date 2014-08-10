@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -25,19 +25,20 @@ package bdi4jade.event;
 import java.util.EventListener;
 
 /**
- * This interface defined the method that a belief listener should implement. A
- * belief listener can be notified about changes in beliefs, when it subscribed
- * to a class that can notify updates.
+ * This interface defines the method that a belief listener should implement. A
+ * belief listener is notified about changes in beliefs of a belief base, when
+ * it is subscribed to the belief base.
  * 
- * @author ingridnunes
+ * @author Ingrid Nunes
  */
 public interface BeliefListener extends EventListener {
 
 	/**
-	 * Updates the listener according to a change in a belief.
+	 * Notifies the listener that a {@link BeliefEvent} occurred.
 	 * 
 	 * @param beliefEvent
+	 *            the belief event that occurred.
 	 */
-	public void update(BeliefEvent beliefEvent);
+	public void eventOccurred(BeliefEvent beliefEvent);
 
 }

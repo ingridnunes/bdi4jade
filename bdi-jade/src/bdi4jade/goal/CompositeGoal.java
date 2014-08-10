@@ -25,7 +25,7 @@ package bdi4jade.goal;
 import java.util.Collection;
 import java.util.List;
 
-import bdi4jade.event.GoalFinishedEvent;
+import bdi4jade.event.GoalEvent;
 
 /**
  * This class represents a goal that is a composition of other goals (subgoals).
@@ -39,7 +39,7 @@ public abstract class CompositeGoal implements Goal {
 	private static final long serialVersionUID = -8253189774672851571L;
 
 	protected List<Goal> completedGoals;
-	protected GoalFinishedEvent failedGoal;
+	protected GoalEvent failedGoal;
 	protected final Collection<Goal> goals;
 
 	/**
@@ -54,8 +54,8 @@ public abstract class CompositeGoal implements Goal {
 
 	/**
 	 * Instantiates a CompositeGoal with the provided goals array. A
-	 * {@link Collection} is instantiated by the method {@link #createGoals(int)}
-	 * and is initialized with the provided goals.
+	 * {@link Collection} is instantiated by the method
+	 * {@link #createGoals(int)} and is initialized with the provided goals.
 	 * 
 	 * @param goals
 	 *            the goals that compose this goal.
@@ -87,15 +87,15 @@ public abstract class CompositeGoal implements Goal {
 	}
 
 	/**
-	 * Returns the goal that could not be achieved, if any. If it is not
-	 * possible to achieve one of the goals, the remaining goals that were not
-	 * completed yet will not be achieved. If there are goals part of this
-	 * composite goal that are being tried to be achieved, they become no longer
-	 * desired.
+	 * Returns the goal event associated with a goal that could not be achieved,
+	 * if any. If it is not possible to achieve one of the goals, the remaining
+	 * goals that were not completed yet will not be achieved. If there are
+	 * goals part of this composite goal that are being tried to be achieved,
+	 * they become no longer desired.
 	 * 
 	 * @return the goal that failed.
 	 */
-	public GoalFinishedEvent getFailedGoal() {
+	public GoalEvent getFailedGoal() {
 		return failedGoal;
 	}
 
@@ -119,12 +119,12 @@ public abstract class CompositeGoal implements Goal {
 	}
 
 	/**
-	 * Sets the goal that failed.
+	 * Sets the goal event associated with the goal that failed.
 	 * 
 	 * @param failedGoal
 	 *            the failedGoal to set.
 	 */
-	public void setFailedGoal(GoalFinishedEvent failedGoal) {
+	public void setFailedGoal(GoalEvent failedGoal) {
 		this.failedGoal = failedGoal;
 	}
 

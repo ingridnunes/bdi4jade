@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -56,20 +56,20 @@ public class BeliefEvent implements AgentAction {
 	}
 
 	/**
-	 * Creates a Belief Changed.
+	 * Creates a belief event.
 	 * 
 	 * @param belief
-	 *            the belief that has changed.
+	 *            the belief over which the event has occurred.
 	 */
 	public BeliefEvent(Belief<?> belief) {
 		this(belief, Action.BELIEF_UPDATED);
 	}
 
 	/**
-	 * Creates a Belief Changed.
+	 * Creates a belief event.
 	 * 
 	 * @param belief
-	 *            the belief that has changed.
+	 *            the belief over which the event has occurred.
 	 * @param action
 	 *            the action performed.
 	 */
@@ -78,10 +78,10 @@ public class BeliefEvent implements AgentAction {
 	}
 
 	/**
-	 * Creates a Belief Changed.
+	 * Creates a belief event.
 	 * 
 	 * @param belief
-	 *            the belief that has changed.
+	 *            the belief over which the event has occurred.
 	 * @param action
 	 *            the action performed.
 	 * @param args
@@ -94,6 +94,8 @@ public class BeliefEvent implements AgentAction {
 	}
 
 	/**
+	 * Returns the action performed.
+	 * 
 	 * @return the action
 	 */
 	public Action getAction() {
@@ -101,6 +103,8 @@ public class BeliefEvent implements AgentAction {
 	}
 
 	/**
+	 * Returns arguments associated with the action performed.
+	 * 
 	 * @return the args
 	 */
 	public Object getArgs() {
@@ -108,6 +112,8 @@ public class BeliefEvent implements AgentAction {
 	}
 
 	/**
+	 * Returns the belief over which the event has occurred.
+	 * 
 	 * @return the belief
 	 */
 	public Belief<?> getBelief() {
@@ -115,29 +121,38 @@ public class BeliefEvent implements AgentAction {
 	}
 
 	/**
+	 * Sets the action performed.
+	 * 
 	 * @param action
-	 *            the action to set
+	 *            the action to set.
 	 */
 	public void setAction(Action action) {
 		this.action = action;
 	}
 
 	/**
+	 * Sets the arguments associated with the action performed.
+	 * 
 	 * @param args
-	 *            the args to set
+	 *            the args to set.
 	 */
 	public void setArgs(Object args) {
 		this.args = args;
 	}
 
 	/**
+	 * Sets the belief over which the event has occurred.
+	 * 
 	 * @param belief
-	 *            the belief to set
+	 *            the belief to set.
 	 */
 	public void setBelief(Belief<?> belief) {
 		this.belief = belief;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();

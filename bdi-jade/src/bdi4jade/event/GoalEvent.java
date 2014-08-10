@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -24,17 +24,19 @@ package bdi4jade.event;
 
 import jade.content.AgentAction;
 import bdi4jade.goal.Goal;
+import bdi4jade.goal.GoalStatus;
 
 /**
  * This class represents an event performed over a goal.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class GoalEvent implements AgentAction {
 
 	private static final long serialVersionUID = 8315524257754153164L;
 
 	protected Goal goal;
+	protected GoalStatus status;
 
 	/**
 	 * Default constructor.
@@ -48,24 +50,62 @@ public class GoalEvent implements AgentAction {
 	 * 
 	 * @param goal
 	 *            the goal of this event.
+	 * @param status
+	 *            the goal status.
 	 */
-	public GoalEvent(Goal goal) {
+	public GoalEvent(Goal goal, GoalStatus status) {
 		this.goal = goal;
+		this.status = status;
 	}
 
 	/**
-	 * @return the goal
+	 * Returns the goal associated with this event.
+	 * 
+	 * @return the goal associated with this event.
 	 */
 	public Goal getGoal() {
 		return goal;
 	}
 
 	/**
+	 * Returns the goal status.
+	 * 
+	 * @return the status.
+	 */
+	public GoalStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * Sets the goal associated with this event.
+	 * 
 	 * @param goal
-	 *            the goal to set
+	 *            the goal to set.
 	 */
 	public void setGoal(Goal goal) {
 		this.goal = goal;
+	}
+
+	/**
+	 * Sets the goal status.
+	 * 
+	 * @param status
+	 *            the status to set.
+	 */
+	public void setStatus(GoalStatus status) {
+		this.status = status;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getClass().getSimpleName()).append("\n");
+		sb.append("Goal: ").append(goal).append("\n");
+		sb.append("Status: ").append(status);
+		return sb.toString();
 	}
 
 }

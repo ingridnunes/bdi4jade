@@ -32,6 +32,27 @@ import bdi4jade.core.Intention;
  */
 public enum GoalStatus {
 
-	ACHIEVED, NO_LONGER_DESIRED, PLAN_FAILED, TRYING_TO_ACHIEVE, UNACHIEVABLE, WAITING;
+	ACHIEVED(true), NO_LONGER_DESIRED(true), PLAN_FAILED, TRYING_TO_ACHIEVE, UNACHIEVABLE(
+			true), WAITING;
+
+	private boolean isFinished;
+
+	private GoalStatus() {
+		this(false);
+	}
+
+	private GoalStatus(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+
+	/**
+	 * Indicates whether this status corresponds to a status in which the goal
+	 * has finished, that is, the agent does not have the goal anymore.
+	 * 
+	 * @return true if the status is a status of finished goal, false otherwise.
+	 */
+	public boolean isFinished() {
+		return isFinished;
+	}
 
 }

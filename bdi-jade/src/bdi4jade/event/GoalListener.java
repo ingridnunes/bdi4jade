@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -25,19 +25,19 @@ package bdi4jade.event;
 import java.util.EventListener;
 
 /**
- * This interface defined the method that a goal listener should implement. A
- * goal listener can be notified about changes in goal, when it subscribed to a
- * class that can notify updates.
+ * This interface defines the method that a goal listener should implement. A
+ * goal listener can be notified about changes in goals, when it subscribed to a
+ * class that can notify events about goals.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public interface GoalListener extends EventListener {
 
 	/**
-	 * Notifies the listener that the goal was performed.
+	 * Notifies the listener that a goal that was performed.
 	 * 
 	 * @param event
-	 *            the performed goal event.
+	 *            the goal event that occurred.
 	 */
 	public void goalPerformed(GoalEvent event);
 
