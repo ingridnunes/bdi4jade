@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -26,10 +26,11 @@ import jade.content.Concept;
 import jade.content.ContentElement;
 
 /**
- * This interface defines the abstraction of a Softgoal. A class that implements
- * this class can be used in the process of goal reasoning and plan selection.
+ * This interface defines the abstraction of an agent softgoal. Softgoals are
+ * not used in the default BDI reasoning cycle, but can be used in the process
+ * of goal reasoning and plan selection, for example.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public interface Softgoal extends ContentElement, Concept {
 

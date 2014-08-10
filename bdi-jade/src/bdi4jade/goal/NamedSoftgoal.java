@@ -16,70 +16,103 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
 package bdi4jade.goal;
 
+import bdi4jade.core.MetadataElement;
+import bdi4jade.core.MetadataElementImpl;
+
 /**
- * @author ingrid
+ * This class provides a default implementation for a softgoal, representing it
+ * just with a given name.
+ * 
+ * It implements the {@link MetadataElement} interface, allowing to associate
+ * metadata with softgoals.
+ * 
+ * @author Ingrid Nunes
  * 
  */
-public class NamedSoftgoal implements Softgoal {
+public class NamedSoftgoal extends MetadataElementImpl implements Softgoal,
+		MetadataElement {
 
 	private static final long serialVersionUID = 3958189054716876043L;
 
-	private final String name;
+	private String name;
 
+	/**
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected NamedSoftgoal() {
+
+	}
+
+	/**
+	 * Initializes a softgoal with its name.
+	 * 
+	 * @param name
+	 *            the softgoal name.
+	 */
 	public NamedSoftgoal(String name) {
 		this.name = name;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns true of the object is a named softgoal and has the same name of
+	 * this named softgoal.
 	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * @param obj
+	 *            to object to be tested if it is equal to this named softgoal.
+	 * 
+	 * @see Object#equals(Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NamedSoftgoal other = (NamedSoftgoal) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+	public final boolean equals(Object obj) {
+		if (obj instanceof NamedSoftgoal) {
+			NamedSoftgoal sg = (NamedSoftgoal) obj;
+			return this.name.equals(sg.name);
+		}
+		return false;
 	}
 
 	/**
-	 * @return the name
+	 * Returns the name of this softgoal.
+	 * 
+	 * @return the name.
 	 */
 	public String getName() {
 		return name;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns the hash code of this named softgoal.
+	 * 
+	 * @return the hash code of the name of this softgoal.
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
+	public final int hashCode() {
+		return name == null ? 0 : this.name.hashCode();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Sets the name of this softgoal. Ideally, the name should be final and
+	 * initialized in the constructor. This method should be only used if
+	 * persistence frameworks are used.
+	 * 
+	 * @param name
+	 *            the name to set.
+	 */
+	protected void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Returns the string representation of this softgoal, which is its name.
 	 * 
 	 * @see java.lang.Object#toString()
 	 */

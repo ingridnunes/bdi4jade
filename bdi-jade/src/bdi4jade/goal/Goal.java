@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -24,13 +24,17 @@ package bdi4jade.goal;
 
 import jade.content.Concept;
 import jade.content.ContentElement;
+import bdi4jade.core.annotation.GoalOwner;
 
 /**
- * This interface defines the abstraction of a Goal. A class that implements
- * this class can be used as a goal from a capability and can be achieved by
- * plans.
+ * This interface defines the abstraction of an agent goal. A class that
+ * implements this class can be used as a goal from a capability and can be
+ * achieved by plans.
  * 
- * @author ingrid
+ * A class implementing this interface may be annotated with {@link GoalOwner}
+ * to specify the capability that owns this goal.
+ * 
+ * @author Ingrid Nunes
  */
 public interface Goal extends ContentElement, Concept {
 
