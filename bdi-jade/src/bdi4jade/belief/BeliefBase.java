@@ -44,7 +44,7 @@ import bdi4jade.exception.BeliefAlreadyExistsException;
  * 
  * @author Ingrid Nunes
  */
-public final class BeliefBase implements Serializable {
+public class BeliefBase implements Serializable {
 
 	private static final long serialVersionUID = -6411530721625492882L;
 
