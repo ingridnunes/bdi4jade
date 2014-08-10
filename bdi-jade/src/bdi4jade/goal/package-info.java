@@ -22,7 +22,8 @@
 
 /**
  * This package contains interfaces and classes that allows representation of
- * goals and softgoals of an agent.
+ * goals and softgoals of an agent. It also contains key goal and softgoal 
+ * implementations.
  * 
  * @author Ingrid Nunes
  *

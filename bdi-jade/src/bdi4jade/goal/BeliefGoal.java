@@ -16,37 +16,25 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.goal;
+package bdi4jade.goal;
 
 import bdi4jade.belief.BeliefBase;
-import bdi4jade.goal.Goal;
 
 /**
- * This class represents the goal of an agent believe in a certain belief, i.e.
- * the agent has a belief whose name is specified in this goal.
+ * This class represents the goal of an agent to believe in a certain belief,
+ * that is, the agent has a belief whose name is specified in this goal.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class BeliefGoal implements Goal {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
 	private String beliefName;
-
-	/**
-	 * Creates a new BeliefGoal. It considers that the belief name is string
-	 * returned from the toString() method of the beliefValue.
-	 * 
-	 * @param beliefValue
-	 *            the belief value whose toString() is the belief name.
-	 */
-	public BeliefGoal(Object beliefValue) {
-		this.beliefName = beliefValue.toString();
-	}
 
 	/**
 	 * Creates a new BeliefGoal with the provided belief name.
@@ -59,15 +47,17 @@ public class BeliefGoal implements Goal {
 	}
 
 	/**
-	 * @return the beliefName
+	 * Returns the name of the belief associated with this goal.
+	 * 
+	 * @return the belief name.
 	 */
 	public String getBeliefName() {
 		return beliefName;
 	}
 
 	/**
-	 * Checks if this goal is achieved by verifying if the provided belief base
-	 * contains the belief of this goal.
+	 * Checks whether this goal is achieved by verifying if the provided belief
+	 * base contains the belief of this goal.
 	 * 
 	 * @param beliefBase
 	 *            the belief base to be checked.
@@ -75,6 +65,20 @@ public class BeliefGoal implements Goal {
 	 */
 	public boolean isAchieved(BeliefBase beliefBase) {
 		return beliefBase.hasBelief(beliefName);
+	}
+
+	/**
+	 * Returns a string representation of this goal, in the form
+	 * "BeliefGoal: belief name".
+	 * 
+	 * @return the string representation of this belief goal.
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return new StringBuffer(getClass().getName()).append(": ")
+				.append(beliefName).toString();
 	}
 
 }

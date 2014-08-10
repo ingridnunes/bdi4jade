@@ -16,21 +16,24 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.goal;
+package bdi4jade.goal;
 
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.belief.BeliefSet;
 
 /**
  * This class represents the goal of an agent believe in a belief that contains
- * a certain value, i.e. the agent has a belief set whose name is specified in
- * this goal and it contains the specified value..
+ * a certain value, that is, the agent has a belief set whose name is specified
+ * in this goal and it contains the specified value.
  * 
- * @author ingrid
+ * @param <T>
+ *            the type of the values in the belief set.
+ * 
+ * @author Ingrid Nunes
  */
 public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
 
@@ -51,14 +54,15 @@ public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
 	}
 
 	/**
-	 * Checks if this goal is achieved by verifying if the provided belief set
-	 * contains the Value of this goal.
+	 * Checks whether this goal is achieved by verifying if the provided belief
+	 * set contains the value specified in this goal.
 	 * 
 	 * @param beliefBase
 	 *            the belief base to be checked.
-	 * @return true if the belief sey contains the value of this goal.
+	 * @return true if the belief set contains the value specified in this goal.
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public boolean isAchieved(BeliefBase beliefBase) {
 		BeliefSet<T> beliefSet = (BeliefSet<T>) beliefBase
 				.getBelief(getBeliefName());
@@ -67,6 +71,21 @@ public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
 		} else {
 			return beliefSet.hasValue(getValue());
 		}
+	}
+
+	/**
+	 * Returns a string representation of this goal, in the form
+	 * "BeliefSetValueGoal: BELIEF NAME should have BELIEF VALUE".
+	 * 
+	 * @return the string representation of this belief value goal.
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return new StringBuffer(getClass().getName()).append(": ")
+				.append(getBeliefName()).append(" should have ")
+				.append(getValue()).toString();
 	}
 
 }

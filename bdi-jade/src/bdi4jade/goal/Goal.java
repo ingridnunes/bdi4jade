@@ -24,7 +24,7 @@ package bdi4jade.goal;
 
 import jade.content.Concept;
 import jade.content.ContentElement;
-import bdi4jade.core.annotation.GoalOwner;
+import bdi4jade.annotation.GoalOwner;
 
 /**
  * This interface defines the abstraction of an agent goal. A class that

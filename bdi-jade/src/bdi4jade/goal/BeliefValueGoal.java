@@ -16,18 +16,24 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.goal;
+package bdi4jade.goal;
 
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
 
 /**
- * @author ingrid
+ * This class represents the goal of an agent to believe in a certain belief
+ * with an specific value, that is, the agent has a belief whose name and value
+ * are specified in this goal.
  * 
+ * @param <T>
+ *            the type of the belief value.
+ * 
+ * @author Ingrid Nunes
  */
 public class BeliefValueGoal<T> extends BeliefGoal {
 
@@ -36,9 +42,9 @@ public class BeliefValueGoal<T> extends BeliefGoal {
 	private T value;
 
 	/**
-	 * Creates a new BeliefSetValueGoal with the provided belief name and a
-	 * value. This value represents the one that should be part of the belief
-	 * set.
+	 * Creates a new BeliefValueGoal with the provided belief name and a value.
+	 * This value represents the value that is aimed to be associated with the
+	 * belief.
 	 * 
 	 * @param beliefName
 	 *            the belief name.
@@ -51,23 +57,26 @@ public class BeliefValueGoal<T> extends BeliefGoal {
 	}
 
 	/**
-	 * @return the value
+	 * The belief value associated with this goal.
+	 * 
+	 * @return the belief value.
 	 */
 	public T getValue() {
 		return value;
 	}
 
 	/**
-	 * Checks if this goal is achieved by verifying if the provided belief set
-	 * contains the Value of this goal.
+	 * Checks whether this goal is achieved by verifying if the provided belief
+	 * has the value specified in this goal.
 	 * 
 	 * @param beliefBase
 	 *            the belief base to be checked.
-	 * @return true if the belief sey contains the value of this goal.
+	 * @return true if the belief has the value specified in this goal, false
+	 *         otherwise.
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public boolean isAchieved(BeliefBase beliefBase) {
-		Belief<T> belief = (Belief<T>) beliefBase.getBelief(getBeliefName());
+		Belief<?> belief = (Belief<?>) beliefBase.getBelief(getBeliefName());
 		if (belief == null) {
 			return false;
 		} else {
@@ -76,11 +85,17 @@ public class BeliefValueGoal<T> extends BeliefGoal {
 	}
 
 	/**
+	 * Returns a string representation of this goal, in the form
+	 * "BeliefValueGoal: BELIEF NAME should be BELIEF VALUE".
+	 * 
+	 * @return the string representation of this belief value goal.
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Belief '" + getBeliefName() + "' has value " + value;
+		return new StringBuffer(getClass().getName()).append(": ")
+				.append(getBeliefName()).append(" should be ").append(value).toString();
 	}
 
 }

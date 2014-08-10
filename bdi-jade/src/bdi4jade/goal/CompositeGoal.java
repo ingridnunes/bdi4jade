@@ -16,24 +16,23 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.goal;
+package bdi4jade.goal;
 
 import java.util.Collection;
 import java.util.List;
 
 import bdi4jade.event.GoalFinishedEvent;
-import bdi4jade.goal.Goal;
 
 /**
  * This class represents a goal that is a composition of other goals (subgoals).
- * It has two subclasses, which indicate if the goals must be achieved in a
+ * It has two main subclasses, which indicate if the goals must be achieved in a
  * parallel or sequential way.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public abstract class CompositeGoal implements Goal {
 
@@ -44,7 +43,7 @@ public abstract class CompositeGoal implements Goal {
 	protected final Collection<Goal> goals;
 
 	/**
-	 * Instantiate a CompositeGoal with the provided goals.
+	 * Instantiates a CompositeGoal with the provided goals.
 	 * 
 	 * @param goals
 	 *            the goals that compose this goal.
@@ -54,8 +53,8 @@ public abstract class CompositeGoal implements Goal {
 	}
 
 	/**
-	 * Instantiate a CompositeGoal with the provided goals array. A
-	 * {@link Collection} is instantiated by the method {@link #createGoals()}
+	 * Instantiates a CompositeGoal with the provided goals array. A
+	 * {@link Collection} is instantiated by the method {@link #createGoals(int)}
 	 * and is initialized with the provided goals.
 	 * 
 	 * @param goals
@@ -69,7 +68,7 @@ public abstract class CompositeGoal implements Goal {
 	}
 
 	/**
-	 * Creates an instance of the collection that will hold the goals of this
+	 * Creates an instance of the collection that holds the goals of this
 	 * composite goal.
 	 * 
 	 * @param size
@@ -79,37 +78,51 @@ public abstract class CompositeGoal implements Goal {
 	protected abstract Collection<Goal> createGoals(int size);
 
 	/**
-	 * @return the completedGoals
+	 * Returns the goals of this composite goal that successfully finished.
+	 * 
+	 * @return the completedGoals the goals that were achieved.
 	 */
 	public List<Goal> getCompletedGoals() {
 		return completedGoals;
 	}
 
 	/**
-	 * @return the failedGoal
+	 * Returns the goal that could not be achieved, if any. If it is not
+	 * possible to achieve one of the goals, the remaining goals that were not
+	 * completed yet will not be achieved. If there are goals part of this
+	 * composite goal that are being tried to be achieved, they become no longer
+	 * desired.
+	 * 
+	 * @return the goal that failed.
 	 */
 	public GoalFinishedEvent getFailedGoal() {
 		return failedGoal;
 	}
 
 	/**
-	 * @return the goals
+	 * Returns the goals associated with this composite goal.
+	 * 
+	 * @return the goals.
 	 */
 	public Collection<Goal> getGoals() {
 		return goals;
 	}
 
 	/**
+	 * Sets the list of completed goals.
+	 * 
 	 * @param completedGoals
-	 *            the completedGoals to set
+	 *            the completedGoals to set.
 	 */
 	public void setCompletedGoals(List<Goal> completedGoals) {
 		this.completedGoals = completedGoals;
 	}
 
 	/**
+	 * Sets the goal that failed.
+	 * 
 	 * @param failedGoal
-	 *            the failedGoal to set
+	 *            the failedGoal to set.
 	 */
 	public void setFailedGoal(GoalFinishedEvent failedGoal) {
 		this.failedGoal = failedGoal;

@@ -16,58 +16,56 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.goal;
+package bdi4jade.goal;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import bdi4jade.goal.Goal;
+import java.util.List;
 
 /**
  * This class represents a goal that aims at achieving all goals that compose
- * this goal in a parallel way.
+ * this goal in a sequential way.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
-public class ParallelGoal extends CompositeGoal {
+public class SequentialGoal extends CompositeGoal {
 
 	private static final long serialVersionUID = -8594724445200990207L;
 
 	/**
-	 * Creates a new ParallelGoal.
+	 * Creates a new SequentialGoal.
+	 * 
+	 * @param goals
+	 *            the goals that compose this goal.
 	 * 
 	 * @see CompositeGoal#CompositeGoal(Goal[])
-	 * 
-	 * @param goals
-	 *            the goals that compose this goal.
 	 */
-	public ParallelGoal(Goal[] goals) {
+	public SequentialGoal(Goal[] goals) {
 		super(goals);
 	}
 
 	/**
-	 * Creates a new ParallelGoal.
+	 * Creates a new SequentialGoal.
+	 * 
+	 * @param goals
+	 *            the goals that compose this goal.
 	 * 
 	 * @see CompositeGoal#CompositeGoal(Collection)
-	 * 
-	 * @param goals
-	 *            the goals that compose this goal.
 	 */
-	public ParallelGoal(Set<Goal> goals) {
+	public SequentialGoal(List<Goal> goals) {
 		super(goals);
 	}
 
 	/**
-	 * @see bdi4jade.util.goal.CompositeGoal#createGoals()
+	 * @see CompositeGoal#createGoals(int)
 	 */
 	@Override
 	protected Collection<Goal> createGoals(int size) {
-		return new HashSet<Goal>(size);
+		return new ArrayList<Goal>(size);
 	}
 
 }
