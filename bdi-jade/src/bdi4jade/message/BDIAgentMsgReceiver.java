@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -40,90 +40,113 @@ import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 
 /**
- * @author ingrid
+ * This class extends the {@link MsgReceiver} behavior from the JADE platform
+ * and is responsible for receiving agent messages and creating
+ * {@link MessageGoal} so that a BDI agent can process it. Message goals are
+ * creates solely if there is an agent plan of any capability that is able to
+ * process the message.
+ * 
+ * @author Ingrid Nunes
  * 
  */
 public class BDIAgentMsgReceiver extends MsgReceiver {
 
-	public static class BDIAgentMatchExpression implements MatchExpression {
+	/**
+	 * This class implements the {@link MatchExpression} interface from JADE and
+	 * is responsible for verifying if there is at least one agent capability
+	 * with a plan that is able to process a given message.
+	 * 
+	 * @author Ingrid Nunes
+	 * 
+	 */
+	public class BDIAgentMatchExpression implements MatchExpression {
 
 		private static final long serialVersionUID = -1076583615928481034L;
 
-		private BDIAgentMsgReceiver bdiAgentMsgReceiver;
-
-		private void getCanProcessCapabilities(final ACLMessage msg,
-				final Set<Capability> capabilities, Capability capability) {
-			if (capability.canProcess(msg)) {
-				capabilities.add(capability);
+		private Set<Capability> getCanProcessCapabilities(final ACLMessage msg) {
+			Set<Capability> capabilities = new HashSet<Capability>();
+			for (Capability capability : getMyAgent().getCapabilities()) {
+				if (capability.canProcess(msg)) {
+					capabilities.add(capability);
+				}
 			}
-			for (Capability child : capability.getPartCapabilities()) {
-				getCanProcessCapabilities(msg, capabilities, child);
-			}
+			return capabilities;
 		}
 
+		/**
+		 * @see jade.lang.acl.MessageTemplate.MatchExpression#match(jade.lang.acl.ACLMessage)
+		 */
 		@Override
 		public boolean match(ACLMessage msg) {
-			Set<Capability> capabilities = new HashSet<Capability>();
-			getCanProcessCapabilities(msg, capabilities, bdiAgentMsgReceiver
-					.getMyAgent().getRootCapability());
-
+			Set<Capability> capabilities = getCanProcessCapabilities(msg);
 			if (!capabilities.isEmpty()) {
-				bdiAgentMsgReceiver.messageMatched(msg, capabilities);
+				synchronized (msgs) {
+					msgs.put(msg, capabilities);
+				}
 				return true;
 			} else {
 				return false;
 			}
 		}
 
-		public void setBdiAgentMsgReceiver(
-				BDIAgentMsgReceiver bdiAgentMsgReceiver) {
-			this.bdiAgentMsgReceiver = bdiAgentMsgReceiver;
-		}
-
 	}
 
 	public static final Object MSG_KEY = "msgs";
-
 	private static final long serialVersionUID = -4435254708782532901L;
 
 	private final Log log;
 	private final Map<ACLMessage, Set<Capability>> msgs;
 
-	public BDIAgentMsgReceiver(BDIAgent agent,
-			BDIAgentMatchExpression matchExpression) {
-		super(agent, new MessageTemplate(matchExpression), INFINITE,
-				new DataStore(), MSG_KEY);
-		matchExpression.setBdiAgentMsgReceiver(this);
+	/**
+	 * Initializes this message receiver, which is associated with a BDI agent.
+	 * 
+	 * @param agent
+	 *            the BDI agent that this behavior is associated with.
+	 */
+	public BDIAgentMsgReceiver(BDIAgent agent) {
+		super(agent, MessageTemplate.MatchAll(), INFINITE, new DataStore(),
+				MSG_KEY);
+		this.template = new MessageTemplate(new BDIAgentMatchExpression());
 		this.msgs = new HashMap<ACLMessage, Set<Capability>>();
 		this.log = LogFactory.getLog(this.getClass());
 	}
 
+	/**
+	 * Returns always false, as this behavior is responsible for message
+	 * processing while a BDI agent is alive.
+	 * 
+	 * @see jade.proto.states.MsgReceiver#done()
+	 */
 	@Override
 	public boolean done() {
 		return false;
 	}
 
-	public BDIAgent getMyAgent() {
+	private BDIAgent getMyAgent() {
 		return (BDIAgent) this.myAgent;
 	}
 
+	/**
+	 * Creates a {@link MessageGoal} for the received message, when handling the
+	 * message.
+	 * 
+	 * @see jade.proto.states.MsgReceiver#handleMessage(jade.lang.acl.ACLMessage)
+	 */
 	@Override
 	protected void handleMessage(ACLMessage msg) {
 		log.debug("Message received.");
-		Set<Capability> capabilities = msgs.get(msg);
-		if (capabilities != null) {
-			MessageGoal goal = new MessageGoal(msg);
-			log.debug("This capabilities can process the message:");
-			for (Capability capability : capabilities) {
-				log.info("* " + capability);
+		synchronized (msgs) {
+			Set<Capability> capabilities = msgs.get(msg);
+			if (capabilities != null) {
+				MessageGoal goal = new MessageGoal(msg);
+				log.debug("This capabilities can process the message:");
+				for (Capability capability : capabilities) {
+					log.debug("* " + capability);
+				}
+				getMyAgent().addGoal(goal);
+				msgs.remove(msg);
 			}
-			getMyAgent().addGoal(goal);
-			msgs.remove(msg);
 		}
-	}
-
-	public void messageMatched(ACLMessage msg, Set<Capability> capabilities) {
-		this.msgs.put(msg, capabilities);
 	}
 
 }

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -26,9 +26,9 @@ import jade.lang.acl.ACLMessage;
 import bdi4jade.goal.Goal;
 
 /**
- * This class represents the goal of processing a message.
+ * This class represents the goal of processing a message received by the agent.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class MessageGoal implements Goal {
 
@@ -37,7 +37,15 @@ public class MessageGoal implements Goal {
 	private ACLMessage message;
 
 	/**
-	 * Constructor.
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected MessageGoal() {
+
+	}
+
+	/**
+	 * Initializes a message goal with the given message.
 	 * 
 	 * @param message
 	 *            the message to be processed.
@@ -47,10 +55,38 @@ public class MessageGoal implements Goal {
 	}
 
 	/**
+	 * Returns the message associated with this message goal.
+	 * 
 	 * @return the message
 	 */
 	public ACLMessage getMessage() {
 		return message;
+	}
+
+	/**
+	 * Sets the message of this goal. Ideally, the message should be final and
+	 * initialized in the constructor. This method should be only used if
+	 * persistence frameworks are used.
+	 * 
+	 * @param message
+	 *            the message to set
+	 */
+	protected void setMessage(ACLMessage message) {
+		this.message = message;
+	}
+
+	/**
+	 * Returns a string representation of this goal, in the form
+	 * "MessageGoal: message".
+	 * 
+	 * @return the string representation of this message goal.
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return new StringBuffer(getClass().getName()).append(": ")
+				.append(message).toString();
 	}
 
 }
