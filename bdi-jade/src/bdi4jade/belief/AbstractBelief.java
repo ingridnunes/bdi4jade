@@ -157,7 +157,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	}
 
 	/**
-	 * Sets a name to this belief. Ideally, a belief name should be final and
+	 * Sets the name of this belief. Ideally, a belief name should be final and
 	 * initialized in the constructor. This method should be only used if
 	 * persistence frameworks are used.
 	 * 
