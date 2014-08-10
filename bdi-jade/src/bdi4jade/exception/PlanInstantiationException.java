@@ -22,9 +22,11 @@
 
 package bdi4jade.exception;
 
+import bdi4jade.plan.PlanBody;
+
 /**
  * This method represents an exception that occurred during the instantiation
- * process of a {@link PlanBodyInterface}.
+ * process of a {@link PlanBody}.
  * 
  * @author Ingrid Nunes
  */
