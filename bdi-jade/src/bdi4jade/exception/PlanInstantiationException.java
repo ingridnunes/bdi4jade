@@ -22,7 +22,7 @@
 
 package bdi4jade.exception;
 
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.planbody.PlanBody;
 
 /**
  * This method represents an exception that occurred during the instantiation
