@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -30,10 +30,16 @@ import java.util.Set;
 import bdi4jade.core.MetadataElement;
 
 /**
- * Represents a belief of the belief base. It has a name and a value associate
- * with it.
+ * This interface represents a belief of the belief base. It has a name and a
+ * value associate with it. It is parameterized by the type of the belief value.
  * 
- * @author ingrid
+ * It extends the {@link MetadataElement} interface, allowing to associate
+ * metadata with beliefs.
+ * 
+ * @param <T>
+ *            the type of the belief value.
+ * 
+ * @author Ingrid Nunes
  */
 public interface Belief<T> extends MetadataElement, Serializable, Concept {
 
@@ -49,7 +55,7 @@ public interface Belief<T> extends MetadataElement, Serializable, Concept {
 	/**
 	 * Returns the belief bases with which this belief is associated.
 	 * 
-	 * @return the beliefBases.
+	 * @return the belief bases.
 	 */
 	public Set<BeliefBase> getBeliefBases();
 
@@ -61,7 +67,7 @@ public interface Belief<T> extends MetadataElement, Serializable, Concept {
 	public String getName();
 
 	/**
-	 * Gets the current value of the Belief.
+	 * Gets the current value of the belief.
 	 * 
 	 * @return the belief value.
 	 */
@@ -78,7 +84,7 @@ public interface Belief<T> extends MetadataElement, Serializable, Concept {
 	public void removeBeliefBase(BeliefBase beliefBase);
 
 	/**
-	 * Sets a new value to the belief.
+	 * Sets the new value of the belief.
 	 * 
 	 * @param value
 	 *            the new value.

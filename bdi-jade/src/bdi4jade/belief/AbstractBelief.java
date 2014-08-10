@@ -16,13 +16,12 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
 package bdi4jade.belief;
 
-import java.security.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,8 +30,17 @@ import bdi4jade.event.BeliefEvent;
 import bdi4jade.event.BeliefEvent.Action;
 
 /**
- * @author ingrid
+ * This is an abstract class that implements the {@link Belief} interface. It
+ * implements some of the interface methods, leaving some implementations to the
+ * subclasses, mainly the choice of how the belief value is stored.
  * 
+ * It is class observable by belief bases ({@link BeliefBase}), allowing the
+ * observation on changes in the value of this belief.
+ * 
+ * @author Ingrid Nunes
+ * 
+ * @param <T>
+ *            the type of the belief value.
  */
 public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 		Belief<T> {
@@ -40,7 +48,15 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	private static final long serialVersionUID = 5098122115249071355L;
 
 	private final Set<BeliefBase> beliefBases;
-	protected final String name;
+	private String name;
+
+	/**
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected AbstractBelief() {
+		this.beliefBases = new HashSet<BeliefBase>();
+	}
 
 	/**
 	 * Initializes a belief with its name.
@@ -56,7 +72,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	}
 
 	/**
-	 * Initializes a belief with its name.
+	 * Initializes a belief with its name and an initial value.
 	 * 
 	 * @param name
 	 *            the belief name.
@@ -65,22 +81,24 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 */
 	public AbstractBelief(String name, T value) {
 		this(name);
-		setValue(value);
+		updateValue(value);
 	}
 
 	/**
-	 * Adds a belief base that contains this belief. The agent whose capability
-	 * contains this belief in the belief base believes in this belief.
-	 * 
-	 * @param beliefBase
-	 *            the belief base to be added.
+	 * @see Belief#addBeliefBase(BeliefBase)
 	 */
 	public void addBeliefBase(BeliefBase beliefBase) {
 		this.beliefBases.add(beliefBase);
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * Returns true of the object is a belief and has the same name of this
+	 * belief.
+	 * 
+	 * @param obj
+	 *            to object to be tested if it is equal to this belief.
+	 * 
+	 * @see Object#equals(Object)
 	 */
 	@Override
 	public final boolean equals(Object obj) {
@@ -92,31 +110,39 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	}
 
 	/**
-	 * Returns the belief bases with which this belief is associated.
-	 * 
-	 * @return the beliefBases.
+	 * @see Belief#getBeliefBases()
 	 */
 	public Set<BeliefBase> getBeliefBases() {
 		return new HashSet<BeliefBase>(beliefBases);
 	}
 
 	/**
-	 * Gets the name of the Belief.
-	 * 
-	 * @return the belief name.
+	 * @see Belief#getName()
 	 */
 	public final String getName() {
 		return name;
 	}
 
 	/**
+	 * Returns the hash code of this belief name.
+	 * 
+	 * @return the hash code of this belief.
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public final int hashCode() {
-		return this.name.hashCode();
+		return name == null ? 0 : this.name.hashCode();
 	}
 
+	/**
+	 * Notifies the belief bases with which this belief is associated that the
+	 * value of this belief has changed.
+	 * 
+	 * @param beliefEvent
+	 *            the {@link BeliefEvent} describing the change on this belief
+	 *            value
+	 */
 	protected void notifyBeliefBases(BeliefEvent beliefEvent) {
 		for (BeliefBase beliefBase : beliefBases) {
 			beliefBase.notifyBeliefChanged(beliefEvent);
@@ -124,22 +150,32 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	}
 
 	/**
-	 * Removes a belief base that does not contain this belief anymore. The
-	 * agent whose capability does not contain this belief in the belief base
-	 * does not believe in this belief anymore.
-	 * 
-	 * @param beliefBases
-	 *            the belief base to be removed.
+	 * @see Belief#removeBeliefBase(BeliefBase)
 	 */
 	public void removeBeliefBase(BeliefBase beliefBases) {
 		this.beliefBases.remove(beliefBases);
 	}
 
 	/**
-	 * Sets a new value to the belief.
+	 * Sets a name to this belief. Ideally, a belief name should be final and
+	 * initialized in the constructor. This method should be only used if
+	 * persistence frameworks are used.
+	 * 
+	 * @param name
+	 *            the name to set.
+	 */
+	protected void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Sets a new value to the belief and notifies belief bases of changes on
+	 * this belief value.
 	 * 
 	 * @param value
 	 *            the new value.
+	 * 
+	 * @see Belief#setValue(Object)
 	 */
 	public final void setValue(T value) {
 		Object oldValue = getValue();
@@ -148,6 +184,11 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	}
 
 	/**
+	 * Returns this belief as a string in the form:
+	 * "belief name = belief value".
+	 * 
+	 * @return the string representation of this belief.
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -156,6 +197,13 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 				.toString();
 	}
 
+	/**
+	 * Sets the value of this belief. It is invoked by the
+	 * {@link #setValue(Object)} method.
+	 * 
+	 * @param value
+	 *            the value to set.
+	 */
 	protected abstract void updateValue(T value);
 
 }

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -27,11 +27,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * This class extends the {@link TransientBeliefSet} and implements
- * {@link BeliefSet} and represents a transient belief set, which is not
- * persisted in a permanent memory.
+ * This class extends the {@link AbstractBeliefSet} class and implements
+ * {@link BeliefSet} interface, representing a transient belief set, which is
+ * not persisted in a permanent memory.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
+ * 
+ * @param <T>
+ *            the type of the belief set values.
  */
 public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 		BeliefSet<T> {
@@ -41,7 +44,15 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	private Set<T> value;
 
 	/**
-	 * Creates a new transient belief set with the provided name.
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected TransientBeliefSet() {
+
+	}
+
+	/**
+	 * Initializes a belief set with its name.
 	 * 
 	 * @param name
 	 *            the name of this belief set.
@@ -51,7 +62,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	}
 
 	/**
-	 * Creates a transient belief set.
+	 * Initializes a belief set with its name and an initial set of values.
 	 * 
 	 * @param name
 	 *            the name of the belief set.

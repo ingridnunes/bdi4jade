@@ -16,14 +16,18 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
 package bdi4jade.belief;
 
 /**
- * @author ingrid
+ * This class extends the {@link Belief} and represents a persistent belief,
+ * which is persisted in a permanent memory. This class has not been implemented
+ * yet.
+ * 
+ * @author Ingrid Nunes
  * 
  */
 public class PersistentBelief<T> extends AbstractBelief<T> {
@@ -43,19 +47,23 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	}
 
 	/**
+	 * Not implemented yet.
+	 * 
 	 * @see bdi4jade.belief.Belief#getValue()
 	 */
 	@Override
 	public T getValue() {
-		// XXX PersistentBelief.getValue()
+		// TODO PersistentBelief.getValue()
 		throw new RuntimeException("Not implemented yet!");
 	}
 
 	/**
+	 * Not implemented yet.
+	 * 
 	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
 	 */
 	protected void updateValue(T value) {
-		// XXX PersistentBelief.setValue(T value)
+		// TODO PersistentBelief.setValue(T value)
 		throw new RuntimeException("Not implemented yet!");
 	}
 

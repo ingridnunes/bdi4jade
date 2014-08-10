@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -29,7 +29,10 @@ import java.util.Set;
  * This interface represents a belief that has a set of values associated with
  * it.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
+ * 
+ * @param <T>
+ *            the type of the belief set values.
  */
 public interface BeliefSet<T> extends Belief<Set<T>> {
 
@@ -42,18 +45,18 @@ public interface BeliefSet<T> extends Belief<Set<T>> {
 	public void addValue(T value);
 
 	/**
-	 * Checks if this belief set has the provided value.
+	 * Checks whether this belief set has the provided value.
 	 * 
 	 * @param value
-	 *            the value to be tested.
-	 * @return true if the belief set contains this value.
+	 *            the value to be checked.
+	 * @return true if the belief set contains this value, false otherwise.
 	 */
 	public boolean hasValue(T value);
 
 	/**
 	 * Returns an iterator for this belief set.
 	 * 
-	 * @return the iterator.
+	 * @return the iterator to iterate the values of the belief set.
 	 */
 	public Iterator<T> iterator();
 
@@ -62,7 +65,7 @@ public interface BeliefSet<T> extends Belief<Set<T>> {
 	 * 
 	 * @param value
 	 *            the value to be removed.
-	 * @return true if the value was removed.
+	 * @return true if the value was removed, false otherwise.
 	 */
 	public boolean removeValue(T value);
 

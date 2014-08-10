@@ -16,17 +16,20 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
 package bdi4jade.belief;
 
 /**
- * This class extends the {@link Belief} and represents a transient belief,
- * which is not persisted in a permanent memory.
+ * This class extends the {@link AbstractBelief} class and represents a
+ * transient belief, which is not persisted in a permanent memory.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
+ * 
+ * @param <T>
+ *            the type of the belief value.
  */
 public class TransientBelief<T> extends AbstractBelief<T> {
 
@@ -35,7 +38,15 @@ public class TransientBelief<T> extends AbstractBelief<T> {
 	protected T value;
 
 	/**
-	 * Initializes a belief with its name.
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected TransientBelief() {
+
+	}
+
+	/**
+	 * Initializes a transient belief with its name.
 	 * 
 	 * @param name
 	 *            the belief name.
@@ -45,7 +56,7 @@ public class TransientBelief<T> extends AbstractBelief<T> {
 	}
 
 	/**
-	 * Initializes a belief with its name and a initial value.
+	 * Initializes a transient belief with its name and a initial value.
 	 * 
 	 * @param name
 	 *            the belief name.

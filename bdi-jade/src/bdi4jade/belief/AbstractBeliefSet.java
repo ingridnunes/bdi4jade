@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -29,8 +29,16 @@ import bdi4jade.event.BeliefEvent;
 import bdi4jade.event.BeliefEvent.Action;
 
 /**
- * @author ingrid
+ * This is an abstract class that implements the {@link BeliefSet} interface,
+ * and extends the {@link AbstractBeliefSet} class, parameterizing it with a
+ * parameterized {@link Set}. It implements some of the interface methods,
+ * leaving some implementations to the subclasses, mainly the choice of how the
+ * belief set values are stored.
  * 
+ * @author Ingrid Nunes
+ * 
+ * @param <T>
+ *            the type of the belief set values.
  */
 public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 		implements BeliefSet<T> {
@@ -38,7 +46,15 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	private static final long serialVersionUID = 8345025506647930L;
 
 	/**
-	 * Creates a new transient belief set with the provided name.
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected AbstractBeliefSet() {
+
+	}
+
+	/**
+	 * Initializes a belief set with its name.
 	 * 
 	 * @param name
 	 *            the name of this belief set.
@@ -48,7 +64,7 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	}
 
 	/**
-	 * Creates a transient belief set.
+	 * Initializes a belief set with its name and an initial set of values.
 	 * 
 	 * @param name
 	 *            the name of the belief set.
@@ -56,13 +72,27 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	 *            the initial values of this belief set.
 	 */
 	public AbstractBeliefSet(String name, Set<T> values) {
-		super(name, values);
+		super(name);
+		updateValue(new HashSet<T>(values));
 	}
 
+	/**
+	 * Adds a value of this belief set. It is invoked by the
+	 * {@link #addValue(Object)} method.
+	 * 
+	 * @param value
+	 *            the value to be added.
+	 */
 	protected abstract void addSetValue(T value);
 
 	/**
-	 * @see bdi4jade.belief.BeliefSet#addValue(java.lang.Object)
+	 * Adds a value to the belief set and notifies belief bases of the addition
+	 * of this value.
+	 * 
+	 * @param value
+	 *            the value to be added.
+	 * 
+	 * @see BeliefSet#addValue(Object)
 	 */
 	@Override
 	public final void addValue(T value) {
@@ -73,10 +103,24 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 		}
 	}
 
+	/**
+	 * Removes a value of this belief set. It is invoked by the
+	 * {@link #removeValue(Object)} method.
+	 * 
+	 * @param value
+	 *            the value to be added.
+	 * @return true if the value was removed, false otherwise.
+	 */
 	protected abstract boolean removeSetValue(T value);
 
 	/**
-	 * @see bdi4jade.belief.BeliefSet#removeValue(java.lang.Object)
+	 * Removes a value of the belief set and notifies belief bases of the
+	 * removal of this value.
+	 * 
+	 * @param value
+	 *            the value to be removed.
+	 * 
+	 * @see BeliefSet#removeValue(Object)
 	 */
 	@Override
 	public final boolean removeValue(T value) {
