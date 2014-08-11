@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -26,8 +26,8 @@ import bdi4jade.belief.TransientBelief;
 import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.PlanBody;
 import bdi4jade.plan.SimplePlan;
+import bdi4jade.plan.planbody.PlanBody;
 
 class ChildGoal implements Goal {
 	private static final long serialVersionUID = 7656633869373580240L;
@@ -58,8 +58,11 @@ public class NestedCapabilitiesAgent extends BDIAgent {
 	}
 
 	protected void init() {
-		addBelief(getRootCapability(), Belief.PARENT_BELIEF);
-		addPlan(getRootCapability(), ParentGoal.class, SuccessPlanBody.class);
+		Capability rootCapability = new Capability();
+		this.addCapability(rootCapability);
+
+		addBelief(rootCapability, Belief.PARENT_BELIEF);
+		addPlan(rootCapability, ParentGoal.class, SuccessPlanBody.class);
 
 		Capability capability = new Capability();
 		addBelief(capability, Belief.MY_BELIEF);
@@ -74,8 +77,8 @@ public class NestedCapabilitiesAgent extends BDIAgent {
 		addBelief(child, Belief.CHILD_BELIEF);
 		addPlan(child, ChildGoal.class, SuccessPlanBody.class);
 
-		getRootCapability().addPartCapability(capability);
-		getRootCapability().addPartCapability(sibling);
+		rootCapability.addPartCapability(capability);
+		rootCapability.addPartCapability(sibling);
 		capability.addPartCapability(child);
 
 		addGoal(new TestGoal());

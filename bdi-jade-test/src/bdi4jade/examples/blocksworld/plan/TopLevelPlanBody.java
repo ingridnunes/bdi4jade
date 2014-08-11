@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -28,9 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import bdi4jade.examples.blocksworld.BlocksWorldAgent;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.goal.AchieveBlocksStacked;
-import bdi4jade.plan.AbstractPlanBody;
+import bdi4jade.goal.BeliefSetValueGoal;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.util.goal.BeliefSetValueGoal;
+import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
  * @author ingrid

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -36,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
 
 import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.examples.AgentStarter;
 
@@ -92,7 +91,7 @@ public class ExperimentRunner implements GoalListener {
 
 	@Override
 	public void goalPerformed(GoalEvent event) {
-		if (event instanceof GoalFinishedEvent
+		if (event.getStatus().isFinished()
 				&& event.getGoal() instanceof TransportationGoal) {
 			if (iteration < ITERATIONS) {
 				run();

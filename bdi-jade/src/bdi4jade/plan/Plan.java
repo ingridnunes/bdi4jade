@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -26,30 +26,28 @@ import jade.lang.acl.ACLMessage;
 import bdi4jade.core.MetadataElement;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
-import bdi4jade.message.MessageGoal;
+import bdi4jade.plan.planbody.PlanBody;
 
 /**
  * This interfaces represents the plan abstraction. It defines the goals that
- * the plan can achieve, in which context, and knows which is its plan body.
+ * the plan can achieve, in which context, and it able to create an instance of
+ * plan body to be executed.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public interface Plan extends MetadataElement {
 
 	/**
-	 * This enumuration represents the possible end states of a plan execution.
+	 * This enumeration represents the possible end states of a plan execution.
 	 * 
-	 * @author ingrid
+	 * @author Ingrid Nunes
 	 */
 	public enum EndState {
 		FAILED, SUCCESSFULL;
 	}
 
 	/**
-	 * Verifies if a given goal can be achieved by this plan. When the goal is a
-	 * {@link MessageGoal}, it invokes the method
-	 * {@link Plan#canProcess(ACLMessage)}. Otherwise, it checks if the class of
-	 * this goal is contained in the goal set of this plan.
+	 * Verifies if a given goal can be achieved by this plan.
 	 * 
 	 * @param goal
 	 *            the goal to be verified.
@@ -59,18 +57,17 @@ public interface Plan extends MetadataElement {
 	public boolean canAchieve(Goal goal);
 
 	/**
-	 * Verifies if the message received matches with any of the message
-	 * templates of this plan.
+	 * Verifies if the message can be processed by this plan.
 	 * 
 	 * @param message
 	 *            the message to be checked.
-	 * @return true if this plan can process the message.
+	 * @return true if this plan can process the message, false otherwise.
 	 */
 	public boolean canProcess(ACLMessage message);
 
 	/**
-	 * Instantiate the plan body of this plan. It must implement the
-	 * {@link PlanBodyInterface} interface.
+	 * Instantiate the plan body of this plan, which is an implementation of the
+	 * {@link PlanBody} interface.
 	 * 
 	 * @return the instantiated plan body.
 	 * @throws PlanInstantiationException
@@ -79,18 +76,36 @@ public interface Plan extends MetadataElement {
 	public abstract PlanBody createPlanBody() throws PlanInstantiationException;
 
 	/**
+	 * Returns the id of this plan.
+	 * 
 	 * @return the id
 	 */
 	public String getId();
 
 	/**
-	 * @return the planLibrary
+	 * Returns the plan library with which this plan is associated.
+	 * 
+	 * @return the planLibrary.
 	 */
 	public PlanLibrary getPlanLibrary();
 
 	/**
+	 * Verifies if the current context is valid for this plan execution.
+	 * 
+	 * @param goal
+	 *            the goal to be achieved whose conditions may be tested to
+	 *            verify the applicability of this plan.
+	 * 
+	 * @return true if the plan can be executed in the current context, false
+	 *         otherwise.
+	 */
+	public boolean isContextApplicable(Goal goal);
+
+	/**
+	 * Sets the plan library with which this plan is associated.
+	 * 
 	 * @param planLibrary
-	 *            the planLibrary to set
+	 *            the planLibrary to set.
 	 */
 	public void setPlanLibrary(PlanLibrary planLibrary);
 

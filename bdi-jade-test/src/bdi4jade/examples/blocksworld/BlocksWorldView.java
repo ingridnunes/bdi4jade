@@ -131,7 +131,7 @@ public class BlocksWorldView extends JPanel implements BeliefListener {
 	}
 
 	@Override
-	public void update(BeliefEvent beliefEvent) {
+	public void eventOccurred(BeliefEvent beliefEvent) {
 		log.debug(beliefEvent);
 		if (Action.BELIEF_SET_VALUE_REMOVED.equals(beliefEvent.getAction()))
 			return;

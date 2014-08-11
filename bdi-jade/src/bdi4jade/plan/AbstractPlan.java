@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -29,74 +29,76 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bdi4jade.core.MetadataElementImpl;
-import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.message.MessageGoal;
 
 /**
- * This class represents the plan abstraction. It defines the goals that the
- * plan can achieve, in which context, and knows which is its plan body.
+ * This class represents the plan abstraction, being an abstract implementation
+ * of the {@link Plan} interface.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 
-	private final Set<Class<? extends Goal>> goals;
-	protected final String id;
-	private final Set<MessageTemplate> messageTemplates;
+	private Set<GoalTemplate> goalTemplates;
+	private String id;
+	private Set<MessageTemplate> messageTemplates;
 	private PlanLibrary planLibrary;
 
 	/**
-	 * Constructs a new Plan. It sets the plan library and plan body class of
-	 * this plan, and initializes the goals that it can achieve and message
-	 * templates of messages it can process.
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected AbstractPlan() {
+		this.goalTemplates = new HashSet<>();
+		this.messageTemplates = new HashSet<>();
+	}
+
+	/**
+	 * Creates a new plan with an identifier.
 	 * 
 	 * @param id
-	 *            plan identifier
+	 *            the plan identifier.
 	 */
 	public AbstractPlan(String id) {
 		this(id, null, null);
 	}
 
 	/**
-	 * Constructs a new Plan. It sets the plan library and plan body class of
-	 * this plan, and initializes the goals that it can achieve and messages it
-	 * can process. The goals are initialized with the provided goal class.
+	 * Creates a new plan with an identifier and a template of goals it can
+	 * achieve.
 	 * 
 	 * @param id
-	 *            plan identifier
-	 * @param goalClass
-	 *            the goal that this plan can achieve
+	 *            the plan identifier.
+	 * @param goalTemplate
+	 *            the template of goals that this plan can achieve.
 	 */
-	public AbstractPlan(String id, Class<? extends Goal> goalClass) {
-		this(id, goalClass, null);
+	public AbstractPlan(String id, GoalTemplate goalTemplate) {
+		this(id, goalTemplate, null);
 	}
 
 	/**
-	 * Constructs a new Plan. It sets the plan library and plan body class of
-	 * this plan, and initializes the goals that it can achieve and messages it
-	 * can process. The goals are initialized with the provided goal class. The
-	 * message templates is initialized with the provided template.
+	 * Creates a new plan with an identifier, a template of goals it can
+	 * achieve, and a template of messages it can process.
 	 * 
 	 * @param id
-	 *            plan identifier
-	 * @param goalClass
-	 *            the goal that this plan can achieve
+	 *            the plan identifier.
+	 * @param goalTemplate
+	 *            the template of goals that this plan can achieve.
 	 * @param messageTemplate
 	 *            the template of messages that this plan can process.
 	 */
-	public AbstractPlan(String id, Class<? extends Goal> goalClass,
+	public AbstractPlan(String id, GoalTemplate goalTemplate,
 			MessageTemplate messageTemplate) {
+		this();
 		if (id == null) {
 			throw new RuntimeException("Plan id cannot be null.");
 		}
 		this.id = id;
-		this.goals = new HashSet<Class<? extends Goal>>();
-		if (goalClass != null) {
-			this.goals.add(goalClass);
+		if (goalTemplate != null) {
+			this.goalTemplates.add(goalTemplate);
 		}
-		initGoals();
-		this.messageTemplates = new HashSet<MessageTemplate>();
+		initGoalTemplates();
 		if (messageTemplate != null) {
 			this.messageTemplates.add(messageTemplate);
 		}
@@ -104,13 +106,11 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
-	 * Constructs a new Plan. It sets the plan library and plan body class of
-	 * this plan, and initializes the goals that it can achieve and message
-	 * templates of messages it can process. The message templates is
-	 * initialized with the provided template.
+	 * Creates a new plan with an identifier and a template of messages it can
+	 * process.
 	 * 
 	 * @param id
-	 *            the plan identifier
+	 *            the plan identifier.
 	 * @param messageTemplate
 	 *            the template of messages that this plan can process.
 	 */
@@ -120,13 +120,13 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
-	 * Adds a goal class that this plan may achieve.
+	 * Adds template of goals that this plan can achieve.
 	 * 
-	 * @param goalClass
-	 *            the goal class that can be achieved by this plan.
+	 * @param goalTemplate
+	 *            the template of goals that this plan can achieve.
 	 */
-	public void addGoal(Class<? extends Goal> goalClass) {
-		this.goals.add(goalClass);
+	public void addGoalTemplate(GoalTemplate goalTemplate) {
+		this.goalTemplates.add(goalTemplate);
 	}
 
 	/**
@@ -140,33 +140,46 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
-	 * Verifies if a given goal can be achieved by this plan. When the goal is a
+	 * Verifies if a given goal can be achieved by this plan. It first checks if
+	 * the current context is applicable by invoking the
+	 * {@link #isContextApplicable(Goal)} method. If so, when the goal is a
 	 * {@link MessageGoal}, it invokes the method
-	 * {@link AbstractPlan#canProcess(ACLMessage)}. Otherwise, it checks if the
-	 * class of this goal is contained in the goal set of this plan.
+	 * {@link #canProcess(ACLMessage)}. Otherwise, it checks if the class of
+	 * this goal is in the goal set of this plan.
 	 * 
 	 * @param goal
 	 *            the goal to be verified.
 	 * @return true if the given goal can be achieved by this plan, false
 	 *         otherwise.
+	 * 
+	 * @see Plan#canAchieve(Goal)
 	 */
+	@Override
 	public boolean canAchieve(Goal goal) {
-		if (goal instanceof MessageGoal) {
-			return canProcess(((MessageGoal) goal).getMessage());
-		} else {
-			return goals.contains(goal.getClass()) ? matchesContext(goal)
-					: false;
+		if (isContextApplicable(goal)) {
+			if (goal instanceof MessageGoal) {
+				return canProcess(((MessageGoal) goal).getMessage());
+			} else {
+				for (GoalTemplate template : goalTemplates) {
+					if (template.match(goal))
+						return true;
+				}
+			}
 		}
+		return false;
 	}
 
 	/**
-	 * Verifies if the message received matches with any of the message
-	 * templates of this plan.
+	 * Verifies if the message matches with any of the message templates of this
+	 * plan.
 	 * 
 	 * @param message
 	 *            the message to be checked.
-	 * @return true if this plan can process the message.
+	 * @return true if this plan can process the message, false otherwise.
+	 * 
+	 * @see Plan#canProcess(ACLMessage)
 	 */
+	@Override
 	public boolean canProcess(ACLMessage message) {
 		for (MessageTemplate template : messageTemplates) {
 			if (template.match(message))
@@ -176,16 +189,12 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
-	 * Instantiate the plan body of this plan. It must implement the
-	 * {@link PlanBody} interface.
+	 * Returns true if the object given as parameter is a plan and has the same
+	 * id of this plan.
 	 * 
-	 * @return the instantiated plan body.
-	 * @throws PlanInstantiationException
-	 *             if an error occurred during the instantiation process.
-	 */
-	public abstract PlanBody createPlanBody() throws PlanInstantiationException;
-
-	/**
+	 * @param obj
+	 *            the object to be tested as equals to this plan.
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -196,28 +205,42 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
-	 * @return the goals
+	 * Returns the set of goal templates of the goals that can be achieved by
+	 * this plan.
+	 * 
+	 * @return the goal templates
 	 */
-	public Set<Class<? extends Goal>> getGoals() {
-		return goals;
+	public Set<GoalTemplate> getGoalTemplates() {
+		return goalTemplates;
 	}
 
 	/**
-	 * @return the id
+	 * Returns the identifier of this plan.
+	 * 
+	 * @return the id.
+	 * 
+	 * @see Plan#getId()
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * @return the messageTemplates
+	 * Returns the set of message templates of the messages that can be
+	 * processed by this plan.
+	 * 
+	 * @return the message templates
 	 */
 	public Set<MessageTemplate> getMessageTemplates() {
 		return messageTemplates;
 	}
 
 	/**
-	 * @return the planLibrary
+	 * Returns the plan library with which this plan is associated.
+	 * 
+	 * @return the planLibrary.
+	 * 
+	 * @see Plan#getPlanLibrary()
 	 */
 	public PlanLibrary getPlanLibrary() {
 		return planLibrary;
@@ -233,10 +256,10 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 
 	/**
 	 * This method is invoked in the Plan constructor. It is responsible for
-	 * initializing the goals that this plan can achieve. The method should be
-	 * overridden by subclasses.
+	 * initializing the goal templates that this plan can achieve. The method
+	 * should be overridden by subclasses.
 	 */
-	protected void initGoals() {
+	protected void initGoalTemplates() {
 
 	}
 
@@ -250,20 +273,26 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
-	 * Verifies that this plan can be executed in the current context. The
-	 * method should be overridden by subclasses.
+	 * Verifies that this plan can be executed in the current context and a
+	 * given goal. The method should be overridden by subclasses, this
+	 * implementation returns always true.
 	 * 
 	 * @param goal
-	 *            the goal to be achieved
+	 *            the goal to be achieved whose conditions may be tested to
+	 *            verify the applicability of this plan.
 	 * 
-	 * @return true if the context matches with the conditions needed for this
-	 *         plan execution.
+	 * @return true.
+	 * 
+	 * @see bdi4jade.plan.Plan#isContextApplicable(Goal)
 	 */
-	protected boolean matchesContext(Goal goal) {
+	@Override
+	public boolean isContextApplicable(Goal goal) {
 		return true;
 	}
 
 	/**
+	 * Sets the plan library with which this plan is associated.
+	 * 
 	 * @param planLibrary
 	 *            the planLibrary to set
 	 */
@@ -272,6 +301,10 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	}
 
 	/**
+	 * Returns the string representation of this plan, which is its id.
+	 * 
+	 * @return the id of the plan.
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

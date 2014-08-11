@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.plan.planbody;
 
 import jade.core.behaviours.Behaviour;
 
@@ -32,10 +32,10 @@ import java.util.List;
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.exception.ParameterException;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.util.ReflectionUtils;
 
@@ -49,7 +49,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	private static final long serialVersionUID = -6488256636028800227L;
 
 	private EndState endState;
-	private final List<GoalFinishedEvent> goalEventQueue;
+	private final List<GoalEvent> goalEventQueue;
 	private Intention intention;
 	private Plan plan;
 	private final List<Goal> subgoals;
@@ -62,7 +62,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 		this.intention = null;
 		this.endState = null;
 		this.subgoals = new ArrayList<Goal>();
-		this.goalEventQueue = new LinkedList<GoalFinishedEvent>();
+		this.goalEventQueue = new LinkedList<>();
 	}
 
 	/**
@@ -207,7 +207,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 * 
 	 * @return the goal event or null if the queue is empty.
 	 */
-	public GoalFinishedEvent getGoalEvent() {
+	public GoalEvent getGoalEvent() {
 		return getGoalEvent(true, -1);
 	}
 
@@ -220,7 +220,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 *            true if the behavior must be blocked if the queue is empty.
 	 * @return the goal event or null if the queue is empty.
 	 */
-	public GoalFinishedEvent getGoalEvent(boolean block) {
+	public GoalEvent getGoalEvent(boolean block) {
 		return getGoalEvent(block, -1);
 	}
 
@@ -237,7 +237,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 *            the maximum amount of time that the behavior must be blocked.
 	 * @return the goal event or null if the queue is empty.
 	 */
-	private GoalFinishedEvent getGoalEvent(boolean block, long ms) {
+	private GoalEvent getGoalEvent(boolean block, long ms) {
 		synchronized (goalEventQueue) {
 			if (!this.goalEventQueue.isEmpty()) {
 				return this.goalEventQueue.remove(0);
@@ -263,7 +263,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 *            the maximum amount of time that the behavior must be blocked.
 	 * @return the goal event or null if the queue is empty.
 	 */
-	public GoalFinishedEvent getGoalEvent(long ms) {
+	public GoalEvent getGoalEvent(long ms) {
 		return getGoalEvent(true, ms);
 	}
 
@@ -288,9 +288,9 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 */
 	@Override
 	public synchronized void goalPerformed(GoalEvent event) {
-		if (event instanceof GoalFinishedEvent) {
+		if (event.getStatus().isFinished()) {
 			synchronized (goalEventQueue) {
-				this.goalEventQueue.add((GoalFinishedEvent) event);
+				this.goalEventQueue.add(event);
 				restart();
 			}
 			synchronized (subgoals) {

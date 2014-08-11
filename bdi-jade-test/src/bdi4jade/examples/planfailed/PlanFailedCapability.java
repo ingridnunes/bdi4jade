@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -30,9 +30,9 @@ import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.core.Capability;
 import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.GoalTemplate;
 import bdi4jade.plan.Plan;
 import bdi4jade.plan.SimplePlan;
 
@@ -63,9 +63,12 @@ public class PlanFailedCapability extends Capability implements GoalListener {
 
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		plans.add(new SimplePlan("Plan1", MyGoal.class, MyPlan.class));
-		plans.add(new SimplePlan("Plan2", MyGoal.class, MyPlan.class));
-		plans.add(new SimplePlan("Plan3", MyGoal.class, MyPlan.class));
+		plans.add(new SimplePlan("Plan1", GoalTemplate
+				.createGoalTypeTemplate(MyGoal.class), MyPlan.class));
+		plans.add(new SimplePlan("Plan2", GoalTemplate
+				.createGoalTypeTemplate(MyGoal.class), MyPlan.class));
+		plans.add(new SimplePlan("Plan3", GoalTemplate
+				.createGoalTypeTemplate(MyGoal.class), MyPlan.class));
 		return plans;
 	}
 
@@ -77,10 +80,8 @@ public class PlanFailedCapability extends Capability implements GoalListener {
 
 	@Override
 	public void goalPerformed(GoalEvent event) {
-		if (event instanceof GoalFinishedEvent
-				&& event.getGoal() instanceof MyGoal) {
-			log.info(event.getGoal() + " Status: "
-					+ ((GoalFinishedEvent) event).getStatus());
+		if (event.getStatus().isFinished() && event.getGoal() instanceof MyGoal) {
+			log.info(event.getGoal() + " Status: " + event.getStatus());
 			counter++;
 			if (counter >= GOALS) {
 				log.info("Goal finished!! Removing capability of this agent...");

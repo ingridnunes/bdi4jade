@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -45,7 +45,6 @@ import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.message.BDIAgentMsgReceiver;
-import bdi4jade.message.BDIAgentMsgReceiver.BDIAgentMatchExpression;
 import bdi4jade.reasoning.BeliefRevisionStrategy;
 import bdi4jade.reasoning.DeliberationFunction;
 import bdi4jade.reasoning.OptionGenerationFunction;
@@ -118,16 +117,11 @@ public class BDIAgent extends Agent {
 				while (it.hasNext()) {
 					Intention intention = it.next();
 					GoalStatus status = intention.getStatus();
-					switch (status) {
-					case ACHIEVED:
-					case NO_LONGER_DESIRED:
-					case UNACHIEVABLE:
+					if (status.isFinished()) {
 						doneIntentions.add(intention);
 						it.remove();
-						break;
-					default:
+					} else {
 						goalStatus.put(intention.getGoal(), status);
-						break;
 					}
 				}
 				for (Intention intention : doneIntentions) {
@@ -193,21 +187,14 @@ public class BDIAgent extends Agent {
 	private final List<Intention> intentions;
 	private OptionGenerationFunction optionGenerationFunction;
 	private PlanSelectionStrategy planSelectionStrategy;
-	private final Capability rootCapability;
+	private final Set<Capability> capabilities;
 	private final Set<Softgoal> softgoals;
 
 	/**
 	 * Default constructor.
 	 */
 	public BDIAgent() {
-		this(new Capability());
-	}
-
-	/**
-	 * Default constructor.
-	 */
-	public BDIAgent(Capability rootCapability) {
-		this.rootCapability = rootCapability;
+		this.capabilities = new HashSet<Capability>();
 		this.intentions = new LinkedList<Intention>();
 		this.bdiInterpreter = new BDIInterpreter(this);
 		this.beliefRevisionStrategy = new DefaultBeliefRevisionStrategy();
@@ -218,19 +205,40 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Default constructor.
+	 */
+	public BDIAgent(Capability capability) {
+		this();
+		this.addCapability(capability);
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public BDIAgent(Capability[] capabilities) {
+		this();
+		for (Capability capability : capabilities) {
+			this.capabilities.add(capability);
+		}
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public BDIAgent(Collection<Capability> capabilities) {
+		this();
+		this.capabilities.addAll(capabilities);
+	}
+
+	/**
 	 * Adds a capability to this agent.
 	 * 
 	 * @param capability
 	 *            capability to be added.
 	 */
 	public void addCapability(Capability capability) {
-		synchronized (rootCapability) {
-			if (capability.getWholeCapability() != null) {
-				throw new RuntimeException(
-						"Capability already binded to another capability!");
-			}
-
-			this.rootCapability.addPartCapability(capability);
+		synchronized (capabilities) {
+			this.capabilities.add(capability);
 			capability.setMyAgent(this);
 		}
 	}
@@ -341,9 +349,11 @@ public class BDIAgent extends Agent {
 	 * @return the collection of all beliefs of this agent.
 	 */
 	public Collection<Belief<?>> getAllBeliefs() {
-		synchronized (rootCapability) {
+		synchronized (capabilities) {
 			Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
-			getAllBeliefs(beliefs, rootCapability);
+			for (Capability capability : capabilities) {
+				getAllBeliefs(beliefs, capability);
+			}
 			return beliefs;
 		}
 	}
@@ -360,9 +370,11 @@ public class BDIAgent extends Agent {
 	 * @return the capabilities
 	 */
 	public List<Capability> getAllCapabilities() {
-		synchronized (rootCapability) {
+		synchronized (capabilities) {
 			List<Capability> capabilities = new ArrayList<>();
-			getAllCapabilities(capabilities, rootCapability);
+			for (Capability capability : capabilities) {
+				getAllCapabilities(capabilities, capability);
+			}
 			return capabilities;
 		}
 	}
@@ -448,8 +460,8 @@ public class BDIAgent extends Agent {
 	 * 
 	 * @return the rootCapability
 	 */
-	public Capability getRootCapability() {
-		return rootCapability;
+	public Set<Capability> getCapabilities() {
+		return capabilities;
 	}
 
 	/**
@@ -469,9 +481,8 @@ public class BDIAgent extends Agent {
 	 * @return true if the capability exists and was removed.
 	 */
 	public boolean removeCapability(Capability capability) {
-		synchronized (rootCapability) {
-			boolean removed = this.rootCapability
-					.removePartCapability(capability);
+		synchronized (capabilities) {
+			boolean removed = this.capabilities.remove(capability);
 			if (removed) {
 				capability.setMyAgent(null);
 			}
@@ -557,8 +568,7 @@ public class BDIAgent extends Agent {
 	 */
 	@Override
 	protected final void setup() {
-		this.addBehaviour(new BDIAgentMsgReceiver(this,
-				new BDIAgentMatchExpression()));
+		this.addBehaviour(new BDIAgentMsgReceiver(this));
 		this.addBehaviour(bdiInterpreter);
 		init();
 	}
@@ -568,11 +578,10 @@ public class BDIAgent extends Agent {
 	 */
 	@Override
 	protected void takeDown() {
-		synchronized (rootCapability) {
-			Set<Capability> capabilities = rootCapability.getPartCapabilities();
-			for (Capability capability : capabilities) {
-				rootCapability.removePartCapability(capability);
-			}
+		synchronized (capabilities) {
+			Iterator<Capability> iterator = capabilities.iterator();
+			while (iterator.hasNext())
+				removeCapability(iterator.next());
 		}
 	}
 

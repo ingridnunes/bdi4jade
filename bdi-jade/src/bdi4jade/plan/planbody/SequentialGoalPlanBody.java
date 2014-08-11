@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.util.plan;
+package bdi4jade.plan.planbody;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,15 +30,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.annotation.Parameter;
-import bdi4jade.event.GoalFinishedEvent;
+import bdi4jade.event.GoalEvent;
 import bdi4jade.exception.ParameterException;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
-import bdi4jade.plan.AbstractPlanBody;
-import bdi4jade.plan.OutputPlanBody;
+import bdi4jade.goal.SequentialGoal;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.util.ReflectionUtils;
-import bdi4jade.util.goal.SequentialGoal;
 
 /**
  * This plan
@@ -52,7 +50,7 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 
 	protected List<Goal> completedGoals;
 	protected Goal currentGoal;
-	protected GoalFinishedEvent failedGoal;
+	protected GoalEvent failedGoal;
 	protected Iterator<Goal> it;
 	protected Log log;
 
@@ -89,7 +87,7 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 				log.debug("Dispatching goal: " + currentGoal);
 			}
 		} else {
-			GoalFinishedEvent goalEvent = getGoalEvent();
+			GoalEvent goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
@@ -119,7 +117,7 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	}
 
 	/**
-	 * @see bdi4jade.plan.OutputPlanBody#setGoalOutput(bdi4jade.goal.Goal)
+	 * @see bdi4jade.plan.planbody.OutputPlanBody#setGoalOutput(bdi4jade.goal.Goal)
 	 */
 	@Override
 	public void setGoalOutput(Goal goal) {
@@ -139,8 +137,8 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	 *            the goal that is going to be dispatched.
 	 * 
 	 * @throws a
-	 *             @{@link GoalParameterException} if an error occurred during
-	 *             setting up the next goal.
+	 * @{@link GoalParameterException} if an error occurred during setting up
+	 *         the next goal.
 	 */
 	protected void setNextGoal(Goal previousGoal, Goal goal)
 			throws ParameterException {

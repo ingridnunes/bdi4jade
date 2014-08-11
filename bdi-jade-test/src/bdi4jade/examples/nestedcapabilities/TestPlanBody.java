@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -25,11 +25,11 @@ package bdi4jade.examples.nestedcapabilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.event.GoalFinishedEvent;
+import bdi4jade.event.GoalEvent;
 import bdi4jade.examples.nestedcapabilities.NestedCapabilitiesAgent.Belief;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.AbstractPlanBody;
+import bdi4jade.plan.planbody.AbstractPlanBody;
 
 public class TestPlanBody extends AbstractPlanBody {
 
@@ -58,7 +58,7 @@ public class TestPlanBody extends AbstractPlanBody {
 			this.step = TestStep.MY_GOAL;
 			break;
 		case MY_GOAL:
-			GoalFinishedEvent goalEvent = getGoalEvent();
+			GoalEvent goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
@@ -139,7 +139,7 @@ public class TestPlanBody extends AbstractPlanBody {
 
 	}
 
-	private void printGoal(GoalFinishedEvent goalEvent, boolean achievedExpected) {
+	private void printGoal(GoalEvent goalEvent, boolean achievedExpected) {
 		if (GoalStatus.ACHIEVED.equals(goalEvent.getStatus())) {
 			log.debug("Goal " + goalEvent.getGoal().getClass().getSimpleName()
 					+ " completed - " + (achievedExpected ? "" : "un")

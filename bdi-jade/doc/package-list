@@ -3,14 +3,11 @@ bdi4jade.belief
 bdi4jade.core
 bdi4jade.event
 bdi4jade.exception
+bdi4jade.extension.planselection.utilitybased
 bdi4jade.goal
 bdi4jade.message
 bdi4jade.plan
-bdi4jade.preference
+bdi4jade.plan.planbody
 bdi4jade.reasoning
-bdi4jade.softgoal
 bdi4jade.util
-bdi4jade.util.agent
-bdi4jade.util.goal
-bdi4jade.util.plan
 bdi4jade.util.reasoning

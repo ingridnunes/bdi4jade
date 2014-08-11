@@ -16,30 +16,45 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.plan.planbody;
 
-import bdi4jade.goal.Goal;
+import bdi4jade.goal.BeliefGoal;
+import bdi4jade.plan.Plan.EndState;
 
 /**
- * This interface defines that a {@link PlanBodyInterface} provides output for a goal
- * that is being achieved. These outputs that are properties of the goal may be
- * set during the plan body execution, but this interface defines a method for
- * excplicit performing this taks of setting outpust.
- * 
  * @author ingrid
+ * 
  */
-public interface OutputPlanBody {
+public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 
-	/**
-	 * Sets the output parameters in the goal.
-	 * 
-	 * @param goal
-	 *            the goal whose output parameters are to be set.
-	 */
-	public void setGoalOutput(Goal goal);
+	private static final long serialVersionUID = -2512248999988800844L;
+
+	@Override
+	public final void action() {
+		if (!isGoalAchieved()) {
+			execute();
+		}
+	}
+
+	protected abstract void execute();
+
+	protected boolean isGoalAchieved() {
+		BeliefGoal goal = (BeliefGoal) getGoal();
+		if (goal.isAchieved(getBeliefBase())) {
+			setEndState(EndState.SUCCESSFULL);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onStart() {
+		if (!(getGoal() instanceof BeliefGoal))
+			throw new IllegalArgumentException("BeliefGoal expected.");
+	}
 
 }

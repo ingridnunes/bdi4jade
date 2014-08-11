@@ -16,17 +16,18 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
 package bdi4jade.examples.template;
 
+import bdi4jade.core.Capability;
 import bdi4jade.examples.template.goal.MyGoal;
 import bdi4jade.examples.template.plan.MyPlan1;
 import bdi4jade.examples.template.plan.MyPlan2;
-import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
+import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
 import bdi4jade.goal.Softgoal;
 
 /**
@@ -37,8 +38,15 @@ public class MyAgent extends UtilityBasedBDIAgent {
 
 	static final long serialVersionUID = 2712019445290687786L;
 
-	public MyAgent() {
+	private final Capability rootCapability;
 
+	public MyAgent() {
+		this.rootCapability = new Capability();
+		this.addCapability(rootCapability);
+	}
+
+	public Capability getRootCapability() {
+		return rootCapability;
 	}
 
 	protected void init() {

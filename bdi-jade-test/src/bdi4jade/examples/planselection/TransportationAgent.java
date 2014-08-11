@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -28,8 +28,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.TransientBelief;
-import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
+import bdi4jade.core.Capability;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
+import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
 
@@ -38,17 +39,24 @@ import bdi4jade.plan.Plan;
  * 
  */
 public class TransportationAgent extends UtilityBasedBDIAgent {
-	
-	static final long serialVersionUID = 2712019445290687786L;
-	
+
 	public static final String SATISFACTION = "Satisfaction";
 
-	private final Random rand;
+	static final long serialVersionUID = 2712019445290687786L;
+
 	private final Log log;
+	private final Random rand;
+	private final Capability rootCapability;
 
 	public TransportationAgent() {
 		this.log = LogFactory.getLog(this.getClass());
 		this.rand = new Random(System.currentTimeMillis());
+		this.rootCapability = new Capability();
+		this.addCapability(rootCapability);
+	}
+
+	public Capability getRootCapability() {
+		return rootCapability;
 	}
 
 	protected void init() {

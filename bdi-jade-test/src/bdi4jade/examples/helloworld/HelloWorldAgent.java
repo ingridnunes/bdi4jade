@@ -16,13 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
 package bdi4jade.examples.helloworld;
 
 import bdi4jade.core.BDIAgent;
+import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.SimplePlan;
 
@@ -31,11 +32,10 @@ public class HelloWorldAgent extends BDIAgent {
 	private static final long serialVersionUID = 2712019445290687786L;
 
 	protected void init() {
-		this.getRootCapability()
-				.getPlanLibrary()
-				.addPlan(
-						new SimplePlan(HelloWorldGoal.class,
-								HelloWorldPlan.class));
+		Capability capability = new Capability();
+		capability.getPlanLibrary().addPlan(
+				new SimplePlan(HelloWorldGoal.class, HelloWorldPlan.class));
+		this.addCapability(capability);
 
 		addGoal(new HelloWorldGoal("reader"));
 	}

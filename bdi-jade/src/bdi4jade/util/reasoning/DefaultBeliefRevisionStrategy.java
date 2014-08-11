@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -44,7 +44,9 @@ public class DefaultBeliefRevisionStrategy implements BeliefRevisionStrategy {
 	 */
 	@Override
 	public void reviewBeliefs(BDIAgent bdiAgent) {
-		reviewBeliefs(bdiAgent.getRootCapability());
+		for (Capability capability : bdiAgent.getCapabilities()) {
+			reviewBeliefs(capability);
+		}
 	}
 
 	public void reviewBeliefs(Capability capability) {

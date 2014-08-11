@@ -16,19 +16,20 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.plan.planbody;
 
 import jade.core.behaviours.Behaviour;
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Intention;
-import bdi4jade.event.GoalFinishedEvent;
+import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
 
 /**
@@ -120,7 +121,7 @@ public interface PlanBody extends GoalListener {
 	 * 
 	 * @return the goal event or null if the queue is empty.
 	 */
-	public GoalFinishedEvent getGoalEvent();
+	public GoalEvent getGoalEvent();
 
 	/**
 	 * Returns a goal event from the queue. If the queue is empty, the behavior
@@ -131,7 +132,7 @@ public interface PlanBody extends GoalListener {
 	 *            true if the behavior must be blocked if the queue is empty.
 	 * @return the goal event or null if the queue is empty.
 	 */
-	public GoalFinishedEvent getGoalEvent(boolean block);
+	public GoalEvent getGoalEvent(boolean block);
 
 	/**
 	 * Returns a goal event from the queue. If the queue is empty, the behavior
@@ -142,7 +143,7 @@ public interface PlanBody extends GoalListener {
 	 *            the maximum amount of time that the behavior must be blocked.
 	 * @return the goal event or null if the queue is empty.
 	 */
-	public GoalFinishedEvent getGoalEvent(long ms);
+	public GoalEvent getGoalEvent(long ms);
 
 	/**
 	 * Returns the {@link Plan} that is associated with this plan instance.

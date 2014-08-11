@@ -64,8 +64,8 @@ public class BlocksWorldApp implements GoalListener {
 				.createMainContainer(bootProfile);
 		try {
 			BlocksWorldAgent agent = new BlocksWorldAgent();
-			BlocksWorldView view = new BlocksWorldView(agent
-					.getRootCapability().getBeliefBase());
+			BlocksWorldView view = new BlocksWorldView(agent.getCapabilities()
+					.iterator().next().getBeliefBase());
 			createAndShowUI(view);
 
 			AgentController ac = ((AgentContainer) controller).acceptNewAgent(

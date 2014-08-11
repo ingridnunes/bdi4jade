@@ -16,19 +16,19 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
+package bdi4jade.plan.planbody;
 
 import jade.core.behaviours.FSMBehaviour;
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
+import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
 
 /**
@@ -38,7 +38,7 @@ import bdi4jade.plan.Plan.EndState;
 public class FSMPlanBody extends FSMBehaviour implements PlanBody {
 
 	private static final long serialVersionUID = -7659781172897309684L;
-	
+
 	private AbstractPlanBody abstractPlanBody;
 
 	public FSMPlanBody() {
@@ -87,15 +87,15 @@ public class FSMPlanBody extends FSMBehaviour implements PlanBody {
 		return abstractPlanBody.getGoal();
 	}
 
-	public GoalFinishedEvent getGoalEvent() {
+	public GoalEvent getGoalEvent() {
 		return abstractPlanBody.getGoalEvent();
 	}
 
-	public GoalFinishedEvent getGoalEvent(boolean block) {
+	public GoalEvent getGoalEvent(boolean block) {
 		return abstractPlanBody.getGoalEvent(block);
 	}
 
-	public GoalFinishedEvent getGoalEvent(long ms) {
+	public GoalEvent getGoalEvent(long ms) {
 		return abstractPlanBody.getGoalEvent(ms);
 	}
 

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -31,14 +31,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.PlanBody;
+import bdi4jade.plan.planbody.PlanBody;
 
 /**
  * This class represents the intention abstraction from the BDI model. It
@@ -195,7 +194,7 @@ public class Intention {
 		GoalStatus status = getStatus();
 		log.debug("Goal: " + goal.getClass().getSimpleName() + " (" + status
 				+ ") - " + goal);
-		this.fireGoalEvent(new GoalFinishedEvent(goal, status));
+		this.fireGoalEvent(new GoalEvent(goal, status));
 	}
 
 	/**
@@ -208,9 +207,13 @@ public class Intention {
 	 */
 	private Set<Plan> getCanAchievePlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		Capability capability = owner == null ? myAgent.getRootCapability()
-				: owner;
-		getCanAchievePlans(plans, capability);
+		if (owner == null) {
+			for (Capability capability : myAgent.getCapabilities()) {
+				getCanAchievePlans(plans, capability);
+			}
+		} else {
+			getCanAchievePlans(plans, owner);
+		}
 		return plans;
 	}
 

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -30,10 +30,10 @@ import java.util.Set;
 
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
-import bdi4jade.util.goal.ParallelGoal;
-import bdi4jade.util.goal.SequentialGoal;
-import bdi4jade.util.plan.ParallelGoalPlanBody;
-import bdi4jade.util.plan.SequentialGoalPlanBody;
+import bdi4jade.goal.ParallelGoal;
+import bdi4jade.goal.SequentialGoal;
+import bdi4jade.plan.planbody.ParallelGoalPlanBody;
+import bdi4jade.plan.planbody.SequentialGoalPlanBody;
 
 /**
  * This class represents the plan library of a capability. It aggregates the
@@ -41,16 +41,27 @@ import bdi4jade.util.plan.SequentialGoalPlanBody;
  * 
  * @author ingrid
  */
-// XXX PlanLibrary - create indexes to optimize plan matches
-public final class PlanLibrary implements Serializable {
+// TODO PlanLibrary - create indexes to optimize plan matches
+public class PlanLibrary implements Serializable {
 
 	private static final long serialVersionUID = 3038533629659859857L;
 
-	private final Capability capability;
+	private Capability capability;
 	private final Set<Plan> plans;
 
 	/**
-	 * Creates a plan library.
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected PlanLibrary() {
+		this.plans = new HashSet<Plan>();
+	}
+
+	/**
+	 * Creates a plan library associated with a capability.
+	 * 
+	 * @param capability
+	 *            the capability with which this plan library is associated.
 	 */
 	public PlanLibrary(final Capability capability) {
 		this(capability, null);
@@ -60,6 +71,8 @@ public final class PlanLibrary implements Serializable {
 	 * Creates a plan library base associated with a capability and adds the
 	 * plans in the provided set.
 	 * 
+	 * @param capability
+	 *            the capability with which this plan library is associated.
 	 * @param plans
 	 *            the initial plans
 	 */
@@ -79,13 +92,16 @@ public final class PlanLibrary implements Serializable {
 
 	/**
 	 * Adds a set of default plans to this library. It adds plans to achieve the
-	 * sequential and parallel goals. This method may be overriden by children
+	 * sequential and parallel goals. This method may be overridden by children
 	 * capabilities.
 	 */
 	protected void addDefaultPlans() {
-		addPlan(new SimplePlan(SequentialGoal.class,
+		addPlan(new SimplePlan(
+				GoalTemplate.createGoalTypeTemplate(SequentialGoal.class),
 				SequentialGoalPlanBody.class));
-		addPlan(new SimplePlan(ParallelGoal.class, ParallelGoalPlanBody.class));
+		addPlan(new SimplePlan(
+				GoalTemplate.createGoalTypeTemplate(ParallelGoal.class),
+				ParallelGoalPlanBody.class));
 	}
 
 	/**
@@ -95,12 +111,16 @@ public final class PlanLibrary implements Serializable {
 	 *            the plan to be added.
 	 */
 	public void addPlan(Plan plan) {
+		if (plan.getPlanLibrary() != null) {
+			plan.getPlanLibrary().removePlan(plan);
+		}
 		plan.setPlanLibrary(this);
 		this.plans.add(plan);
 	}
 
 	/**
-	 * Returns the set of plans that can achieve the given goal.
+	 * Returns the set of plans that can achieve the given goal. It checks this
+	 * plan library and the plan library of the part capabilities, recursively.
 	 * 
 	 * @param goal
 	 *            the goal to be achieved.
@@ -113,19 +133,29 @@ public final class PlanLibrary implements Serializable {
 				plans.add(plan);
 			}
 		}
+		for (Capability child : capability.getPartCapabilities()) {
+			plans.addAll(child.getPlanLibrary().canAchievePlans(goal));
+		}
 		return plans;
 	}
 
 	/**
-	 * Returns true if there is a plan that can process the given message.
+	 * Returns true if there is a plan that can process the given message. It
+	 * checks this plan library and the plan library of the part capabilities,
+	 * recursively.
 	 * 
 	 * @param message
-	 *            the message to be processed.
-	 * @return true if a plan can process the message.
+	 *            the message to be checked.
+	 * @return true if a plan can process the message, false otherwise.
 	 */
-	public boolean canProcessPlans(ACLMessage message) {
+	public boolean canHandle(ACLMessage message) {
 		for (Plan plan : this.plans) {
 			if (plan.canProcess(message)) {
+				return true;
+			}
+		}
+		for (Capability part : capability.getPartCapabilities()) {
+			if (part.getPlanLibrary().canHandle(message)) {
 				return true;
 			}
 		}
@@ -133,14 +163,18 @@ public final class PlanLibrary implements Serializable {
 	}
 
 	/**
-	 * @return the capability
+	 * Returns the capability with which this plan library is associated.
+	 * 
+	 * @return the capability.
 	 */
 	public Capability getCapability() {
 		return capability;
 	}
 
 	/**
-	 * @return the plans
+	 * Returns the set of plans that are part of this plan library.
+	 * 
+	 * @return the plans.
 	 */
 	public Set<Plan> getPlans() {
 		return plans;
@@ -162,7 +196,7 @@ public final class PlanLibrary implements Serializable {
 	 * 
 	 * @param plan
 	 *            the plan to be removed.
-	 * @return true if the plan was removed.
+	 * @return true if the plan was removed, false otherwise.
 	 */
 	public boolean removePlan(Plan plan) {
 		boolean removed = this.plans.remove(plan);

@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
 
 /**
- * This annotations allows to specify that a {@link Goal} belongs to a
+ * This annotation allows to specify that a {@link Goal} belongs to a
  * capability and, if so, whether is is internal or external. If a goal belongs to a capability, it is
  * 
  * @author ingridnunes
@@ -41,7 +41,7 @@ import bdi4jade.goal.Goal;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Owner {
+public @interface GoalOwner {
 
 	/**
 	 * This attribute indicates the {@link Capability} that owns the

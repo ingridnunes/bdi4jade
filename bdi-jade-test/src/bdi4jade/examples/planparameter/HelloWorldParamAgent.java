@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -25,8 +25,8 @@ package bdi4jade.examples.planparameter;
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.core.BDIAgent;
+import bdi4jade.core.Capability;
 import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.SimplePlan;
@@ -69,18 +69,19 @@ public class HelloWorldParamAgent extends BDIAgent implements GoalListener {
 	private static final long serialVersionUID = 2712019445290687786L;
 
 	protected void init() {
-		this.getRootCapability()
-				.getPlanLibrary()
+		Capability capability = new Capability();
+		capability.getPlanLibrary()
 				.addPlan(
 						new SimplePlan(HelloWorldParamGoal.class,
 								HelloWorldParamPlan.class));
+		addCapability(capability);
 
 		addGoal(new HelloWorldParamGoal("reader"), this);
 	}
 
 	@Override
 	public void goalPerformed(GoalEvent event) {
-		if (event instanceof GoalFinishedEvent) {
+		if (event.getStatus().isFinished()) {
 			System.out.println("Hello World Goal Finished! Time: "
 					+ event.getGoal());
 		}

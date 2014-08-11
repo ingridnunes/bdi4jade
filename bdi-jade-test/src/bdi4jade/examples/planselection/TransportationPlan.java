@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -29,6 +29,7 @@ import java.util.Map;
 
 import bdi4jade.extension.planselection.utilitybased.PlanContribution;
 import bdi4jade.goal.Softgoal;
+import bdi4jade.plan.GoalTemplate;
 import bdi4jade.plan.SimplePlan;
 
 /**
@@ -50,7 +51,9 @@ public class TransportationPlan extends SimplePlan {
 	public TransportationPlan(String id, double crashProbability,
 			double beingRobbedProbability, boolean costConstant, double cost,
 			double comfort, int minTime, int maxTime) {
-		super(id, TransportationGoal.class, TransportationPlanBody.class);
+		super(id,
+				GoalTemplate.createGoalTypeTemplate(TransportationGoal.class),
+				TransportationPlanBody.class);
 
 		this.beingRobbedProbability = beingRobbedProbability;
 		this.comfort = comfort;

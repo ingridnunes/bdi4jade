@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -32,14 +32,14 @@ import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.core.Capability;
 import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalFinishedEvent;
 import bdi4jade.event.GoalListener;
+import bdi4jade.goal.CompositeGoal;
 import bdi4jade.goal.Goal;
+import bdi4jade.goal.ParallelGoal;
+import bdi4jade.goal.SequentialGoal;
+import bdi4jade.plan.GoalTemplate;
 import bdi4jade.plan.Plan;
 import bdi4jade.plan.SimplePlan;
-import bdi4jade.util.goal.CompositeGoal;
-import bdi4jade.util.goal.ParallelGoal;
-import bdi4jade.util.goal.SequentialGoal;
 
 /**
  * @author ingrid
@@ -117,9 +117,9 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
 		SimplePlan plan = new SimplePlan(MyPlan.class);
-		plan.addGoal(MyGoal1.class);
-		plan.addGoal(MyGoal2.class);
-		plan.addGoal(MyGoal3.class);
+		plan.addGoalTemplate(GoalTemplate.createGoalTypeTemplate(MyGoal1.class));
+		plan.addGoalTemplate(GoalTemplate.createGoalTypeTemplate(MyGoal2.class));
+		plan.addGoalTemplate(GoalTemplate.createGoalTypeTemplate(MyGoal3.class));
 		plans.add(plan);
 		return plans;
 	}
@@ -133,10 +133,9 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 
 	@Override
 	public void goalPerformed(GoalEvent event) {
-		if (event instanceof GoalFinishedEvent
+		if (event.getStatus().isFinished()
 				&& event.getGoal() instanceof CompositeGoal) {
-			log.info(event.getGoal() + " Status: "
-					+ ((GoalFinishedEvent) event).getStatus());
+			log.info(event.getGoal() + " Status: " + event.getStatus());
 			log.info("Goal finished!! Removing capability of this agent...");
 			myAgent.removeCapability(this);
 
