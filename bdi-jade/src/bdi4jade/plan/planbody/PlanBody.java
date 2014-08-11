@@ -33,16 +33,23 @@ import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
 
 /**
- * This interface defines a PlanBody. Plans are executed as behaviors (
- * {@link Behaviour}), but executed in the BDI context, these behaviors should
- * also implement this interface.
+ * This interface defines a plan body, which specifies a set of steps to achieve
+ * a goal. It is part of a {@link Plan}, which in turn specifies different
+ * properties such as the goals that a plan can achieve or messages it can
+ * process. When a plan should be executed, a plan body is instantiated and run.
  * 
- * @author ingrid
+ * A plan body is a {@link GoalListener} as it may dispatch goals during its
+ * execution and be notified when it is achieved (or learn it is not possible to
+ * achieve it).
+ * 
+ * @author Ingrid Nunes
  */
 public interface PlanBody extends GoalListener {
 
 	/**
-	 * Dispatches a goal to be achieved.
+	 * Dispatches a goal to be achieved. It is added as a top level agent goal,
+	 * that is, the dispatched goal is independent of the goal that this plan
+	 * body is trying to achieve.
 	 * 
 	 * @param goal
 	 *            the goal to be dispatched.
@@ -78,7 +85,8 @@ public interface PlanBody extends GoalListener {
 	public void dispatchProtectedSubgoalAndListen(Goal subgoal);
 
 	/**
-	 * Dispatches a subgoal to be achieved.
+	 * Dispatches a subgoal to be achieved. Dispatched subgoals are goals of an
+	 * agent as long as the plan body that dispatched it is being executed.
 	 * 
 	 * @param subgoal
 	 *            the subgoal to be dispatched.
@@ -95,9 +103,10 @@ public interface PlanBody extends GoalListener {
 	public void dispatchSubgoalAndListen(Goal subgoal);
 
 	/**
-	 * Returns the belief base of the capability.
+	 * Returns the belief base of the capability associated with the plan of
+	 * this plan body.
 	 * 
-	 * @return the belief base containing the beliefs.
+	 * @return the belief base containing the capability beliefs.
 	 */
 	public BeliefBase getBeliefBase();
 
@@ -109,7 +118,7 @@ public interface PlanBody extends GoalListener {
 	public EndState getEndState();
 
 	/**
-	 * Returns the goal to be achieved by this plan instance.
+	 * Returns the goal to be achieved by this plan body.
 	 * 
 	 * @return the goal.
 	 */
@@ -178,6 +187,8 @@ public interface PlanBody extends GoalListener {
 	 * 
 	 * @return an integer code representing the termination value of the
 	 *         behaviour.
+	 * 
+	 * @see Behaviour#onEnd()
 	 */
 	public int onEnd();
 
@@ -200,14 +211,8 @@ public interface PlanBody extends GoalListener {
 	public void reset();
 
 	/**
-	 * Restarts a blocked plan body.
-	 * 
-	 * @see Behaviour#restart()
-	 */
-	public void restart();
-
-	/**
-	 * Starts the plan body, a {@link Behaviour}, associated with this plan.
+	 * Starts the execution of a plan body, a {@link Behaviour}, associated with
+	 * this plan.
 	 */
 	public void start();
 

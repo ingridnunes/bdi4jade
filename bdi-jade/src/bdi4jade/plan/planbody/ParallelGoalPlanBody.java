@@ -25,9 +25,6 @@ package bdi4jade.plan.planbody;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import bdi4jade.event.GoalEvent;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
@@ -35,8 +32,9 @@ import bdi4jade.goal.ParallelGoal;
 import bdi4jade.plan.Plan.EndState;
 
 /**
- * @author ingrid
+ * This plan body provides the set of actions to achieve a {@link ParallelGoal}.
  * 
+ * @author Ingrid Nunes
  */
 public class ParallelGoalPlanBody extends AbstractPlanBody implements
 		OutputPlanBody {
@@ -46,17 +44,14 @@ public class ParallelGoalPlanBody extends AbstractPlanBody implements
 	protected List<Goal> completedGoals;
 	protected boolean dispatched;
 	protected GoalEvent failedGoal;
-	protected Log log;
 	protected ParallelGoal parallelGoal;
 
 	/**
-	 * Created a new ParallelGoalPlan.
-	 */
-	public ParallelGoalPlanBody() {
-		this.log = LogFactory.getLog(this.getClass());
-	}
-
-	/**
+	 * This method tries to achieve all subgoals of the {@link ParallelGoal} to
+	 * be achieved in a parallel way. If one of the subgoals fail, it stops the
+	 * plan body execution, and consequently all other subgoals not achieved yet
+	 * are dropped.
+	 * 
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
 	@Override
@@ -89,7 +84,9 @@ public class ParallelGoalPlanBody extends AbstractPlanBody implements
 	}
 
 	/**
-	 * Initializes this plan.
+	 * Initializes this plan. It verifies if the goal that triggered this plan
+	 * body execution is a {@link ParallelGoal}. If not, it throws an
+	 * {@link IllegalArgumentException}.
 	 */
 	@Override
 	public void onStart() {
@@ -101,10 +98,15 @@ public class ParallelGoalPlanBody extends AbstractPlanBody implements
 	}
 
 	/**
+	 * Sets completed goals, and the failed goal, if there is one.
+	 * 
 	 * @see bdi4jade.plan.planbody.OutputPlanBody#setGoalOutput(bdi4jade.goal.Goal)
 	 */
 	@Override
 	public void setGoalOutput(Goal goal) {
+		if (!(getGoal() instanceof ParallelGoal))
+			throw new IllegalArgumentException("ParallelGoal expected.");
+
 		ParallelGoal parGoal = (ParallelGoal) goal;
 		parGoal.setCompletedGoals(completedGoals);
 		parGoal.setFailedGoal(failedGoal);

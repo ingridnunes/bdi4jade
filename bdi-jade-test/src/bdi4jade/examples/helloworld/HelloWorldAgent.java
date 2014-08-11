@@ -25,7 +25,7 @@ package bdi4jade.examples.helloworld;
 import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.SimplePlan;
+import bdi4jade.plan.DefaultPlan;
 
 public class HelloWorldAgent extends BDIAgent {
 
@@ -34,7 +34,7 @@ public class HelloWorldAgent extends BDIAgent {
 	protected void init() {
 		Capability capability = new Capability();
 		capability.getPlanLibrary().addPlan(
-				new SimplePlan(HelloWorldGoal.class, HelloWorldPlan.class));
+				new DefaultPlan(HelloWorldGoal.class, HelloWorldPlan.class));
 		this.addCapability(capability);
 
 		addGoal(new HelloWorldGoal("reader"));

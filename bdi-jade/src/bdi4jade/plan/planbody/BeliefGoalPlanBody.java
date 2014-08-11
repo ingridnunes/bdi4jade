@@ -26,13 +26,24 @@ import bdi4jade.goal.BeliefGoal;
 import bdi4jade.plan.Plan.EndState;
 
 /**
- * @author ingrid
+ * This plan body aims to achieve a {@link BeliefGoal}. It verifies when the
+ * plan begins its execution if the goal is already achieved. If so, nothing is
+ * performed, otherwise the method {@link #execute()} is invoked, as a
+ * replacement of the {@link #action()} method.
+ * 
+ * @author Ingrid Nunes
  * 
  */
 public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -2512248999988800844L;
 
+	/**
+	 * This final implementation of the action method verifies the belief goal
+	 * that triggered this plan body execution is already achieved (
+	 * {@link #isGoalAchieved()}). If not, it invokes the {@link #execute()}
+	 * method;
+	 */
 	@Override
 	public final void action() {
 		if (!isGoalAchieved()) {
@@ -40,8 +51,19 @@ public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 		}
 	}
 
+	/**
+	 * This method is a placeholder for subclasses that should implement the set
+	 * of steps needed to achieve this plan body goal.
+	 */
 	protected abstract void execute();
 
+	/**
+	 * Returns true if the goal of this plan body was achieved. If so, it sets
+	 * the end state to successful, which cases this plan body to complete its
+	 * execution.
+	 * 
+	 * @return
+	 */
 	protected boolean isGoalAchieved() {
 		BeliefGoal goal = (BeliefGoal) getGoal();
 		if (goal.isAchieved(getBeliefBase())) {
@@ -51,6 +73,11 @@ public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 		return false;
 	}
 
+	/**
+	 * Verifies if the goal that triggered this plan body execution is a
+	 * {@link BeliefGoal}. If not, it throws an {@link IllegalArgumentException}
+	 * .
+	 */
 	@Override
 	public void onStart() {
 		if (!(getGoal() instanceof BeliefGoal))

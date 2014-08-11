@@ -28,8 +28,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bdi4jade.core.Capability;
+import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid
@@ -44,8 +44,8 @@ public class PingPongCapability extends Capability {
 
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		plans.add(new SimplePlan(Ping.class, PingPlan.class));
-		plans.add(new SimplePlan(MessageTemplate.MatchContent(PING),
+		plans.add(new DefaultPlan(Ping.class, PingPlan.class));
+		plans.add(new DefaultPlan(MessageTemplate.MatchContent(PING),
 				PongPlan.class));
 		return plans;
 	}

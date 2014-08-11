@@ -32,7 +32,10 @@ import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
 
 /**
- * @author ingrid
+ * This allows a plan body to inherit from both {@link AbstractPlanBody} and
+ * {@link FSMBehaviour}.
+ * 
+ * @author Ingrid Nunes
  * 
  */
 public class FSMPlanBody extends FSMBehaviour implements PlanBody {
@@ -101,7 +104,6 @@ public class FSMPlanBody extends FSMBehaviour implements PlanBody {
 
 	public Plan getPlan() {
 		return abstractPlanBody.getPlan();
-
 	}
 
 	@Override

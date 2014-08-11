@@ -26,17 +26,19 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.MessageTemplate;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
+import bdi4jade.goal.GoalTemplate;
+import bdi4jade.goal.GoalTemplateFactory;
 import bdi4jade.plan.planbody.PlanBody;
 
 /**
  * This class represents a plan whose plan body is a class that can be
- * instantiated by invoking the {@link Class#newInstance()} method. A
- * class that has the {@link Behaviour} class as superclass is provides and it
- * is instantiates in the {@link SimplePlan#createPlanBody()} method.
+ * instantiated by invoking the {@link Class#newInstance()} method. A class that
+ * has the {@link Behaviour} class as superclass is provides and it is
+ * instantiates in the {@link DefaultPlan#createPlanBody()} method.
  * 
  * @author ingrid
  */
-public class SimplePlan extends AbstractPlan {
+public class DefaultPlan extends AbstractPlan {
 
 	protected final Class<? extends PlanBody> planBodyClass;
 
@@ -50,10 +52,10 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(Class<? extends Goal> goalClass,
+	public DefaultPlan(Class<? extends Goal> goalClass,
 			Class<? extends PlanBody> planBodyClass) {
-		super(planBodyClass.getSimpleName(), GoalTemplate
-				.createGoalTypeTemplate(goalClass));
+		super(planBodyClass.getSimpleName(), GoalTemplateFactory
+				.goalType(goalClass));
 		this.planBodyClass = planBodyClass;
 	}
 
@@ -65,7 +67,7 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(Class<? extends PlanBody> planBodyClass) {
+	public DefaultPlan(Class<? extends PlanBody> planBodyClass) {
 		super(planBodyClass.getSimpleName());
 		this.planBodyClass = planBodyClass;
 	}
@@ -83,7 +85,7 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(GoalTemplate goalTemplate,
+	public DefaultPlan(GoalTemplate goalTemplate,
 			Class<? extends PlanBody> planBodyClass) {
 		super(planBodyClass.getSimpleName(), goalTemplate);
 		this.planBodyClass = planBodyClass;
@@ -109,7 +111,7 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(GoalTemplate goalTemplate,
+	public DefaultPlan(GoalTemplate goalTemplate,
 			MessageTemplate messageTemplate,
 			Class<? extends PlanBody> planBodyClass) {
 		super(planBodyClass.getSimpleName(), goalTemplate, messageTemplate);
@@ -130,7 +132,7 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(MessageTemplate messageTemplate,
+	public DefaultPlan(MessageTemplate messageTemplate,
 			Class<? extends PlanBody> planBodyClass) {
 		super(planBodyClass.getSimpleName(), messageTemplate);
 		this.planBodyClass = planBodyClass;
@@ -151,7 +153,7 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(String id, GoalTemplate goalTemplate,
+	public DefaultPlan(String id, GoalTemplate goalTemplate,
 			Class<? extends PlanBody> planBodyClass) {
 		super(id, goalTemplate);
 		this.planBodyClass = planBodyClass;
@@ -178,7 +180,7 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(String id, GoalTemplate goalTemplate,
+	public DefaultPlan(String id, GoalTemplate goalTemplate,
 			MessageTemplate messageTemplate,
 			Class<? extends PlanBody> planBodyClass) {
 		super(id, goalTemplate, messageTemplate);
@@ -200,7 +202,7 @@ public class SimplePlan extends AbstractPlan {
 	 * @param planBodyClass
 	 *            the class of this plan body.
 	 */
-	public SimplePlan(String id, MessageTemplate messageTemplate,
+	public DefaultPlan(String id, MessageTemplate messageTemplate,
 			Class<? extends PlanBody> planBodyClass) {
 		super(id, messageTemplate);
 		this.planBodyClass = planBodyClass;

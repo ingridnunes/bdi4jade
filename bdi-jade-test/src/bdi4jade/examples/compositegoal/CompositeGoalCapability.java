@@ -35,11 +35,11 @@ import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.CompositeGoal;
 import bdi4jade.goal.Goal;
+import bdi4jade.goal.GoalTemplateFactory;
 import bdi4jade.goal.ParallelGoal;
 import bdi4jade.goal.SequentialGoal;
-import bdi4jade.plan.GoalTemplate;
+import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid
@@ -116,10 +116,10 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		SimplePlan plan = new SimplePlan(MyPlan.class);
-		plan.addGoalTemplate(GoalTemplate.createGoalTypeTemplate(MyGoal1.class));
-		plan.addGoalTemplate(GoalTemplate.createGoalTypeTemplate(MyGoal2.class));
-		plan.addGoalTemplate(GoalTemplate.createGoalTypeTemplate(MyGoal3.class));
+		DefaultPlan plan = new DefaultPlan(MyPlan.class);
+		plan.addGoalTemplate(GoalTemplateFactory.goalType(MyGoal1.class));
+		plan.addGoalTemplate(GoalTemplateFactory.goalType(MyGoal2.class));
+		plan.addGoalTemplate(GoalTemplateFactory.goalType(MyGoal3.class));
 		plans.add(plan);
 		return plans;
 	}

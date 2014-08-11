@@ -35,8 +35,8 @@ import bdi4jade.examples.blocksworld.plan.AchieveOnPlanBody;
 import bdi4jade.examples.blocksworld.plan.PerformMovePlanBody;
 import bdi4jade.examples.blocksworld.plan.TopLevelPlanBody;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.GoalTemplate;
-import bdi4jade.plan.SimplePlan;
+import bdi4jade.goal.GoalTemplateFactory;
+import bdi4jade.plan.DefaultPlan;
 
 /**
  * @author ingrid
@@ -70,15 +70,15 @@ public class BlocksWorldAgent extends BDIAgent {
 
 		// Plans
 		rootCapability.getPlanLibrary().addPlan(
-				new SimplePlan(GoalTemplate.createBeliefSetTypeGoalTemplate(
+				new DefaultPlan(GoalTemplateFactory.beliefSetTypeGoal(
 						BlocksWorldAgent.BELIEF_ON, On.class),
 						AchieveOnPlanBody.class));
 		rootCapability.getPlanLibrary().addPlan(
-				new SimplePlan(GoalTemplate.createBeliefSetTypeGoalTemplate(
+				new DefaultPlan(GoalTemplateFactory.beliefSetTypeGoal(
 						BlocksWorldAgent.BELIEF_CLEAR, Clear.class),
 						AchieveOnPlanBody.class));
 		rootCapability.getPlanLibrary().addPlan(
-				new SimplePlan(PerformMove.class, PerformMovePlanBody.class) {
+				new DefaultPlan(PerformMove.class, PerformMovePlanBody.class) {
 					@Override
 					@SuppressWarnings("unchecked")
 					public boolean isContextApplicable(Goal goal) {
@@ -96,7 +96,7 @@ public class BlocksWorldAgent extends BDIAgent {
 					}
 				});
 		rootCapability.getPlanLibrary().addPlan(
-				new SimplePlan(AchieveBlocksStacked.class,
+				new DefaultPlan(AchieveBlocksStacked.class,
 						TopLevelPlanBody.class));
 	}
 }

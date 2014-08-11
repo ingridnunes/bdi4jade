@@ -32,9 +32,9 @@ import bdi4jade.core.Capability;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.GoalTemplate;
+import bdi4jade.goal.GoalTemplateFactory;
+import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid
@@ -63,12 +63,12 @@ public class PlanFailedCapability extends Capability implements GoalListener {
 
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		plans.add(new SimplePlan("Plan1", GoalTemplate
-				.createGoalTypeTemplate(MyGoal.class), MyPlan.class));
-		plans.add(new SimplePlan("Plan2", GoalTemplate
-				.createGoalTypeTemplate(MyGoal.class), MyPlan.class));
-		plans.add(new SimplePlan("Plan3", GoalTemplate
-				.createGoalTypeTemplate(MyGoal.class), MyPlan.class));
+		plans.add(new DefaultPlan("Plan1", GoalTemplateFactory
+				.goalType(MyGoal.class), MyPlan.class));
+		plans.add(new DefaultPlan("Plan2", GoalTemplateFactory
+				.goalType(MyGoal.class), MyPlan.class));
+		plans.add(new DefaultPlan("Plan3", GoalTemplateFactory
+				.goalType(MyGoal.class), MyPlan.class));
 		return plans;
 	}
 

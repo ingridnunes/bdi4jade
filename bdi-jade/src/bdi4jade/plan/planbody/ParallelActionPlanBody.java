@@ -32,8 +32,10 @@ import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
 
 /**
- * @author ingrid
+ * This allows a plan body to inherit from both {@link AbstractPlanBody} and
+ * {@link ParallelBehaviour}.
  * 
+ * @author Ingrid Nunes
  */
 public class ParallelActionPlanBody extends ParallelBehaviour implements
 		PlanBody {
@@ -102,7 +104,6 @@ public class ParallelActionPlanBody extends ParallelBehaviour implements
 
 	public Plan getPlan() {
 		return abstractPlanBody.getPlan();
-
 	}
 
 	@Override

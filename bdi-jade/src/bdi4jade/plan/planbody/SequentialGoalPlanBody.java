@@ -26,9 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import bdi4jade.annotation.Parameter;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.exception.ParameterException;
@@ -39,7 +36,8 @@ import bdi4jade.plan.Plan.EndState;
 import bdi4jade.util.ReflectionUtils;
 
 /**
- * This plan
+ * This plan body provides the set of actions to achieve a
+ * {@link SequentialGoal}.
  * 
  * @author ingrid
  */
@@ -52,16 +50,12 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	protected Goal currentGoal;
 	protected GoalEvent failedGoal;
 	protected Iterator<Goal> it;
-	protected Log log;
 
 	/**
-	 * Created a new SequentialGoalPlan.
-	 */
-	public SequentialGoalPlanBody() {
-		this.log = LogFactory.getLog(this.getClass());
-	}
-
-	/**
+	 * This method tries to achieve all subgoals of the {@link SequentialGoal}
+	 * to be achieved sequentially. If one of the subgoals fail, it stops the
+	 * plan body execution.
+	 * 
 	 * @see jade.core.behaviours.Behaviour#action()
 	 */
 	@Override
@@ -105,10 +99,15 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	}
 
 	/**
-	 * Initializes this plan. Starts the goals iterator.
+	 * Initializes this plan. Starts the goals iterator and verifies if the goal
+	 * that triggered this plan body execution is a {@link SequentialGoal}. If
+	 * not, it throws an {@link IllegalArgumentException}.
 	 */
 	@Override
 	public void onStart() {
+		if (!(getGoal() instanceof SequentialGoal))
+			throw new IllegalArgumentException("SequentialGoal expected.");
+
 		SequentialGoal goal = (SequentialGoal) getGoal();
 		this.it = goal.getGoals().iterator();
 		this.currentGoal = null;
@@ -117,6 +116,8 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	}
 
 	/**
+	 * Sets completed goals, and the failed goal, if there is one.
+	 * 
 	 * @see bdi4jade.plan.planbody.OutputPlanBody#setGoalOutput(bdi4jade.goal.Goal)
 	 */
 	@Override

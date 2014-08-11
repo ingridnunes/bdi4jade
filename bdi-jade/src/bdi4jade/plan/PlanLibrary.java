@@ -30,6 +30,7 @@ import java.util.Set;
 
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
+import bdi4jade.goal.GoalTemplateFactory;
 import bdi4jade.goal.ParallelGoal;
 import bdi4jade.goal.SequentialGoal;
 import bdi4jade.plan.planbody.ParallelGoalPlanBody;
@@ -96,11 +97,11 @@ public class PlanLibrary implements Serializable {
 	 * capabilities.
 	 */
 	protected void addDefaultPlans() {
-		addPlan(new SimplePlan(
-				GoalTemplate.createGoalTypeTemplate(SequentialGoal.class),
+		addPlan(new DefaultPlan(
+				GoalTemplateFactory.goalType(SequentialGoal.class),
 				SequentialGoalPlanBody.class));
-		addPlan(new SimplePlan(
-				GoalTemplate.createGoalTypeTemplate(ParallelGoal.class),
+		addPlan(new DefaultPlan(
+				GoalTemplateFactory.goalType(ParallelGoal.class),
 				ParallelGoalPlanBody.class));
 	}
 

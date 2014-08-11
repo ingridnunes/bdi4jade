@@ -31,13 +31,13 @@ import bdi4jade.examples.template.MyAgentSoftgoals;
 import bdi4jade.examples.template.goal.MyGoal;
 import bdi4jade.extension.planselection.utilitybased.PlanContribution;
 import bdi4jade.goal.Softgoal;
-import bdi4jade.plan.SimplePlan;
+import bdi4jade.plan.DefaultPlan;
 
 /**
  * @author ingrid
  * 
  */
-public class MyPlan2 extends SimplePlan {
+public class MyPlan2 extends DefaultPlan {
 
 	public MyPlan2() {
 		super(MyGoal.class, MyPlan2Body.class);

@@ -29,9 +29,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
+import bdi4jade.event.GoalListener;
 import bdi4jade.exception.ParameterException;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
@@ -40,9 +44,10 @@ import bdi4jade.plan.Plan.EndState;
 import bdi4jade.util.ReflectionUtils;
 
 /**
- * This class represents a plan that has been instantiated to be executed.
+ * This class provides an almost complete implementation of the {@link PlanBody}
+ * interface. It represents a plan that has been instantiated to be executed.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 
@@ -51,13 +56,15 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	private EndState endState;
 	private final List<GoalEvent> goalEventQueue;
 	private Intention intention;
+	protected final Log log;
 	private Plan plan;
 	private final List<Goal> subgoals;
 
 	/**
-	 * Creates a new plan body instance.
+	 * Creates a new plan body.
 	 */
 	public AbstractPlanBody() {
+		this.log = LogFactory.getLog(getClass());
 		this.plan = null;
 		this.intention = null;
 		this.endState = null;
@@ -66,21 +73,14 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Dispatches a goal to be achieved.
-	 * 
-	 * @param goal
-	 *            the goal to be dispatched.
+	 * @see PlanBody#dispatchGoal(Goal)
 	 */
 	public void dispatchGoal(Goal goal) {
 		this.intention.getMyAgent().addGoal(goal);
 	}
 
 	/**
-	 * Dispatches a goal to be achieved, using the capability (or its children
-	 * capabilities) associated with the plan.
-	 * 
-	 * @param goal
-	 *            the goal to be dispatched.
+	 * @see PlanBody#dispatchProtectedGoal(Goal)
 	 */
 	public void dispatchProtectedGoal(Goal goal) {
 		this.intention.getMyAgent().addGoal(
@@ -88,11 +88,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Dispatches a subgoal to be achieved, using the capability (or its
-	 * children capabilities) associated with the plan.
-	 * 
-	 * @param subgoal
-	 *            the subgoal to be dispatched.
+	 * @see PlanBody#dispatchProtectedSubgoal(Goal)
 	 */
 	public void dispatchProtectedSubgoal(Goal subgoal) {
 		this.intention.getMyAgent().addGoal(
@@ -103,12 +99,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Dispatches a subgoal to be achieved, using the capability (or its
-	 * children capabilities) associated with the plan, and registers itself as
-	 * a listener to receive a notification of the end of execution of the goal.
-	 * 
-	 * @param subgoal
-	 *            the subgoal to be dispatched.
+	 * @see PlanBody#dispatchProtectedSubgoalAndListen(Goal)
 	 */
 	public void dispatchProtectedSubgoalAndListen(Goal subgoal) {
 		this.intention.getMyAgent().addGoal(
@@ -119,10 +110,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Dispatches a subgoal to be achieved.
-	 * 
-	 * @param subgoal
-	 *            the subgoal to be dispatched.
+	 * @see PlanBody#dispatchSubgoal(Goal)
 	 */
 	public void dispatchSubgoal(Goal subgoal) {
 		this.intention.getMyAgent().addGoal(subgoal);
@@ -132,11 +120,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Dispatches a subgoal to be achieved and registers itself as a listener to
-	 * receive a notification of the end of execution of the goal.
-	 * 
-	 * @param subgoal
-	 *            the subgoal to be dispatched.
+	 * @see PlanBody#dispatchSubgoalAndListen(Goal)
 	 */
 	public void dispatchSubgoalAndListen(Goal subgoal) {
 		this.intention.getMyAgent().addGoal(subgoal, this);
@@ -145,6 +129,15 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 		}
 	}
 
+	/**
+	 * Indicates to the JADE platform that this behavior/plan body finished its
+	 * execution. If {@link #getEndState()} returns null, it returns false, as
+	 * the plan body has not reached a final state. It returns true otherwise.
+	 * 
+	 * @return false if {@link #getEndState()} returns null, true otherwise.
+	 * 
+	 * @see jade.core.behaviours.Behaviour#done()
+	 */
 	@Override
 	public final boolean done() {
 		synchronized (plan) {
@@ -167,9 +160,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Returns the belief base of the capability.
-	 * 
-	 * @return the belief base containing the beliefs.
+	 * @see PlanBody#getBeliefBase()
 	 */
 	public BeliefBase getBeliefBase() {
 		return this.plan.getPlanLibrary().getCapability().getBeliefBase();
@@ -177,12 +168,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 
 	/**
 	 * Returns the end state of plan. A null value means that the plan is still
-	 * in execution. If the plan body has come to an end state, it invokes the
-	 * method to set the output parameters of the goal, in case the plan body
-	 * implements the {@link OutputPlanBody} interface (this is invoked only
-	 * once). If the plan body has come to an end state, it sets all of its
-	 * subgoals as no longer desired, in case they are still trying to be
-	 * achieved.
+	 * executing.
 	 * 
 	 * @return the end state of the plan.
 	 */
@@ -202,8 +188,8 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Returns a goal event from the queue. If the queue is empty, the behavior
-	 * associated with this plan instance is blocked.
+	 * Returns a goal event from the queue. If the queue is empty, the plan body
+	 * execution is blocked.
 	 * 
 	 * @return the goal event or null if the queue is empty.
 	 */
@@ -212,12 +198,11 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Returns a goal event from the queue. If the queue is empty, the behavior
-	 * associated with this plan instance is going to be blocked if the
-	 * parameter passed to this method is true.
+	 * Returns a goal event from the queue. If the queue is empty, the plan body
+	 * execution is blocked if the parameter passed to this method is true.
 	 * 
 	 * @param block
-	 *            true if the behavior must be blocked if the queue is empty.
+	 *            true if the plan body must be blocked if the queue is empty.
 	 * @return the goal event or null if the queue is empty.
 	 */
 	public GoalEvent getGoalEvent(boolean block) {
@@ -226,16 +211,18 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 
 	/**
 	 * Returns a goal event from the queue. If the block parameter is true, the
-	 * behavior associated with this plan instance is going to be blocked if the
-	 * queue is empty according to the specified milliseconds. specified
-	 * milliseconds. If the time is lower then zero, the behavior is going to be
-	 * blocked until an event happens ({@link Behaviour#block()}).
+	 * plan body execution is blocked if the queue is empty according to the
+	 * specified milliseconds. If the time is lower then zero, the plan body is
+	 * going to be blocked until an event happens.
 	 * 
 	 * @param block
 	 *            true if the behavior must be blocked if the queue is empty.
 	 * @param ms
 	 *            the maximum amount of time that the behavior must be blocked.
 	 * @return the goal event or null if the queue is empty.
+	 * 
+	 * @see Behaviour#block()
+	 * @see Behaviour#block(long)
 	 */
 	private GoalEvent getGoalEvent(boolean block, long ms) {
 		synchronized (goalEventQueue) {
@@ -255,9 +242,8 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Returns a goal event from the queue. If the queue is empty, the behavior
-	 * associated with this plan instance is going to be blocked for the
-	 * specified milliseconds.
+	 * Returns a goal event from the queue. If the queue is empty, the plan body
+	 * execution is blocked for the specified milliseconds.
 	 * 
 	 * @param ms
 	 *            the maximum amount of time that the behavior must be blocked.
@@ -268,6 +254,9 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
+	 * Returns the intention associated with the goal that triggered this plan
+	 * pdy execution.
+	 * 
 	 * @return the intention
 	 */
 	Intention getIntention() {
@@ -275,7 +264,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Returns the {@link Plan} that is associated with this plan instance.
+	 * Returns the {@link Plan} that is associated with this plan body.
 	 * 
 	 * @return the plan.
 	 */
@@ -284,7 +273,12 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * @see bdi4jade.event.GoalListener#goalPerformed(bdi4jade.event.GoalEvent)
+	 * Receives the notification that a goal event has occurred. If the event
+	 * has a finished status, it is added to the event queue, which can be
+	 * retrieved by invoking the {@link #getGoalEvent()} method, and restarts
+	 * the plan body execution.
+	 * 
+	 * @see GoalListener#goalPerformed(bdi4jade.event.GoalEvent)
 	 */
 	@Override
 	public synchronized void goalPerformed(GoalEvent event) {
@@ -329,8 +323,21 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
+	 * Sets the end state of plan. A null value means that the plan is still
+	 * executing.
+	 * 
+	 * If the plan body has come to an end state, it invokes the method to set
+	 * the output parameters of the goal, in case the plan body implements the
+	 * {@link OutputPlanBody} interface (this is invoked only once), or sets up
+	 * the goal inputs parameters based on the plan body output parameters. If
+	 * an error occurs during this setting process, a warn is shown, but no
+	 * exception is thrown.
+	 * 
+	 * If the plan body has come to an end state, it drops all subgoals, in case
+	 * they are still trying to be achieved.
+	 * 
 	 * @param endState
-	 *            the endState to set
+	 *            the endState to set.
 	 */
 	protected final void setEndState(EndState endState) {
 		synchronized (plan) {
@@ -343,7 +350,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 						ReflectionUtils.setPlanBodyOutput(this,
 								intention.getGoal());
 					} catch (ParameterException exc) {
-						// FIXME what to do
+						log.warn("Could not set all goal outputs: " + exc);
 					}
 				}
 				dropSubgoals();
@@ -352,16 +359,17 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	}
 
 	/**
-	 * Starts the plan body, a {@link Behaviour}, associated with this plan.
+	 * Starts the plan body, by adding it as to the agent as a {@link Behaviour}
+	 * .
 	 */
 	public final void start() {
 		this.intention.getMyAgent().addBehaviour(this);
 	}
 
 	/**
-	 * Stops the plan body, a {@link Behaviour}, associated with this plan. If
-	 * the body implements the {@link DisposablePlanBody}, it invokes the method
-	 * to about the plan body, so it can perform finalizations.
+	 * Stops the plan body execution. It drops all plan body subgoals. If the
+	 * body implements the {@link DisposablePlanBody}, it invokes the method to
+	 * about the plan body, so it can perform finalizations.
 	 */
 	public final void stop() {
 		dropSubgoals();

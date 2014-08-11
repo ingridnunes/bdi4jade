@@ -29,7 +29,7 @@ import bdi4jade.core.Capability;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.SimplePlan;
+import bdi4jade.plan.DefaultPlan;
 
 public class HelloWorldParamAgent extends BDIAgent implements GoalListener {
 
@@ -70,10 +70,9 @@ public class HelloWorldParamAgent extends BDIAgent implements GoalListener {
 
 	protected void init() {
 		Capability capability = new Capability();
-		capability.getPlanLibrary()
-				.addPlan(
-						new SimplePlan(HelloWorldParamGoal.class,
-								HelloWorldParamPlan.class));
+		capability.getPlanLibrary().addPlan(
+				new DefaultPlan(HelloWorldParamGoal.class,
+						HelloWorldParamPlan.class));
 		addCapability(capability);
 
 		addGoal(new HelloWorldParamGoal("reader"), this);

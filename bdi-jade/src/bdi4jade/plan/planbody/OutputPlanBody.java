@@ -25,12 +25,12 @@ package bdi4jade.plan.planbody;
 import bdi4jade.goal.Goal;
 
 /**
- * This interface defines that a {@link PlanBodyInterface} provides output for a goal
+ * This interface defines that a {@link PlanBody} provides output for a goal
  * that is being achieved. These outputs that are properties of the goal may be
  * set during the plan body execution, but this interface defines a method for
- * excplicit performing this taks of setting outpust.
+ * explicit performing this task of setting outputs.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public interface OutputPlanBody {
 

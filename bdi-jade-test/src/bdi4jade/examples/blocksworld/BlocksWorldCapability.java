@@ -36,8 +36,8 @@ import bdi4jade.examples.blocksworld.plan.AchieveOnPlanBody;
 import bdi4jade.examples.blocksworld.plan.PerformMovePlanBody;
 import bdi4jade.examples.blocksworld.plan.TopLevelPlanBody;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.GoalTemplate;
-import bdi4jade.plan.SimplePlan;
+import bdi4jade.goal.GoalTemplateFactory;
+import bdi4jade.plan.DefaultPlan;
 
 /**
  * @author ingrid
@@ -80,15 +80,14 @@ public class BlocksWorldCapability extends Capability {
 		clear.addValue(new Clear(Thing.BLOCK_4));
 		clear.addValue(new Clear(Thing.TABLE));
 
-		this.achieveOnPlan = new SimplePlan(
-				GoalTemplate.createBeliefSetTypeGoalTemplate(
+		this.achieveOnPlan = new DefaultPlan(
+				GoalTemplateFactory.beliefSetTypeGoal(
 						BlocksWorldAgent.BELIEF_ON, On.class),
 				AchieveOnPlanBody.class);
-		this.clearPlan = new SimplePlan(
-				GoalTemplate.createBeliefSetTypeGoalTemplate(
-						BlocksWorldAgent.BELIEF_CLEAR, Clear.class),
+		this.clearPlan = new DefaultPlan(GoalTemplateFactory.beliefSetTypeGoal(
+				BlocksWorldAgent.BELIEF_CLEAR, Clear.class),
 				AchieveOnPlanBody.class);
-		this.performMovePlan = new SimplePlan(PerformMove.class,
+		this.performMovePlan = new DefaultPlan(PerformMove.class,
 				PerformMovePlanBody.class) {
 			@Override
 			@SuppressWarnings("unchecked")
@@ -104,8 +103,7 @@ public class BlocksWorldCapability extends Capability {
 				return false;
 			}
 		};
-		this.achieveBlocksStackedPlan = new SimplePlan(
+		this.achieveBlocksStackedPlan = new DefaultPlan(
 				AchieveBlocksStacked.class, TopLevelPlanBody.class);
 	}
-
 }

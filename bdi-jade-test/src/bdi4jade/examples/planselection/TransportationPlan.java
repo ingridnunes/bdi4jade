@@ -28,15 +28,15 @@ import java.util.List;
 import java.util.Map;
 
 import bdi4jade.extension.planselection.utilitybased.PlanContribution;
+import bdi4jade.goal.GoalTemplateFactory;
 import bdi4jade.goal.Softgoal;
-import bdi4jade.plan.GoalTemplate;
-import bdi4jade.plan.SimplePlan;
+import bdi4jade.plan.DefaultPlan;
 
 /**
  * @author ingrid
  * 
  */
-public class TransportationPlan extends SimplePlan {
+public class TransportationPlan extends DefaultPlan {
 
 	public static final double MAX_TIME_TAKEN = 90;
 
@@ -51,8 +51,7 @@ public class TransportationPlan extends SimplePlan {
 	public TransportationPlan(String id, double crashProbability,
 			double beingRobbedProbability, boolean costConstant, double cost,
 			double comfort, int minTime, int maxTime) {
-		super(id,
-				GoalTemplate.createGoalTypeTemplate(TransportationGoal.class),
+		super(id, GoalTemplateFactory.goalType(TransportationGoal.class),
 				TransportationPlanBody.class);
 
 		this.beingRobbedProbability = beingRobbedProbability;

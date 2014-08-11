@@ -20,25 +20,16 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.plan;
-
-import bdi4jade.goal.BeliefGoal;
-import bdi4jade.goal.BeliefSetValueGoal;
-import bdi4jade.goal.BeliefValueGoal;
-import bdi4jade.goal.Goal;
+package bdi4jade.goal;
 
 /**
- * This abstract class specifies a goal template that is used to match a goal to
- * be achieved to a template of goals. This template is used to indicate the set
- * of goals that a plan is able to handle.
- * 
- * This class also provides a collection of static methods to create common goal
+ * This class provides a collection of static methods to create common goal
  * templates.
  * 
  * @author Ingrid Nunes
  * 
  */
-public abstract class GoalTemplate {
+public abstract class GoalTemplateFactory {
 
 	/**
 	 * This method creates a goal template that positively matches a goal if it
@@ -49,7 +40,7 @@ public abstract class GoalTemplate {
 	 * @return the goal template that checks if the goal is a {@link BeliefGoal}
 	 *         with the given name.
 	 */
-	public static GoalTemplate createBeliefGoalTemplate(final String beliefName) {
+	public static GoalTemplate beliefGoal(final String beliefName) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefGoal) {
@@ -74,8 +65,8 @@ public abstract class GoalTemplate {
 	 *         {@link BeliefSetValueGoal} with the given name and value of the
 	 *         given type.
 	 */
-	public static GoalTemplate createBeliefSetTypeGoalTemplate(
-			final String beliefName, final Class<?> beliefValueClass) {
+	public static GoalTemplate beliefSetTypeGoal(final String beliefName,
+			final Class<?> beliefValueClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
@@ -100,8 +91,8 @@ public abstract class GoalTemplate {
 	 * @return the goal template that checks if the goal is a
 	 *         {@link BeliefSetValueGoal} with the given name and value.
 	 */
-	public static GoalTemplate createBeliefSetValueGoalTemplate(
-			final String beliefName, final Object beliefValue) {
+	public static GoalTemplate beliefSetValueGoal(final String beliefName,
+			final Object beliefValue) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
@@ -127,8 +118,8 @@ public abstract class GoalTemplate {
 	 *         {@link BeliefValueGoal} with the given name and value of the
 	 *         given type.
 	 */
-	public static GoalTemplate createBeliefTypeGoalTemplate(
-			final String beliefName, final Class<?> beliefValueClass) {
+	public static GoalTemplate beliefTypeGoal(final String beliefName,
+			final Class<?> beliefValueClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
@@ -153,8 +144,8 @@ public abstract class GoalTemplate {
 	 * @return the goal template that checks if the goal is a
 	 *         {@link BeliefValueGoal} with the given name and value.
 	 */
-	public static GoalTemplate createBeliefValueGoalTemplate(
-			final String beliefName, final Object beliefValue) {
+	public static GoalTemplate beliefValueGoal(final String beliefName,
+			final Object beliefValue) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
@@ -175,8 +166,7 @@ public abstract class GoalTemplate {
 	 *            the goal class to be matched.
 	 * @return the goal template that checks if the goal is of the given type.
 	 */
-	public static GoalTemplate createGoalTypeTemplate(
-			final Class<? extends Goal> goalClass) {
+	public static GoalTemplate goalType(final Class<? extends Goal> goalClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				return goalClass.isInstance(goal);
@@ -194,8 +184,7 @@ public abstract class GoalTemplate {
 	 * @return the goal template that checks if the goal is a
 	 *         {@link BeliefValueGoal} with the given name and null value.
 	 */
-	public static GoalTemplate createNullBeliefValueGoalTemplate(
-			final String beliefName) {
+	public static GoalTemplate nullBeliefValueGoal(final String beliefName) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
@@ -207,14 +196,5 @@ public abstract class GoalTemplate {
 			}
 		};
 	}
-
-	/**
-	 * This methods checks if the given goal matches this template.
-	 * 
-	 * @param goal
-	 *            the goal to be checked.
-	 * @return true if the goal matches this template, false otherwise.
-	 */
-	public abstract boolean match(Goal goal);
 
 }

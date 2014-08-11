@@ -26,7 +26,7 @@ import bdi4jade.belief.TransientBelief;
 import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
-import bdi4jade.plan.SimplePlan;
+import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.planbody.PlanBody;
 
 class ChildGoal implements Goal {
@@ -54,7 +54,7 @@ public class NestedCapabilitiesAgent extends BDIAgent {
 
 	private void addPlan(Capability capability, Class<? extends Goal> goal,
 			Class<? extends PlanBody> planBody) {
-		capability.getPlanLibrary().addPlan(new SimplePlan(goal, planBody));
+		capability.getPlanLibrary().addPlan(new DefaultPlan(goal, planBody));
 	}
 
 	protected void init() {

@@ -26,8 +26,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bdi4jade.core.Capability;
+import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan;
-import bdi4jade.plan.SimplePlan;
 
 /**
  * @author ingrid
@@ -39,9 +39,9 @@ public class SubgoalCapability extends Capability {
 
 	private static Set<Plan> getPlans() {
 		Set<Plan> plans = new HashSet<Plan>();
-		plans.add(new SimplePlan(TopLevelGoal.class, ParentPlan.class));
-		plans.add(new SimplePlan(TopLevelGoal.class, MyPlan.class));
-		plans.add(new SimplePlan(Subgoal.class, ChildPlan.class));
+		plans.add(new DefaultPlan(TopLevelGoal.class, ParentPlan.class));
+		plans.add(new DefaultPlan(TopLevelGoal.class, MyPlan.class));
+		plans.add(new DefaultPlan(Subgoal.class, ChildPlan.class));
 		return plans;
 	}
 
