@@ -2,22 +2,6 @@ bdi4jade.annotation
 bdi4jade.belief
 bdi4jade.core
 bdi4jade.event
-bdi4jade.examples
-bdi4jade.examples.blocksworld
-bdi4jade.examples.blocksworld.domain
-bdi4jade.examples.blocksworld.goal
-bdi4jade.examples.blocksworld.plan
-bdi4jade.examples.compositegoal
-bdi4jade.examples.helloworld
-bdi4jade.examples.nestedcapabilities
-bdi4jade.examples.ping
-bdi4jade.examples.planfailed
-bdi4jade.examples.planparameter
-bdi4jade.examples.planselection
-bdi4jade.examples.subgoal
-bdi4jade.examples.template
-bdi4jade.examples.template.goal
-bdi4jade.examples.template.plan
 bdi4jade.exception
 bdi4jade.extension.planselection.utilitybased
 bdi4jade.goal
@@ -26,4 +10,3 @@ bdi4jade.plan
 bdi4jade.plan.planbody
 bdi4jade.reasoning
 bdi4jade.util
-bdi4jade.util.reasoning

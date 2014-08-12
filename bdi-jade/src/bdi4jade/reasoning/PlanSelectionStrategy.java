@@ -24,30 +24,28 @@ package bdi4jade.reasoning;
 
 import java.util.Set;
 
-import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
 
 /**
- * This interface defines the plan selection strategy to be used in a
- * capability. This strategy is used for selecting a plan from a set of possible
- * options.
+ * This interface defines the plan selection strategy to be used within the
+ * scope of a capability. This strategy is used for selecting a plan from a set
+ * of possible candidate plans of a capability.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
-public interface PlanSelectionStrategy {
+public interface PlanSelectionStrategy extends ReasoningStrategy {
 
 	/**
-	 * Selects a plan to be executed to achieve the given goal.
+	 * Selects a plan to be executed to achieve the given goal, given a set of
+	 * candidate plans.
 	 * 
 	 * @param goal
 	 *            the goal that must be achieved.
-	 * @param plans
+	 * @param candidatePlans
 	 *            the plans that can achieve the goal.
 	 * @return the selected plan.
 	 */
 	public Plan selectPlan(Goal goal, Set<Plan> candidatePlans);
-	
-	public void setCapability(Capability capability);
 
 }

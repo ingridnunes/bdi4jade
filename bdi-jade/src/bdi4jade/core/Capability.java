@@ -40,13 +40,13 @@ import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
 import bdi4jade.plan.PlanLibrary;
 import bdi4jade.reasoning.BeliefRevisionStrategy;
+import bdi4jade.reasoning.DefaultBeliefRevisionStrategy;
+import bdi4jade.reasoning.DefaultDeliberationFunction;
+import bdi4jade.reasoning.DefaultOptionGenerationFunction;
+import bdi4jade.reasoning.DefaultPlanSelectionStrategy;
 import bdi4jade.reasoning.DeliberationFunction;
 import bdi4jade.reasoning.OptionGenerationFunction;
 import bdi4jade.reasoning.PlanSelectionStrategy;
-import bdi4jade.util.reasoning.DefaultBeliefRevisionStrategy;
-import bdi4jade.util.reasoning.DefaultDeliberationFunction;
-import bdi4jade.util.reasoning.DefaultOptionGenerationFunction;
-import bdi4jade.util.reasoning.DefaultPlanSelectionStrategy;
 
 /**
  * This capability represents a component that aggregates the mental attitudes

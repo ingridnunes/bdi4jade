@@ -22,24 +22,19 @@
 
 package bdi4jade.reasoning;
 
-import bdi4jade.core.BDIAgent;
-
 /**
- * This is used during the BDI interpreter cycle to review the agent's beliefs.
+ * This interface defines the belief revision strategy to be used within the
+ * scope of a capability. This is used during the BDI interpreter cycle to
+ * review the beliefs.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public interface BeliefRevisionStrategy extends ReasoningStrategy {
 
 	/**
-	 * This method receives an agent whose beliefs are to be reviewed. It may
-	 * check for inconsistencies among beliefs, associate time with them, and
-	 * son on. These beliefs may be analyzed as a whole (all beliefs from all
-	 * belief bases of each capability) or each belief base can be analyzed
-	 * individually.
-	 * 
-	 * @param bdiAgent
-	 *            the {@link BDIAgent} whose beliefs are to be reviewed.
+	 * This method reviews beliefs of a belief base of a capability. It may
+	 * check for inconsistencies among beliefs, associate a timestamp with them,
+	 * and so on.
 	 */
 	public void reviewBeliefs();
 

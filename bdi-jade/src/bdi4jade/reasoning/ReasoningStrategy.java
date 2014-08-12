@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -25,11 +25,21 @@ package bdi4jade.reasoning;
 import bdi4jade.core.Capability;
 
 /**
- * @author ingridnunes
- *
+ * This interface defines methods that should be implemented by all reasoning
+ * strategies.
+ * 
+ * @author Ingrid Nunes
  */
 public interface ReasoningStrategy {
-	
+
+	/**
+	 * Sets the capability with which this strategy is associated with. If this
+	 * strategy was previously associated with another capability, this methods
+	 * throws an {@link IllegalArgumentException}.
+	 * 
+	 * @param capability
+	 *            the capability to set.
+	 */
 	public void setCapability(Capability capability);
 
 }

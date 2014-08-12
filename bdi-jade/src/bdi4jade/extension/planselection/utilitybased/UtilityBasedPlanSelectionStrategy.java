@@ -32,8 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
+import bdi4jade.reasoning.AbstractReasoningStrategy;
 import bdi4jade.reasoning.PlanSelectionStrategy;
-import bdi4jade.util.reasoning.AbstractReasoningStrategy;
 
 /**
  * A utility-based implementation of the {@link PlanSelectionStrategy}. It

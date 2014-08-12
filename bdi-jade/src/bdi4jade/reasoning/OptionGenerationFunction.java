@@ -22,32 +22,31 @@
 
 package bdi4jade.reasoning;
 
-import java.util.Map;
-import java.util.Set;
-
-import bdi4jade.core.Capability;
 import bdi4jade.core.GoalUpdateSet;
-import bdi4jade.goal.Goal;
-import bdi4jade.goal.GoalStatus;
 
 /**
  * This interface defines the option generation functions to be used in the
- * BDI-interpreter. This strategy is used for creating new goals or to drop
- * existing ones.
+ * BDI-interpreter, within the scope of a capability. This strategy is used for
+ * creating new goals or to drop existing ones.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public interface OptionGenerationFunction extends ReasoningStrategy {
 
 	/**
-	 * The goals parameter is a map of all goals of the agent (that might be
-	 * intentions) with their corresponding status. A set is returned of this
-	 * function indicating the creating of new goals and the ones that continue
-	 * to be goals. The non-selected goals will be no longer desired.
+	 * This method is responsible for analyzing goals dispatched by a capability
+	 * that have not been achieved yet, and choosing those to be dropped. It may
+	 * also generate new goals to be achieved.
 	 * 
-	 * @param goals
-	 *            the current goals with their status.
-	 * @return the list of selected goals.
+	 * The parameter of this method is a {@link GoalUpdateSet}, which contains
+	 * three sets: (i) the set of current goals dispatched by the capability
+	 * associated with this strategy and their status; (ii) the set of generated
+	 * goals; and (ii) the set of dropped goals. The last two sets are outputs
+	 * of this methods.
+	 * 
+	 * @param goalUpdateSet
+	 *            a three-set object containing current goals with their status,
+	 *            and dropped and generated goals.
 	 */
 	public void generateGoals(GoalUpdateSet goalUpdateSet);
 

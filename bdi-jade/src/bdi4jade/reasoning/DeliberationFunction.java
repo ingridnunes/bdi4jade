@@ -22,30 +22,29 @@
 
 package bdi4jade.reasoning;
 
-import java.util.Map;
 import java.util.Set;
 
-import bdi4jade.core.Capability;
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
-import bdi4jade.goal.Goal;
-import bdi4jade.goal.GoalStatus;
 
 /**
- * This interface defines the deliberation function to be used in an agent. This
- * strategy is used for selecting a set of goals that must be tried (intentions)
- * from the set of goals.
+ * This interface defines the deliberation function to be used within the scope
+ * of a capability. This strategy is used for selecting a set of goals that must
+ * be tried (intentions) from the set of goals.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public interface DeliberationFunction extends ReasoningStrategy {
 
 	/**
-	 * Selects the goals that must be tried to achieve and the ones that will be
-	 * in the waiting status.
+	 * Selects the goals that must be tried to achieve and the ones. Goals that
+	 * are not selected will have its status set to waiting;
 	 * 
 	 * @param goals
-	 *            the list of current goals (that might be intentions).
-	 * @return the list of selected goals.
+	 *            the list of current goals dispatched by the capability
+	 *            associated with this strategy.
+	 * 
+	 * @return the list of selected goals (which are in the for of
+	 *         {@link GoalDescription}), which will become intentions.
 	 */
 	public Set<GoalDescription> filter(Set<GoalDescription> goals);
 
