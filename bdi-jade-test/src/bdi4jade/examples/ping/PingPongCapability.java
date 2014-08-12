@@ -59,7 +59,7 @@ public class PingPongCapability extends Capability {
 
 	@Override
 	protected void setup() {
-		myAgent.addGoal(new Ping(otherAgent));
+		getMyAgent().addGoal(new Ping(otherAgent));
 	}
 
 }

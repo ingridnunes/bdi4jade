@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.Belief;
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
+import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
@@ -48,11 +50,12 @@ import bdi4jade.plan.Plan;
 
 /**
  * This class is an extension of {@link Agent} that has a current set of goals,
- * which are selected to become intentions, i.e. to tried to be achieved by
- * means of the selection and execution of plans. It also have a set of
- * {@link Capability}. It has a behavior that runs the BDI-interpreter. This
- * agent also have a {@link MsgReceiver} behavior to receive all messages that
- * the agent current plans can process.
+ * which can be selected to become intentions, that is, to tried to be achieved
+ * by means of the selection and execution of plans. It also have a set of
+ * {@link Capability} - an agent is an aggregation of capabilities. It has a
+ * behavior that runs the BDI-interpreter. This agent also have a
+ * {@link MsgReceiver} behavior to receive all messages that the agent current
+ * plans can process.
  * 
  * @author Ingrid Nunes
  */
@@ -68,11 +71,8 @@ public class BDIAgent extends Agent {
 
 		private static final long serialVersionUID = -6991759791322598475L;
 
-		private Log log;
-
 		private BDIInterpreter(BDIAgent bdiAgent) {
 			super(bdiAgent);
-			this.log = LogFactory.getLog(this.getClass());
 		}
 
 		/**
@@ -83,8 +83,7 @@ public class BDIAgent extends Agent {
 		 * After it removes from the intention set the ones that are finished,
 		 * i.e. associated with goals with status achieved, no longer desired or
 		 * unachievable, and notifies goal listeners about this event. This is
-		 * performed using the {@link #removeFinishedIntentions(Collection)}
-		 * method.
+		 * performed using the {@link #processIntentions(Collection)} method.
 		 * 
 		 * Then, it generate a an updated set of goals, dropping existing ones
 		 * that are no longer desired and also creating new ones. This updated
@@ -107,10 +106,10 @@ public class BDIAgent extends Agent {
 			reviewBeliefs();
 
 			synchronized (allIntentions) {
-				GoalUpdateSet agentGoalUpdateSet = removeFinishedIntentions(agentIntentions);
+				GoalUpdateSet agentGoalUpdateSet = processIntentions(agentIntentions);
 				Map<Capability, GoalUpdateSet> capabilityGoalUpdateSets = new HashMap<>();
 				for (Capability capability : capabilities) {
-					GoalUpdateSet capabilityGoalUpdateSet = removeFinishedIntentions(capability
+					GoalUpdateSet capabilityGoalUpdateSet = processIntentions(capability
 							.getIntentions());
 					capabilityGoalUpdateSets.put(capability,
 							capabilityGoalUpdateSet);
@@ -139,7 +138,7 @@ public class BDIAgent extends Agent {
 				for (GoalDescription goal : agentGoalUpdateSet
 						.getDroppedGoals()) {
 					goal.getIntention().noLongerDesire();
-					goal.getIntention().fireGoalFinishedEvent();
+					fireGoalEvent(goal.getIntention());
 					agentIntentions.remove(goal.getIntention());
 					allIntentions.remove(goal.getGoal());
 					agentGoalUpdateSet.removeIntention(goal);
@@ -148,7 +147,7 @@ public class BDIAgent extends Agent {
 						.values()) {
 					for (GoalDescription goal : goalUpdateSet.getDroppedGoals()) {
 						goal.getIntention().noLongerDesire();
-						goal.getIntention().fireGoalFinishedEvent();
+						fireGoalEvent(goal.getIntention());
 						goal.getDispatcher().removeIntention(
 								goal.getIntention());
 						allIntentions.remove(goal.getGoal());
@@ -186,25 +185,30 @@ public class BDIAgent extends Agent {
 
 		/**
 		 * Processes all intentions of the given collection. Intentions
-		 * associated with goals that finished, are removed and goal listeners (
-		 * {@link GoalListener}) are notified.
+		 * associated with goals that finished are removed and goal listeners (
+		 * {@link GoalListener}) are notified. Goal listeners are also notified
+		 * if a plan failed while trying to achieve a goal (intentions with
+		 * {@link GoalStatus#PLAN_FAILED}).
 		 * 
 		 * @param intentions
 		 *            the collection of intentions to be processed.
 		 * @return the {@link GoalUpdateSet} with current goals initialized with
 		 *         current intentions.
 		 */
-		private GoalUpdateSet removeFinishedIntentions(
-				Collection<Intention> intentions) {
+		private GoalUpdateSet processIntentions(Collection<Intention> intentions) {
 			GoalUpdateSet goalUpdateSet = new GoalUpdateSet();
 			Iterator<Intention> it = intentions.iterator();
 			while (it.hasNext()) {
 				Intention intention = it.next();
-				if (intention.getStatus().isFinished()) {
-					intention.fireGoalFinishedEvent();
+				GoalStatus status = intention.getStatus();
+				if (status.isFinished()) {
+					fireGoalEvent(intention);
 					it.remove();
 					allIntentions.remove(intention.getGoal());
 				} else {
+					if (GoalStatus.PLAN_FAILED.equals(status)) {
+						fireGoalEvent(intention);
+					}
 					goalUpdateSet.addIntention(intention);
 				}
 			}
@@ -220,18 +224,22 @@ public class BDIAgent extends Agent {
 	private final Map<Goal, Intention> allIntentions;
 	private final BDIInterpreter bdiInterpreter;
 	private final Set<Capability> capabilities;
+	protected final List<GoalListener> goalListeners;
+	protected final Log log;
 	private final Set<Softgoal> softgoals;
 
 	/**
 	 * Default constructor.
 	 */
 	public BDIAgent() {
+		this.log = LogFactory.getLog(this.getClass());
 		this.bdiInterpreter = new BDIInterpreter(this);
 		this.capabilities = new HashSet<>();
 		this.allIntentions = new HashMap<>();
 		this.aggregatedCapabilities = new HashSet<>();
 		this.agentIntentions = new LinkedList<>();
 		this.softgoals = new HashSet<>();
+		this.goalListeners = new LinkedList<>();
 	}
 
 	/**
@@ -330,6 +338,18 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Adds a listener to be notified when about goal events.
+	 * 
+	 * @param goalListener
+	 *            the listener to be notified.
+	 */
+	public void addGoalListener(GoalListener goalListener) {
+		synchronized (goalListeners) {
+			goalListeners.add(goalListener);
+		}
+	}
+
+	/**
 	 * Adds a new goal to this agent to be achieved and adds a listener to
 	 * observe its end. If this goal has a capability that owns it, only plans
 	 * of this capability and its children capabilities will be considered to
@@ -356,10 +376,11 @@ public class BDIAgent extends Agent {
 			if (goalListener != null) {
 				intention.addGoalListener(goalListener);
 			}
+			fireGoalEvent(new GoalEvent(goal));
 			return intention;
 		}
 	}
-
+	
 	/**
 	 * Adds a new softgoal to this agent.
 	 * 
@@ -371,6 +392,7 @@ public class BDIAgent extends Agent {
 			this.softgoals.add(softgoal);
 		}
 	}
+
 
 	/**
 	 * Drops a given goal of this agent. If the goal is not part of the agent's
@@ -417,6 +439,44 @@ public class BDIAgent extends Agent {
 			capability.filter(capabilityGoals.get(capability));
 		}
 		return selectedGoals;
+	}
+
+	/**
+	 * Notifies all listeners, if any, about a goal event.
+	 * 
+	 * @param goalEvent
+	 *            the event to notify.
+	 */
+	private void fireGoalEvent(GoalEvent goalEvent) {
+		synchronized (goalListeners) {
+			for (GoalListener goalListener : goalListeners) {
+				goalListener.goalPerformed(goalEvent);
+			}
+		}
+	}
+
+	/**
+	 * Creates a goal event given an intention, and notifies all listeners, if
+	 * any, about a goal event.
+	 * 
+	 * @param intention
+	 *            the intention used to create the goal event.
+	 */
+	private void fireGoalEvent(Intention intention) {
+		Goal goal = intention.getGoal();
+		GoalStatus status = intention.getStatus();
+		log.debug("Goal: " + goal.getClass().getSimpleName() + " (" + status
+				+ ") - " + goal);
+
+		GoalEvent goalEvent = new GoalEvent(goal, status);
+		synchronized (goalListeners) {
+			for (GoalListener goalListener : goalListeners) {
+				goalListener.goalPerformed(goalEvent);
+			}
+			for (GoalListener goalListener : intention.getGoalListeners()) {
+				goalListener.goalPerformed(goalEvent);
+			}
+		}
 	}
 
 	/**
@@ -492,6 +552,15 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Returns all goal listeners.
+	 * 
+	 * @return the goalListeners.
+	 */
+	public List<GoalListener> getGoalListeners() {
+		return goalListeners;
+	}
+
+	/**
 	 * @return the intentions
 	 */
 	public Set<Intention> getIntentions() {
@@ -529,6 +598,23 @@ public class BDIAgent extends Agent {
 			}
 			return removed;
 		}
+	}
+
+	/**
+	 * Removes a goal listener, so it will not be notified about the goal events
+	 * anymore.
+	 * 
+	 * @param goalListener
+	 *            the goal listener to be removed.
+	 */
+	public void removeGoalListener(GoalListener goalListener) {
+		synchronized (goalListeners) {
+			goalListeners.remove(goalListener);
+		}
+	}
+
+	void resetAllCapabilities() {
+		//TODO
 	}
 
 	/**

@@ -22,9 +22,9 @@
 
 package bdi4jade.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +32,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
@@ -49,22 +48,23 @@ import bdi4jade.plan.planbody.PlanBody;
  * considered unachievable. When a plan fails, the BDI-interpreter cycle may
  * invoke the {@link #tryToAchive()} method again, so the intention tries
  * another plan. During its execution, the intention can be set to no longer
- * desired.
+ * desired. This occurs during the agent reasoning cycle or when a goal is
+ * dropped ({@link BDIAgent#dropGoal(Goal)}).
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class Intention {
 
 	private PlanBody currentPlan;
 	private final Set<Plan> executedPlans;
 	private final Goal goal;
-	private final List<GoalListener> goalListeners;
 	private final Log log;
 	private final BDIAgent myAgent;
 	private boolean noLongerDesired;
-	private final Capability owner;
+	private final Capability dispatcher;
 	private boolean unachievable;
 	private boolean waiting;
+	private final List<GoalListener> goalListeners;
 
 	/**
 	 * Creates a new intention. It is associated with an agent and the goal that
@@ -98,22 +98,10 @@ public class Intention {
 		this.unachievable = false;
 		this.noLongerDesired = false;
 		this.waiting = true;
-		this.goalListeners = new ArrayList<GoalListener>();
-		this.executedPlans = new HashSet<Plan>();
+		this.executedPlans = new HashSet<>();
 		this.currentPlan = null;
-		this.owner = owner;
-	}
-
-	/**
-	 * Adds a listener to be notified when the given has achieve its end state.
-	 * 
-	 * @param goalListener
-	 *            the listener to be notified.
-	 */
-	public void addGoalListener(GoalListener goalListener) {
-		synchronized (goalListeners) {
-			goalListeners.add(goalListener);
-		}
+		this.dispatcher = owner;
+		this.goalListeners = new LinkedList<>();
 	}
 
 	/**
@@ -176,31 +164,6 @@ public class Intention {
 	}
 
 	/**
-	 * Notify all listeners, if any, about a goal event.
-	 * 
-	 * @param goalEvent
-	 */
-	private void fireGoalEvent(GoalEvent goalEvent) {
-		synchronized (goalListeners) {
-			for (GoalListener goalListener : goalListeners) {
-				goalListener.goalPerformed(goalEvent);
-			}
-		}
-	}
-
-	/**
-	 * Fires a goal event when a goal has achieved its end state.
-	 * 
-	 * @see GoalStatus
-	 */
-	public void fireGoalFinishedEvent() {
-		GoalStatus status = getStatus();
-		log.debug("Goal: " + goal.getClass().getSimpleName() + " (" + status
-				+ ") - " + goal);
-		this.fireGoalEvent(new GoalEvent(goal, status));
-	}
-
-	/**
 	 * Returns all plans from the capabilities that can achieve the goal. If the
 	 * goal is associated with a capability, only the capability and its
 	 * children capabilities will be searched. Otherwise, all plan libraries
@@ -210,7 +173,7 @@ public class Intention {
 	 */
 	private Map<Capability, Set<Plan>> getCanAchievePlans() {
 		Map<Capability, Set<Plan>> plans = new HashMap<>();
-		if (owner == null) {
+		if (dispatcher == null) {
 			for (Capability capability : myAgent.getAggregatedCapabilities()) {
 				Set<Plan> capabilityPlans = new HashSet<>();
 				getCanAchievePlans(capabilityPlans, capability);
@@ -218,8 +181,8 @@ public class Intention {
 			}
 		} else {
 			Set<Plan> capabilityPlans = new HashSet<>();
-			getCanAchievePlans(capabilityPlans, owner);
-			plans.put(owner, capabilityPlans);
+			getCanAchievePlans(capabilityPlans, dispatcher);
+			plans.put(dispatcher, capabilityPlans);
 		}
 		return plans;
 	}
@@ -239,13 +202,6 @@ public class Intention {
 	}
 
 	/**
-	 * @return the goalListeners
-	 */
-	public List<GoalListener> getGoalListeners() {
-		return goalListeners;
-	}
-
-	/**
 	 * @return the myAgent
 	 */
 	public BDIAgent getMyAgent() {
@@ -256,7 +212,7 @@ public class Intention {
 	 * @return the owner
 	 */
 	public Capability getOwner() {
-		return owner;
+		return dispatcher;
 	}
 
 	/**
@@ -317,19 +273,6 @@ public class Intention {
 	}
 
 	/**
-	 * Removes a goal listener to not be notified about the goal achievement
-	 * anymore.
-	 * 
-	 * @param goalListener
-	 *            the goal listener to be removed.
-	 */
-	public void removeGoalListener(GoalListener goalListener) {
-		synchronized (goalListeners) {
-			goalListeners.remove(goalListener);
-		}
-	}
-
-	/**
 	 * Makes this intention starts to try to achieve the goal. It changes the
 	 * goal status from {@link GoalStatus#WAITING} or
 	 * {@link GoalStatus#PLAN_FAILED} to {@link GoalStatus#TRYING_TO_ACHIEVE}.
@@ -351,6 +294,40 @@ public class Intention {
 		default:
 			assert false : status;
 			break;
+		}
+	}
+	
+	/**
+	 * Adds a listener to be notified when about goal events.
+	 * 
+	 * @param goalListener
+	 *            the listener to be notified.
+	 */
+	public void addGoalListener(GoalListener goalListener) {
+		synchronized (goalListeners) {
+			goalListeners.add(goalListener);
+		}
+	}
+
+	/**
+	 * Returns all goal listeners.
+	 * 
+	 * @return the goalListeners.
+	 */
+	public List<GoalListener> getGoalListeners() {
+		return goalListeners;
+	}
+
+	/**
+	 * Removes a goal listener, so it will not be notified about the goal events
+	 * anymore.
+	 * 
+	 * @param goalListener
+	 *            the goal listener to be removed.
+	 */
+	public void removeGoalListener(GoalListener goalListener) {
+		synchronized (goalListeners) {
+			goalListeners.remove(goalListener);
 		}
 	}
 

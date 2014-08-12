@@ -28,7 +28,7 @@ import bdi4jade.belief.Belief;
 /**
  * This class represents an event performed over a belief.
  * 
- * @author ingridnunes
+ * @author Ingrid Nunes
  */
 public class BeliefEvent implements AgentAction {
 
@@ -36,7 +36,7 @@ public class BeliefEvent implements AgentAction {
 	 * This enumeration represents the set of possible actions that can be
 	 * performed over a belief.
 	 * 
-	 * @author ingrid
+	 * @author Ingrid Nunes
 	 */
 	public enum Action {
 		BELIEF_ADDED, BELIEF_REMOVED, BELIEF_SET_VALUE_ADDED, BELIEF_SET_VALUE_REMOVED, BELIEF_UPDATED

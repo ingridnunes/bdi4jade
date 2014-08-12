@@ -26,7 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author ingrid
+ * This class provides an implementation to the {@link MetadataElement}. It is
+ * able to store metadata.
+ * 
+ * @author Ingrid Nunes
  * 
  */
 public abstract class MetadataElementImpl implements MetadataElement {
@@ -38,7 +41,7 @@ public abstract class MetadataElementImpl implements MetadataElement {
 	}
 
 	/**
-	 * @return the metadata
+	 * @see MetadataElement#getMetadata()
 	 */
 	@Override
 	public Map<?, ?> getMetadata() {
@@ -46,11 +49,7 @@ public abstract class MetadataElementImpl implements MetadataElement {
 	}
 
 	/**
-	 * Gets a value of a metadata.
-	 * 
-	 * @param name
-	 *            the name of the metadata.
-	 * @return the existing value of this metadata.
+	 * @see MetadataElement#getMetadata(Object)
 	 */
 	@Override
 	public Object getMetadata(Object name) {
@@ -58,11 +57,7 @@ public abstract class MetadataElementImpl implements MetadataElement {
 	}
 
 	/**
-	 * Verifies if a metadata is associated with this element.
-	 * 
-	 * @param name
-	 *            the name of the metadata.
-	 * @return true if the element has this metadata.
+	 * @see MetadataElement#hasMetadata(Object)
 	 */
 	@Override
 	public boolean hasMetadata(Object name) {
@@ -70,13 +65,7 @@ public abstract class MetadataElementImpl implements MetadataElement {
 	}
 
 	/**
-	 * Put a metadata in this element. If it does not exists, it is added, and
-	 * it is update otherwise.
-	 * 
-	 * @param name
-	 *            the name of the metadata.
-	 * @param value
-	 *            the value associated with this metadata.
+	 * @see MetadataElement#putMetadata(Object, Object)
 	 */
 	@Override
 	public void putMetadata(Object name, Object value) {
@@ -84,11 +73,7 @@ public abstract class MetadataElementImpl implements MetadataElement {
 	}
 
 	/**
-	 * Removes a metadata of this element.
-	 * 
-	 * @param name
-	 *            the name of the metadata.
-	 * @return the existing value of this metadata.
+	 * @see MetadataElement#removeMetadata(Object)
 	 */
 	@Override
 	public Object removeMetadata(Object name) {

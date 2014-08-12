@@ -50,6 +50,16 @@ public class GoalEvent implements AgentAction {
 	 * 
 	 * @param goal
 	 *            the goal of this event.
+	 */
+	public GoalEvent(Goal goal) {
+		this(goal, null);
+	}
+
+	/**
+	 * Creates a new goal event with a goal.
+	 * 
+	 * @param goal
+	 *            the goal of this event.
 	 * @param status
 	 *            the goal status.
 	 */
@@ -74,6 +84,16 @@ public class GoalEvent implements AgentAction {
 	 */
 	public GoalStatus getStatus() {
 		return status;
+	}
+
+	/**
+	 * Indicates if this goal event is a goal added event.
+	 * 
+	 * @return true if this is an event in which a goal was added, false
+	 *         otherwise.
+	 */
+	public boolean isGoalAdded() {
+		return status == null;
 	}
 
 	/**

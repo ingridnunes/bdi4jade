@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
+// http://inf.ufrgs.br/prosoft/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -30,11 +30,25 @@ import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 
 /**
- * @author ingridnunes
+ * This class is a data structure to used to specify updates on goals. In a
+ * certain agent state, it has a set of current goals. During the agent
+ * reasoning cycle, some of these goals may be dropped, and new goals may be
+ * generated. This class has the set with current goals, and allows informing
+ * which goals should be dropped, and which should be generated. Current goals
+ * may contain goals dispatched by a single capability.
  * 
+ * @author Ingrid Nunes
  */
 public class GoalUpdateSet {
 
+	/**
+	 * This class is a data structure to describe a goal. This description
+	 * contains the goal itself, together with its status and the capability
+	 * that dispatched the goal (if it was dispatched in a plan of a
+	 * capability).
+	 * 
+	 * @author Ingrid Nunes
+	 */
 	public class GoalDescription {
 
 		private final Capability dispatcher;
@@ -60,18 +74,39 @@ public class GoalUpdateSet {
 			this.intention = intention;
 		}
 
+		/**
+		 * Returns the capability that dispatched the goal.
+		 * 
+		 * @return the capability.
+		 */
 		public Capability getDispatcher() {
 			return dispatcher;
 		}
 
+		/**
+		 * Returns the goal described by this descriptor.
+		 * 
+		 * @return the goal.
+		 */
 		public Goal getGoal() {
 			return goal;
 		}
 
+		/**
+		 * Returns the intention associated with the goal described by this
+		 * descriptor.
+		 * 
+		 * @return the intention.
+		 */
 		Intention getIntention() {
 			return intention;
 		}
 
+		/**
+		 * Returns the status of the goal described by this descriptor.
+		 * 
+		 * @return the goal status.
+		 */
 		public GoalStatus getStatus() {
 			return status;
 		}
@@ -99,26 +134,65 @@ public class GoalUpdateSet {
 		this.currentGoals.add(new GoalDescription(intention));
 	}
 
+	/**
+	 * Indicates that a goal should be dropped. The goal is added to the set of
+	 * dropped goals.
+	 * 
+	 * @param goal
+	 *            the goal to be dropped.
+	 */
 	public void dropGoal(GoalDescription goal) {
 		this.droppedGoals.add(goal);
 	}
 
+	/**
+	 * Indicates that a goal should be added to the agent. The goal is added to
+	 * the set of generated goals.
+	 * 
+	 * @param goal
+	 *            the goal to be added.
+	 */
 	public void generateGoal(Goal goal) {
 		this.generatedGoals.add(new GoalDescription(goal));
 	}
 
+	/**
+	 * Indicates that a goal should be added to the agent, with the capability
+	 * that dispatched the goal. The goal is added to the set of generated
+	 * goals.
+	 * 
+	 * @param goal
+	 *            the goal to be added.
+	 * @param dispatcher
+	 *            the capability that dispatched the goal.
+	 */
 	public void generateGoal(Goal goal, Capability dispatcher) {
 		this.generatedGoals.add(new GoalDescription(goal, dispatcher));
 	}
 
+	/**
+	 * Returns the set of current agent goals.
+	 * 
+	 * @return the set of current goals.
+	 */
 	public Set<GoalDescription> getCurrentGoals() {
 		return new HashSet<>(currentGoals);
 	}
 
+	/**
+	 * Returns the set of dropped goals.
+	 * 
+	 * @return the set of dropped goals.
+	 */
 	public Set<GoalDescription> getDroppedGoals() {
 		return new HashSet<>(droppedGoals);
 	}
 
+	/**
+	 * Returns the set of generated goals.
+	 * 
+	 * @return the set of generated goals.
+	 */
 	public Set<GoalDescription> getGeneratedGoals() {
 		return new HashSet<>(generatedGoals);
 	}

@@ -25,7 +25,10 @@ package bdi4jade.core;
 import java.util.Map;
 
 /**
- * @author ingrid
+ * This interface defines methods that a certain element should implement to
+ * store metadata. Such metadata may be used in reasoning processes.
+ * 
+ * @author Ingrid Nunes
  * 
  */
 public interface MetadataElement {

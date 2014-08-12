@@ -51,7 +51,7 @@ public class SubgoalCapability extends Capability {
 
 	@Override
 	protected void setup() {
-		myAgent.addGoal(new TopLevelGoal());
+		getMyAgent().addGoal(new TopLevelGoal());
 	}
 
 }

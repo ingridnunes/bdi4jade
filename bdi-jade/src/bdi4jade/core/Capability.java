@@ -53,36 +53,40 @@ import bdi4jade.reasoning.PlanSelectionStrategy;
  * defined by the BDI architecture. It has a belief base with the associated
  * beliefs (knowledge) and a plan library.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class Capability implements Serializable {
 
 	private static final long serialVersionUID = -4922359927943108421L;
 
+	private final Set<Capability> associatedCapabilities;
 	protected final BeliefBase beliefBase;
 	private BeliefRevisionStrategy beliefRevisionStrategy;
 	private DeliberationFunction deliberationFunction;
 	protected final String id;
 	private final Collection<Intention> intentions;
 	protected final Log log;
-	protected BDIAgent myAgent;
+	private BDIAgent myAgent;
 	private OptionGenerationFunction optionGenerationFunction;
-	protected final Set<Capability> partCapabilities;
+	private final Set<Capability> partCapabilities;
 	protected final PlanLibrary planLibrary;
 	private PlanSelectionStrategy planSelectionStrategy;
-	private boolean start;
-	protected Capability wholeCapability;
+	private boolean started;
+
+	private Capability wholeCapability;
 
 	/**
-	 * Creates a new capability. It uses {@link BeliefBase} and
-	 * {@link PlanLibrary} as belief base and plan library respectively.
+	 * Creates a new capability with a generated id. It uses {@link BeliefBase}
+	 * and {@link PlanLibrary} as belief base and plan library respectively.
 	 */
 	public Capability() {
-		this(null);
+		this(null, null, null, null, null);
 	}
 
 	/**
-	 * Creates a new capability.
+	 * Creates a new capability with a generated id. It uses {@link BeliefBase}
+	 * and {@link PlanLibrary} as belief base and plan library respectively, and
+	 * adds initial beliefs and plans.
 	 * 
 	 * @param initialBeliefs
 	 *            the initial set of beliefs to be added to the belief base of
@@ -92,52 +96,43 @@ public class Capability implements Serializable {
 	 *            this capability.
 	 */
 	public Capability(Set<Belief<?>> initialBeliefs, Set<Plan> initialPlans) {
-		this(null, initialBeliefs, initialPlans);
+		this(null, null, initialBeliefs, null, initialPlans);
 	}
 
 	/**
-	 * Creates a new capability. It uses {@link BeliefBase} and
-	 * {@link PlanLibrary} as belief base and plan library respectively.
+	 * Creates a new capability with the given id. It uses {@link BeliefBase}
+	 * and {@link PlanLibrary} as belief base and plan library respectively.
 	 * 
 	 * @param id
 	 *            the capability id. If it is null, the class name is going to
 	 *            be used.
 	 */
 	public Capability(String id) {
-		this(id, null, null);
+		this(id, null, null, null, null);
 	}
 
 	/**
-	 * Creates a new capability. It uses {@link BeliefBase} and
-	 * {@link PlanLibrary} as belief base and plan library respectively.
+	 * Creates a new capability with the given id, or a generated one if it is
+	 * null. It also sets the belief base and plan library, and adds initial
+	 * beliefs and plans.
 	 * 
 	 * @param id
 	 *            the capability id. If it is null, the class name is going to
 	 *            be used.
-	 * @param wholeCapability
-	 *            the whole-capability that this capability is part of.
-	 */
-	public Capability(String id, Capability wholeCapability) {
-		this(id, wholeCapability, null, null);
-	}
-
-	/**
-	 * Creates a new capability.
-	 * 
-	 * @param id
-	 *            the capability id. If it is null, the class name is going to
-	 *            be used.
-	 * @param wholeCapability
-	 *            the whole-capability that this capability is part of.
+	 * @param beliefBase
+	 *            the belief base.
 	 * @param initialBeliefs
 	 *            the initial set of beliefs to be added to the belief base of
 	 *            this capability.
+	 * @param planLibrary
+	 *            the plan library.
 	 * @param initialPlans
 	 *            the initial set of plans to be added to the plan library of
 	 *            this capability.
 	 */
-	public Capability(String id, Capability wholeCapability,
-			Set<Belief<?>> initialBeliefs, Set<Plan> initialPlans) {
+	protected Capability(String id, BeliefBase beliefBase,
+			Set<Belief<?>> initialBeliefs, PlanLibrary planLibrary,
+			Set<Plan> initialPlans) {
 		this.log = LogFactory.getLog(getClass());
 		this.intentions = new LinkedList<>();
 
@@ -154,17 +149,16 @@ public class Capability implements Serializable {
 			this.id = id;
 		}
 
-		// Setting up parent
+		// Initializing belief base and plan library
+		this.beliefBase = beliefBase == null ? new BeliefBase(this,
+				initialBeliefs) : beliefBase;
+		this.planLibrary = planLibrary == null ? new PlanLibrary(this,
+				initialPlans) : planLibrary;
+
+		// Initializing associations
+		this.wholeCapability = null;
+		this.associatedCapabilities = new HashSet<>();
 		this.partCapabilities = new HashSet<>();
-		if (wholeCapability != null) {
-			wholeCapability.addPartCapability(this);
-		}
-
-		// Initializing belief base
-		this.beliefBase = new BeliefBase(this, initialBeliefs);
-
-		// Initializing plan library
-		this.planLibrary = new PlanLibrary(this, initialPlans);
 
 		// Initializing reasoning strategies
 		this.beliefRevisionStrategy = new DefaultBeliefRevisionStrategy();
@@ -172,11 +166,15 @@ public class Capability implements Serializable {
 		this.deliberationFunction = new DefaultDeliberationFunction();
 		this.planSelectionStrategy = new DefaultPlanSelectionStrategy();
 
-		this.start = false;
+		synchronized (this) {
+			this.started = false;
+		}
 	}
 
 	/**
-	 * Creates a new capability.
+	 * Creates a new capability with the given id. It uses {@link BeliefBase}
+	 * and {@link PlanLibrary} as belief base and plan library respectively, and
+	 * adds initial beliefs and plans.
 	 * 
 	 * @param id
 	 *            the capability id. If it is null, the class name is going to
@@ -190,19 +188,41 @@ public class Capability implements Serializable {
 	 */
 	public Capability(String id, Set<Belief<?>> initialBeliefs,
 			Set<Plan> initialPlans) {
-		this(id, null, initialBeliefs, initialPlans);
+		this(id, null, initialBeliefs, null, initialPlans);
 	}
 
-	void addIntention(Intention intention) {
+	/**
+	 * Associates a capability to this capability.
+	 * 
+	 * @param capability
+	 *            the capability to be associated.
+	 */
+	public final void addAssociatedCapability(Capability capability) {
+		this.associatedCapabilities.add(capability);
+		resetAgentCapabilities();
+	}
+
+	final void addIntention(Intention intention) {
 		this.intentions.add(intention);
 	}
 
-	public void addPartCapability(Capability partCapability) {
+	/**
+	 * Adds a capability as part of this capability, which is a
+	 * whole-capability.
+	 * 
+	 * @param partCapability
+	 *            the part capability to be added.
+	 */
+	public final void addPartCapability(Capability partCapability) {
 		if (partCapability.wholeCapability != null) {
-			partCapability.wholeCapability.removePartCapability(partCapability);
+			partCapability.wholeCapability.partCapabilities
+					.remove(partCapability);
+			partCapability.wholeCapability = null;
 		}
 		partCapability.wholeCapability = this;
 		this.partCapabilities.add(partCapability);
+
+		resetAgentCapabilities();
 	}
 
 	/**
@@ -218,149 +238,251 @@ public class Capability implements Serializable {
 	}
 
 	/**
-	 * This method is responsible for selecting a set of goals that must be
-	 * tried to be achieved (intentions) from the set of goals. Its default
-	 * implementation requests each of its capabilities to filter their goals.
-	 * Subclasses may override this method to customize this deliberation
-	 * function.
+	 * Returns true if the object given as parameter is a capability and has the
+	 * same full id of this capability.
+	 * 
+	 * @param obj
+	 *            the object to be tested as equals to this plan.
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	protected Set<GoalDescription> filter(Set<GoalDescription> goals) {
+	@Override
+	public final boolean equals(Object obj) {
+		if (!(obj instanceof Capability))
+			return false;
+		return getFullId().equals(((Capability) obj).getFullId());
+	}
+
+	/**
+	 * This method is responsible for selecting a set of goals that must be
+	 * tried to be achieved (intentions) from the set of goals. It delegates its
+	 * responsibility to the {@link DeliberationFunction} set in this
+	 * capability.
+	 * 
+	 * @param goals
+	 *            the list of current goals dispatched by the capability
+	 *            associated with this strategy.
+	 * 
+	 * @return the list of selected goals (which are in the for of
+	 *         {@link GoalDescription}), which will become intentions.
+	 * 
+	 * @see DeliberationFunction
+	 */
+	public final Set<GoalDescription> filter(Set<GoalDescription> goals) {
 		return this.deliberationFunction.filter(goals);
 	}
 
 	/**
 	 * This method is responsible for generating new goals or dropping existing
-	 * ones. Its default implementation requests each of its capabilities to
-	 * generate or drop goals. Subclasses may override this method to customize
-	 * this options generation function.
+	 * ones. It delegates its responsibility to the
+	 * {@link OptionGenerationFunction} set in this capability.
+	 * 
+	 * @param goalUpdateSet
+	 *            a three-set object containing current goals with their status,
+	 *            and dropped and generated goals.
+	 * 
+	 * @see OptionGenerationFunction
 	 */
-	protected void generateGoals(GoalUpdateSet goalUpdateSet) {
+	public final void generateGoals(GoalUpdateSet goalUpdateSet) {
 		this.optionGenerationFunction.generateGoals(goalUpdateSet);
 	}
 
 	/**
-	 * @return the beliefBase
+	 * Returns this capability belief base.
+	 * 
+	 * @return the beliefBase.
 	 */
-	public BeliefBase getBeliefBase() {
+	public final BeliefBase getBeliefBase() {
 		return beliefBase;
 	}
 
 	/**
-	 * @return the beliefRevisionStrategy
+	 * Returns the belief revision strategy of this capability.
+	 * 
+	 * @return the beliefRevisionStrategy.
 	 */
-	public BeliefRevisionStrategy getBeliefRevisionStrategy() {
+	public final BeliefRevisionStrategy getBeliefRevisionStrategy() {
 		return beliefRevisionStrategy;
 	}
 
 	/**
-	 * @return the deliberationFunction
+	 * Returns the deliberation function of this capability.
+	 * 
+	 * @return the deliberationFunction.
 	 */
-	public DeliberationFunction getDeliberationFunction() {
+	public final DeliberationFunction getDeliberationFunction() {
 		return deliberationFunction;
 	}
 
 	/**
-	 * @return the id
+	 * Returns the full id of this capability, which is its id prefixed by all
+	 * whole-capabilities' ids.
+	 * 
+	 * @return the full id of this capability.
+	 */
+	public final String getFullId() {
+		StringBuffer sb = new StringBuffer();
+		getFullId(sb);
+		return sb.toString();
+	}
+
+	private final void getFullId(StringBuffer sb) {
+		if (wholeCapability != null) {
+			wholeCapability.getFullId(sb);
+			sb.append(".");
+		}
+		sb.append(id);
+	}
+
+	/**
+	 * Returns this capability id.
+	 * 
+	 * @return the id.
 	 */
 	public String getId() {
 		return id;
 	}
 
-	/**
-	 * @return the intentions
-	 */
-	Collection<Intention> getIntentions() {
+	final Collection<Intention> getIntentions() {
 		return intentions;
 	}
 
 	/**
-	 * @return the agent that this capability is associated with.
+	 * Returns the agent that this capability is associated with.
+	 * 
+	 * @return the agent.
 	 */
-	public BDIAgent getMyAgent() {
+	public final BDIAgent getMyAgent() {
 		return this.myAgent;
 	}
 
 	/**
-	 * @return the optionGenerationFunction
+	 * Returns the option generation function of this capability.
+	 * 
+	 * @return the optionGenerationFunction.
 	 */
-	public OptionGenerationFunction getOptionGenerationFunction() {
+	public final OptionGenerationFunction getOptionGenerationFunction() {
 		return optionGenerationFunction;
 	}
 
 	/**
-	 * @return the partCapabilities
+	 * Returns the parts of this capability.
+	 * 
+	 * @return the partCapabilities.
 	 */
-	public Set<Capability> getPartCapabilities() {
+	public final Set<Capability> getPartCapabilities() {
 		return partCapabilities;
 	}
 
 	/**
-	 * @return the planLibrary
+	 * Returns the plan library of this capability.
+	 * 
+	 * @return the planLibrary.
 	 */
-	public PlanLibrary getPlanLibrary() {
+	public final PlanLibrary getPlanLibrary() {
 		return planLibrary;
 	}
 
 	/**
-	 * @return the planSelectionStrategy
+	 * Returns the plan selection strategy of this capability.
+	 * 
+	 * @return the planSelectionStrategy.
 	 */
-	public PlanSelectionStrategy getPlanSelectionStrategy() {
+	public final PlanSelectionStrategy getPlanSelectionStrategy() {
 		return planSelectionStrategy;
 	}
 
 	/**
-	 * @return the wholeCapability
+	 * Returns the whole-capability, if this is a part capability.
+	 * 
+	 * @return the wholeCapability.
 	 */
-	public Capability getWholeCapability() {
+	public final Capability getWholeCapability() {
 		return wholeCapability;
 	}
 
-	public boolean hasParts() {
-		return !this.partCapabilities.isEmpty();
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public final int hashCode() {
+		return this.getFullId().hashCode();
 	}
 
-	void removeIntention(Intention intention) {
+	/**
+	 * Dissociates a capability of this capability.
+	 * 
+	 * @param capability
+	 *            the capability to be dissociated.
+	 */
+	public final void removeAssociatedCapability(Capability capability) {
+		this.associatedCapabilities.remove(capability);
+		resetAgentCapabilities();
+	}
+
+	final void removeIntention(Intention intention) {
 		this.intentions.remove(intention);
 	}
 
-	public boolean removePartCapability(Capability partCapability) {
+	/**
+	 * Removes a capability as part of this capability, which is a
+	 * whole-capability.
+	 * 
+	 * @param partCapability
+	 *            the part capability to be removed.
+	 * 
+	 * @return true if the capability was removed, false otherwise.
+	 */
+	public final boolean removePartCapability(Capability partCapability) {
 		boolean removed = this.partCapabilities.remove(partCapability);
 		if (removed) {
 			partCapability.wholeCapability = null;
+			resetAgentCapabilities();
 		}
 		return removed;
 	}
 
+	private final void resetAgentCapabilities() {
+		if (myAgent != null) {
+			myAgent.resetAllCapabilities();
+		}
+	}
+
 	/**
-	 * This method is responsible for reviewing beliefs from this agent. Its
-	 * default implementation requests each of its capabilities to review their
-	 * individual set of beliefs. Subclasses may override this method to
-	 * customize belief revision.
+	 * This method is responsible for reviewing beliefs of this capability. It
+	 * delegates its responsibility to the {@link BeliefRevisionStrategy} set in
+	 * this capability.
+	 * 
+	 * @see BeliefRevisionStrategy
 	 */
-	protected void reviewBeliefs() {
+	public final void reviewBeliefs() {
 		this.beliefRevisionStrategy.reviewBeliefs();
 	}
 
 	/**
-	 * This method is responsible for selecting plans to achieve a goals of this
-	 * agent. Its default implementation requests each of its capabilities to
-	 * select one of its plans. Subclasses may override this method to customize
-	 * plan selection.
+	 * This method is responsible for selecting a plan to achieve a goals. It
+	 * delegates its responsibility to the {@link PlanSelectionStrategy} set in
+	 * this capability.
 	 * 
 	 * @param goal
-	 *            the goal to be achieved.
-	 * @param capabilityPlans
-	 *            the set of candidate plans of each capability.
+	 *            the goal that must be achieved.
+	 * @param candidatePlans
+	 *            the plans that can achieve the goal.
+	 * @return the selected plan.
+	 * 
+	 * @see PlanSelectionStrategy
 	 */
-	protected Plan selectPlan(Goal goal, Set<Plan> candidatePlans) {
+	public final Plan selectPlan(Goal goal, Set<Plan> candidatePlans) {
 		return this.planSelectionStrategy.selectPlan(goal, candidatePlans);
 	}
 
 	/**
+	 * Sets the belief revision strategy of this capability.
+	 * 
 	 * @param beliefRevisionStrategy
 	 *            the beliefRevisionStrategy to set
 	 */
-	public void setBeliefRevisionStrategy(
+	public final void setBeliefRevisionStrategy(
 			BeliefRevisionStrategy beliefRevisionStrategy) {
 		if (beliefRevisionStrategy == null) {
 			this.beliefRevisionStrategy = new DefaultBeliefRevisionStrategy();
@@ -372,10 +494,12 @@ public class Capability implements Serializable {
 	}
 
 	/**
+	 * Sets the deliberation function of this capability.
+	 * 
 	 * @param deliberationFunction
 	 *            the deliberationFunction to set
 	 */
-	public void setDeliberationFunction(
+	public final void setDeliberationFunction(
 			DeliberationFunction deliberationFunction) {
 		if (deliberationFunction == null) {
 			this.deliberationFunction = new DefaultDeliberationFunction();
@@ -387,22 +511,32 @@ public class Capability implements Serializable {
 	}
 
 	/**
+	 * This method attaches a capability to an agent. It also sets up the
+	 * capability by adding all annotated fields to this capability, including
+	 * from its parents. It also invokes the {@link #setup()} method, so that
+	 * further setup customizations can be performed.
+	 * 
 	 * @param myAgent
 	 *            the myAgent to set
 	 */
-	public void setMyAgent(BDIAgent myAgent) {
+	public final void setMyAgent(BDIAgent myAgent) {
 		this.myAgent = myAgent;
-		if (!start) {
-			setup();
-			this.start = true;
+		synchronized (this) {
+			if (!started) {
+				// TODO Adds all annotated fields.
+				setup();
+				this.started = true;
+			}
 		}
 	}
 
 	/**
+	 * Sets the option generation function of this capability.
+	 * 
 	 * @param optionGenerationFunction
 	 *            the optionGenerationFunction to set
 	 */
-	public void setOptionGenerationFunction(
+	public final void setOptionGenerationFunction(
 			OptionGenerationFunction optionGenerationFunction) {
 		if (optionGenerationFunction == null) {
 			this.optionGenerationFunction = new DefaultOptionGenerationFunction();
@@ -414,10 +548,12 @@ public class Capability implements Serializable {
 	}
 
 	/**
+	 * Sets the plan selection strategy of this capability.
+	 * 
 	 * @param planSelectionStrategy
 	 *            the planSelectionStrategy to set
 	 */
-	public void setPlanSelectionStrategy(
+	public final void setPlanSelectionStrategy(
 			PlanSelectionStrategy planSelectionStrategy) {
 		if (planSelectionStrategy == null) {
 			this.planSelectionStrategy = new DefaultPlanSelectionStrategy();
@@ -429,11 +565,12 @@ public class Capability implements Serializable {
 	}
 
 	/**
-	 * This is an empty holder for being overridden by subclasses. Initializes
-	 * the capability. This method is invoked by the constructor. It may be used
-	 * to add initial plans and beliefs. The reasoning strategies of this
-	 * capability are initialized in the constructor with default strategies.
-	 * This method may also customize them.
+	 * This is an empty holder for being overridden by subclasses. It is used to
+	 * initialize the capability. This method is invoked when this capability is
+	 * attached to an agent for the first time. It may be used to add initial
+	 * plans and beliefs. The reasoning strategies of this capability are
+	 * initialized in the constructor with default strategies. This method may
+	 * also customize them.
 	 */
 	protected void setup() {
 

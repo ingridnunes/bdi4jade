@@ -137,7 +137,7 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 				&& event.getGoal() instanceof CompositeGoal) {
 			log.info(event.getGoal() + " Status: " + event.getStatus());
 			log.info("Goal finished!! Removing capability of this agent...");
-			myAgent.removeCapability(this);
+			getMyAgent().removeCapability(this);
 
 		}
 	}
@@ -152,7 +152,7 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 		} else {
 			compositeGoal = new ParallelGoal(goals);
 		}
-		this.myAgent.addGoal(compositeGoal, this);
+		this.getMyAgent().addGoal(compositeGoal, this);
 	}
 
 }
