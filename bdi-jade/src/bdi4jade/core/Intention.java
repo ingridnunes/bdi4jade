@@ -23,8 +23,10 @@
 package bdi4jade.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -121,12 +123,13 @@ public class Intention {
 	 * intention is set to unachievable.
 	 */
 	private synchronized void dispatchPlan() {
-		Set<Plan> options = getCanAchievePlans();
-		options.removeAll(executedPlans);
+		Map<Capability, Set<Plan>> options = getCanAchievePlans();
+		for (Set<Plan> plans : options.values()) {
+			plans.removeAll(executedPlans);
+		}
 
 		while (this.currentPlan == null && !options.isEmpty()) {
-			Plan selectedPlan = myAgent.getPlanSelectionStrategy().selectPlan(
-					goal, options);
+			Plan selectedPlan = myAgent.selectPlan(goal, options);
 			try {
 				this.currentPlan = selectedPlan.createPlanBody();
 				currentPlan.init(selectedPlan, this);
@@ -205,14 +208,18 @@ public class Intention {
 	 * 
 	 * @return the set of plans that can achieve the goal.
 	 */
-	private Set<Plan> getCanAchievePlans() {
-		Set<Plan> plans = new HashSet<Plan>();
+	private Map<Capability, Set<Plan>> getCanAchievePlans() {
+		Map<Capability, Set<Plan>> plans = new HashMap<>();
 		if (owner == null) {
-			for (Capability capability : myAgent.getCapabilities()) {
-				getCanAchievePlans(plans, capability);
+			for (Capability capability : myAgent.getAggregatedCapabilities()) {
+				Set<Plan> capabilityPlans = new HashSet<>();
+				getCanAchievePlans(capabilityPlans, capability);
+				plans.put(capability, capabilityPlans);
 			}
 		} else {
-			getCanAchievePlans(plans, owner);
+			Set<Plan> capabilityPlans = new HashSet<>();
+			getCanAchievePlans(capabilityPlans, owner);
+			plans.put(owner, capabilityPlans);
 		}
 		return plans;
 	}
@@ -243,6 +250,13 @@ public class Intention {
 	 */
 	public BDIAgent getMyAgent() {
 		return myAgent;
+	}
+
+	/**
+	 * @return the owner
+	 */
+	public Capability getOwner() {
+		return owner;
 	}
 
 	/**

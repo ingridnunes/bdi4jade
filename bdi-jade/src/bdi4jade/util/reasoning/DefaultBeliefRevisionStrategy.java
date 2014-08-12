@@ -23,8 +23,6 @@
 package bdi4jade.util.reasoning;
 
 import bdi4jade.belief.BeliefBase;
-import bdi4jade.core.BDIAgent;
-import bdi4jade.core.Capability;
 import bdi4jade.reasoning.BeliefRevisionStrategy;
 
 /**
@@ -34,7 +32,8 @@ import bdi4jade.reasoning.BeliefRevisionStrategy;
  * 
  * @author ingrid
  */
-public class DefaultBeliefRevisionStrategy implements BeliefRevisionStrategy {
+public class DefaultBeliefRevisionStrategy extends AbstractReasoningStrategy
+		implements BeliefRevisionStrategy {
 
 	/**
 	 * Invokes the {@link BeliefBase#reviewBeliefs()} for the belief base of all
@@ -43,17 +42,8 @@ public class DefaultBeliefRevisionStrategy implements BeliefRevisionStrategy {
 	 * @see bdi4jade.reasoning.BeliefRevisionStrategy#reviewBeliefs(bdi4jade.core.BDIAgent)
 	 */
 	@Override
-	public void reviewBeliefs(BDIAgent bdiAgent) {
-		for (Capability capability : bdiAgent.getCapabilities()) {
-			reviewBeliefs(capability);
-		}
-	}
+	public void reviewBeliefs() {
 
-	public void reviewBeliefs(Capability capability) {
-		capability.reviewBeliefs();
-		for (Capability child : capability.getPartCapabilities()) {
-			reviewBeliefs(child);
-		}
 	}
 
 }

@@ -34,7 +34,7 @@ import bdi4jade.reasoning.PlanSelectionStrategy;
  * 
  * @author ingrid
  */
-public class DefaultPlanSelectionStrategy implements PlanSelectionStrategy {
+public class DefaultPlanSelectionStrategy extends AbstractReasoningStrategy implements PlanSelectionStrategy {
 
 	/**
 	 * @see bdi4jade.reasoning.PlanSelectionStrategy#selectPlan(bdi4jade.goal.Goal,

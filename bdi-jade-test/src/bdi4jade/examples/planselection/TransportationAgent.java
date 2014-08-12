@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.TransientBelief;
+import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
 import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
@@ -38,7 +39,7 @@ import bdi4jade.plan.Plan;
  * @author ingrid
  * 
  */
-public class TransportationAgent extends UtilityBasedBDIAgent {
+public class TransportationAgent extends BDIAgent {
 
 	public static final String SATISFACTION = "Satisfaction";
 
@@ -51,7 +52,7 @@ public class TransportationAgent extends UtilityBasedBDIAgent {
 	public TransportationAgent() {
 		this.log = LogFactory.getLog(this.getClass());
 		this.rand = new Random(System.currentTimeMillis());
-		this.rootCapability = new Capability();
+		this.rootCapability = new UtilityBasedBDIAgent();
 		this.addCapability(rootCapability);
 	}
 

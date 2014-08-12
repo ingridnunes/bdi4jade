@@ -137,9 +137,8 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	 * @param goal
 	 *            the goal that is going to be dispatched.
 	 * 
-	 * @throws a
-	 * @{@link GoalParameterException} if an error occurred during setting up
-	 *         the next goal.
+	 * @throws ParameterException
+	 *             if an error occurred during setting up the next goal.
 	 */
 	protected void setNextGoal(Goal previousGoal, Goal goal)
 			throws ParameterException {

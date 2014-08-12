@@ -25,6 +25,8 @@ package bdi4jade.reasoning;
 import java.util.Map;
 import java.util.Set;
 
+import bdi4jade.core.Capability;
+import bdi4jade.core.GoalUpdateSet.GoalDescription;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 
@@ -35,7 +37,7 @@ import bdi4jade.goal.GoalStatus;
  * 
  * @author ingrid
  */
-public interface DeliberationFunction {
+public interface DeliberationFunction extends ReasoningStrategy {
 
 	/**
 	 * Selects the goals that must be tried to achieve and the ones that will be
@@ -45,6 +47,6 @@ public interface DeliberationFunction {
 	 *            the list of current goals (that might be intentions).
 	 * @return the list of selected goals.
 	 */
-	public Set<Goal> filter(Map<Goal, GoalStatus> goals);
+	public Set<GoalDescription> filter(Set<GoalDescription> goals);
 
 }

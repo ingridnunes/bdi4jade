@@ -171,7 +171,7 @@ public interface PlanBody extends GoalListener {
 	 *            the plan associated this this plan body.
 	 * @param intention
 	 *            the intention that this plan instance have to achieve.
-	 * @throws PlanBodyInstantiationException
+	 * @throws PlanInstantiationException
 	 *             if this plan body has already been initialized.
 	 */
 	public void init(Plan plan, Intention intention)

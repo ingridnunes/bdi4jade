@@ -25,6 +25,8 @@ package bdi4jade.reasoning;
 import java.util.Map;
 import java.util.Set;
 
+import bdi4jade.core.Capability;
+import bdi4jade.core.GoalUpdateSet;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 
@@ -35,7 +37,7 @@ import bdi4jade.goal.GoalStatus;
  * 
  * @author ingrid
  */
-public interface OptionGenerationFunction {
+public interface OptionGenerationFunction extends ReasoningStrategy {
 
 	/**
 	 * The goals parameter is a map of all goals of the agent (that might be
@@ -47,6 +49,6 @@ public interface OptionGenerationFunction {
 	 *            the current goals with their status.
 	 * @return the list of selected goals.
 	 */
-	public Set<Goal> generateGoals(Map<Goal, GoalStatus> goals);
+	public void generateGoals(GoalUpdateSet goalUpdateSet);
 
 }

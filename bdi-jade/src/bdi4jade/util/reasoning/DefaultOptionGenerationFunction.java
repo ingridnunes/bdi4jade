@@ -22,12 +22,7 @@
 
 package bdi4jade.util.reasoning;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import bdi4jade.goal.Goal;
-import bdi4jade.goal.GoalStatus;
+import bdi4jade.core.GoalUpdateSet;
 import bdi4jade.reasoning.OptionGenerationFunction;
 
 /**
@@ -36,15 +31,15 @@ import bdi4jade.reasoning.OptionGenerationFunction;
  * 
  * @author ingrid
  */
-public class DefaultOptionGenerationFunction implements
-		OptionGenerationFunction {
+public class DefaultOptionGenerationFunction extends AbstractReasoningStrategy
+		implements OptionGenerationFunction {
 
 	/**
 	 * @see bdi4jade.reasoning.OptionGenerationFunction#generateGoals(java.util.Map)
 	 */
 	@Override
-	public Set<Goal> generateGoals(Map<Goal, GoalStatus> goals) {
-		return new HashSet<Goal>(goals.keySet());
+	public void generateGoals(GoalUpdateSet goalUpdateSet) {
+
 	}
 
 }

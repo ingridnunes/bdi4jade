@@ -65,7 +65,8 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 
 		private Set<Capability> getCanProcessCapabilities(final ACLMessage msg) {
 			Set<Capability> capabilities = new HashSet<Capability>();
-			for (Capability capability : getMyAgent().getCapabilities()) {
+			for (Capability capability : getMyAgent()
+					.getAggregatedCapabilities()) {
 				if (capability.canProcess(msg)) {
 					capabilities.add(capability);
 				}

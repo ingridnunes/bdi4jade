@@ -24,6 +24,7 @@ package bdi4jade.reasoning;
 
 import java.util.Set;
 
+import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
 
@@ -45,6 +46,8 @@ public interface PlanSelectionStrategy {
 	 *            the plans that can achieve the goal.
 	 * @return the selected plan.
 	 */
-	public Plan selectPlan(Goal goal, Set<Plan> plans);
+	public Plan selectPlan(Goal goal, Set<Plan> candidatePlans);
+	
+	public void setCapability(Capability capability);
 
 }

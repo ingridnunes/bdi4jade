@@ -22,20 +22,19 @@
 
 package bdi4jade.extension.planselection.utilitybased;
 
-import bdi4jade.core.BDIAgent;
+import bdi4jade.core.Capability;
 
 /**
  * @author ingrid
  * 
  */
-public class UtilityBasedBDIAgent extends BDIAgent {
+public class UtilityBasedBDIAgent extends Capability {
 
 	private static final long serialVersionUID = -1721751203235905764L;
 
 	public UtilityBasedBDIAgent() {
 		setPlanSelectionStrategy(new UtilityBasedPlanSelectionStrategy(this));
-		// FIXME getRootCapability().getBeliefBase()
-			//	.addBelief(new SoftgoalPreferences());
+		getBeliefBase().addBelief(new SoftgoalPreferences());
 	}
 
 }

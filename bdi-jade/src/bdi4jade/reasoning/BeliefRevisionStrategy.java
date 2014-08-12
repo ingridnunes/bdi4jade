@@ -29,7 +29,7 @@ import bdi4jade.core.BDIAgent;
  * 
  * @author ingrid
  */
-public interface BeliefRevisionStrategy {
+public interface BeliefRevisionStrategy extends ReasoningStrategy {
 
 	/**
 	 * This method receives an agent whose beliefs are to be reviewed. It may
@@ -41,6 +41,6 @@ public interface BeliefRevisionStrategy {
 	 * @param bdiAgent
 	 *            the {@link BDIAgent} whose beliefs are to be reviewed.
 	 */
-	public void reviewBeliefs(BDIAgent bdiAgent);
+	public void reviewBeliefs();
 
 }

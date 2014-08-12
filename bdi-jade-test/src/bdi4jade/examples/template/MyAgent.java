@@ -22,6 +22,7 @@
 
 package bdi4jade.examples.template;
 
+import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.examples.template.goal.MyGoal;
 import bdi4jade.examples.template.plan.MyPlan1;
@@ -34,14 +35,14 @@ import bdi4jade.goal.Softgoal;
  * @author ingrid
  * 
  */
-public class MyAgent extends UtilityBasedBDIAgent {
+public class MyAgent extends BDIAgent {
 
 	static final long serialVersionUID = 2712019445290687786L;
 
 	private final Capability rootCapability;
 
 	public MyAgent() {
-		this.rootCapability = new Capability();
+		this.rootCapability = new UtilityBasedBDIAgent();
 		this.addCapability(rootCapability);
 	}
 

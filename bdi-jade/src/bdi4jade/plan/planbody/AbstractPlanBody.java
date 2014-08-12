@@ -153,7 +153,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 			Iterator<Goal> it = subgoals.iterator();
 			while (it.hasNext()) {
 				Goal subgoal = it.next();
-				this.intention.getMyAgent().setNoLongerDesired(subgoal);
+				this.intention.getMyAgent().dropGoal(subgoal);
 				it.remove();
 			}
 		}
@@ -304,7 +304,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 *            the plan associated this this plan body.
 	 * @param intention
 	 *            the intention that this plan instance have to achieve.
-	 * @throws PlanBodyInstantiationException
+	 * @throws PlanInstantiationException
 	 *             if this plan body has already been initialized.
 	 */
 	public final void init(Plan plan, Intention intention)

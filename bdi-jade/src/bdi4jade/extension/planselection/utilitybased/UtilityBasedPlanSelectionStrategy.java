@@ -29,11 +29,11 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.core.BDIAgent;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
 import bdi4jade.reasoning.PlanSelectionStrategy;
+import bdi4jade.util.reasoning.AbstractReasoningStrategy;
 
 /**
  * A utility-based implementation of the {@link PlanSelectionStrategy}. It
@@ -42,7 +42,8 @@ import bdi4jade.reasoning.PlanSelectionStrategy;
  * 
  * @author ingrid
  */
-public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy {
+public class UtilityBasedPlanSelectionStrategy extends
+		AbstractReasoningStrategy implements PlanSelectionStrategy {
 
 	private final Log log;
 	private final UtilityBasedBDIAgent myAgent;
@@ -68,13 +69,6 @@ public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy 
 	}
 
 	/**
-	 * @return the myAgent
-	 */
-	public BDIAgent getMyAgent() {
-		return myAgent;
-	}
-
-	/**
 	 * @see bdi4jade.reasoning.PlanSelectionStrategy#selectPlan(bdi4jade.goal.Goal,
 	 *      java.util.Set)
 	 */
@@ -90,7 +84,7 @@ public class UtilityBasedPlanSelectionStrategy implements PlanSelectionStrategy 
 					.getPlanLibrary().getCapability().getBeliefBase()
 					.getBelief(SoftgoalPreferences.NAME);
 
-			for (Softgoal softgoal : myAgent.getAllSoftgoals()) {
+			for (Softgoal softgoal : capability.getMyAgent().getAllSoftgoals()) {
 				Double preference = preferences
 						.getPreferenceForSoftgoal(softgoal);
 				if (preference != null) {
