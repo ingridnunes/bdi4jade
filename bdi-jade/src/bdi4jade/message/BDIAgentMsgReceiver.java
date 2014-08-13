@@ -67,7 +67,7 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 			Set<Capability> capabilities = new HashSet<Capability>();
 			for (Capability capability : getMyAgent()
 					.getAggregatedCapabilities()) {
-				if (capability.canProcess(msg)) {
+				if (capability.canHandle(msg)) {
 					capabilities.add(capability);
 				}
 			}

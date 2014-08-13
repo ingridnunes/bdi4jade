@@ -70,7 +70,7 @@ public class GoalUpdateSet {
 		private GoalDescription(Intention intention) {
 			this.goal = intention.getGoal();
 			this.status = intention.getStatus();
-			this.dispatcher = intention.getOwner();
+			this.dispatcher = intention.getDispatcher();
 			this.intention = intention;
 		}
 

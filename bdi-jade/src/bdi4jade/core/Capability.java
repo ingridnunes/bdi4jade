@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -205,6 +206,25 @@ public class Capability implements Serializable {
 		resetAgentCapabilities();
 	}
 
+	/**
+	 * Adds the set of plans of this capability that can achieve the given goal
+	 * to a map of candidate plans. It checks its plan library and the part
+	 * capabilities, recursively.
+	 * 
+	 * @param goal
+	 *            the goal to be achieved.
+	 * @param candidatePlansMap
+	 *            the map to which the set of plans that can achieve the goal
+	 *            should be added.
+	 */
+	public void addCandidatePlans(Goal goal,
+			Map<Capability, Set<Plan>> candidatePlansMap) {
+		candidatePlansMap.put(this, planLibrary.getCandidatePlans(goal));
+		for (Capability part : partCapabilities) {
+			part.addCandidatePlans(goal, candidatePlansMap);
+		}
+	}
+
 	final void addIntention(Intention intention) {
 		this.intentions.add(intention);
 	}
@@ -229,14 +249,25 @@ public class Capability implements Serializable {
 
 	/**
 	 * Checks if this capability has a plan that can process the given message.
+	 * It checks the plan library of this capabilities and, if cannot handle it,
+	 * it checks part capabilities, recursively.
 	 * 
 	 * @param msg
 	 *            the message to be checked.
 	 * @return true if this capability has at least a plan that can process the
 	 *         message.
 	 */
-	public boolean canProcess(ACLMessage msg) {
-		return this.planLibrary.canHandle(msg);
+	public boolean canHandle(ACLMessage msg) {
+		if (planLibrary.canHandle(msg)) {
+			return true;
+		} else {
+			for (Capability part : partCapabilities) {
+				if (part.canHandle(msg)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

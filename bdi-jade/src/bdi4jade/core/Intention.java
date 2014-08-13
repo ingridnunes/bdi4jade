@@ -56,16 +56,16 @@ import bdi4jade.plan.planbody.PlanBody;
 public class Intention {
 
 	private PlanBody currentPlan;
-	private final Capability owner;
+	private final Capability dispatcher;
 	private final Set<Plan> executedPlans;
 	private final Goal goal;
+	private final List<GoalListener> goalListeners;
 	private final Log log;
 	private final BDIAgent myAgent;
 	private boolean noLongerDesired;
-	private final Capability dispatcher;
+	private final Set<Capability> owners;
 	private boolean unachievable;
 	private boolean waiting;
-	private final List<GoalListener> goalListeners;
 
 	/**
 	 * Creates a new intention. It is associated with an agent and the goal that
@@ -102,8 +102,20 @@ public class Intention {
 		this.executedPlans = new HashSet<>();
 		this.currentPlan = null;
 		this.dispatcher = dispatcher;
-		this.owner = null; // TODO
+		this.owners = new HashSet<>(); // TODO
 		this.goalListeners = new LinkedList<>();
+	}
+
+	/**
+	 * Adds a listener to be notified when about goal events.
+	 * 
+	 * @param goalListener
+	 *            the listener to be notified.
+	 */
+	public void addGoalListener(GoalListener goalListener) {
+		synchronized (goalListeners) {
+			goalListeners.add(goalListener);
+		}
 	}
 
 	/**
@@ -113,8 +125,18 @@ public class Intention {
 	 * intention is set to unachievable.
 	 */
 	private synchronized void dispatchPlan() {
-		// FIXME
-		Map<Capability, Set<Plan>> options = getCanAchievePlans();
+		Map<Capability, Set<Plan>> options = new HashMap<>();
+
+		if (owners.isEmpty()) {
+			for (Capability capability : myAgent.getAggregatedCapabilities()) {
+				capability.addCandidatePlans(goal, options);
+			}
+		} else {
+			for (Capability capability : owners) {
+				capability.addCandidatePlans(goal, options);
+			}
+		}
+
 		for (Set<Plan> plans : options.values()) {
 			plans.removeAll(executedPlans);
 		}
@@ -167,34 +189,12 @@ public class Intention {
 	}
 
 	/**
-	 * Returns all plans from the capabilities that can achieve the goal. If the
-	 * goal is associated with a capability, only the capability and its
-	 * children capabilities will be searched. Otherwise, all plan libraries
-	 * will be considered.
+	 * Returns the capability that dispatched this goal.
 	 * 
-	 * @return the set of plans that can achieve the goal.
+	 * @return the dispatcher.
 	 */
-	private Map<Capability, Set<Plan>> getCanAchievePlans() {
-		Map<Capability, Set<Plan>> plans = new HashMap<>();
-		if (dispatcher == null) {
-			for (Capability capability : myAgent.getAggregatedCapabilities()) {
-				Set<Plan> capabilityPlans = new HashSet<>();
-				getCanAchievePlans(capabilityPlans, capability);
-				plans.put(capability, capabilityPlans);
-			}
-		} else {
-			Set<Plan> capabilityPlans = new HashSet<>();
-			getCanAchievePlans(capabilityPlans, dispatcher);
-			plans.put(dispatcher, capabilityPlans);
-		}
-		return plans;
-	}
-
-	private void getCanAchievePlans(final Set<Plan> plans, Capability capability) {
-		plans.addAll(capability.getPlanLibrary().canAchievePlans(goal));
-		for (Capability child : capability.getPartCapabilities()) {
-			getCanAchievePlans(plans, child);
-		}
+	public Capability getDispatcher() {
+		return dispatcher;
 	}
 
 	/**
@@ -207,6 +207,15 @@ public class Intention {
 	}
 
 	/**
+	 * Returns all goal listeners.
+	 * 
+	 * @return the goalListeners.
+	 */
+	public List<GoalListener> getGoalListeners() {
+		return goalListeners;
+	}
+
+	/**
 	 * Returns the agent associated with this intention.
 	 * 
 	 * @return the myAgent.
@@ -216,21 +225,12 @@ public class Intention {
 	}
 
 	/**
-	 * Returns the capability that owns this goal.
+	 * Returns the set of capabilities that own this goal.
 	 * 
-	 * @return the owner.
+	 * @return the owners.
 	 */
-	public Capability getOwner() {
-		return owner;
-	}
-
-	/**
-	 * Returns the capability that dispatched this goal.
-	 * 
-	 * @return the dispatcher.
-	 */
-	public Capability getDispatcher() {
-		return dispatcher;
+	public Set<Capability> getOwners() {
+		return owners;
 	}
 
 	/**
@@ -291,6 +291,19 @@ public class Intention {
 	}
 
 	/**
+	 * Removes a goal listener, so it will not be notified about the goal events
+	 * anymore.
+	 * 
+	 * @param goalListener
+	 *            the goal listener to be removed.
+	 */
+	public void removeGoalListener(GoalListener goalListener) {
+		synchronized (goalListeners) {
+			goalListeners.remove(goalListener);
+		}
+	}
+
+	/**
 	 * Makes this intention starts to try to achieve the goal. It changes the
 	 * goal status from {@link GoalStatus#WAITING} or
 	 * {@link GoalStatus#PLAN_FAILED} to {@link GoalStatus#TRYING_TO_ACHIEVE}.
@@ -312,40 +325,6 @@ public class Intention {
 		default:
 			assert false : status;
 			break;
-		}
-	}
-
-	/**
-	 * Adds a listener to be notified when about goal events.
-	 * 
-	 * @param goalListener
-	 *            the listener to be notified.
-	 */
-	public void addGoalListener(GoalListener goalListener) {
-		synchronized (goalListeners) {
-			goalListeners.add(goalListener);
-		}
-	}
-
-	/**
-	 * Returns all goal listeners.
-	 * 
-	 * @return the goalListeners.
-	 */
-	public List<GoalListener> getGoalListeners() {
-		return goalListeners;
-	}
-
-	/**
-	 * Removes a goal listener, so it will not be notified about the goal events
-	 * anymore.
-	 * 
-	 * @param goalListener
-	 *            the goal listener to be removed.
-	 */
-	public void removeGoalListener(GoalListener goalListener) {
-		synchronized (goalListeners) {
-			goalListeners.remove(goalListener);
 		}
 	}
 

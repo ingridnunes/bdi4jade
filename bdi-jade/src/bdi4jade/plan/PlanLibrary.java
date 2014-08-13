@@ -120,34 +120,11 @@ public class PlanLibrary implements Serializable {
 	}
 
 	/**
-	 * Returns the set of plans that can achieve the given goal. It checks this
-	 * plan library and the plan library of the part capabilities, recursively.
-	 * 
-	 * @param goal
-	 *            the goal to be achieved.
-	 * @return the set of plans that can achieve the goal.
-	 */
-	public Set<Plan> canAchievePlans(Goal goal) {
-		Set<Plan> plans = new HashSet<Plan>();
-		for (Plan plan : this.plans) {
-			if (plan.canAchieve(goal)) {
-				plans.add(plan);
-			}
-		}
-		for (Capability child : capability.getPartCapabilities()) {
-			plans.addAll(child.getPlanLibrary().canAchievePlans(goal));
-		}
-		return plans;
-	}
-
-	/**
-	 * Returns true if there is a plan that can process the given message. It
-	 * checks this plan library and the plan library of the part capabilities,
-	 * recursively.
+	 * Returns true if there is a plan that can handle the given message.
 	 * 
 	 * @param message
 	 *            the message to be checked.
-	 * @return true if a plan can process the message, false otherwise.
+	 * @return true if a plan can handle the message, false otherwise.
 	 */
 	public boolean canHandle(ACLMessage message) {
 		for (Plan plan : this.plans) {
@@ -155,12 +132,24 @@ public class PlanLibrary implements Serializable {
 				return true;
 			}
 		}
-		for (Capability part : capability.getPartCapabilities()) {
-			if (part.getPlanLibrary().canHandle(message)) {
-				return true;
+		return false;
+	}
+
+	/**
+	 * Returns the set of plans that can achieve the given goal.
+	 * 
+	 * @param goal
+	 *            the goal to be achieved.
+	 * @return the set of plans that can achieve the goal.
+	 */
+	public Set<Plan> getCandidatePlans(Goal goal) {
+		Set<Plan> plans = new HashSet<Plan>();
+		for (Plan plan : this.plans) {
+			if (plan.canAchieve(goal)) {
+				plans.add(plan);
 			}
 		}
-		return false;
+		return plans;
 	}
 
 	/**
