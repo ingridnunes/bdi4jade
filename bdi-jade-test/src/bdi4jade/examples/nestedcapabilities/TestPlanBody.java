@@ -54,7 +54,7 @@ public class TestPlanBody extends AbstractPlanBody {
 			printBelief(Belief.CHILD_BELIEF);
 
 			log.info("Testing plans...");
-			dispatchProtectedSubgoalAndListen(new MyGoal());
+			dispatchSubgoalAndListen(new MyGoal());// FIXME
 			this.step = TestStep.MY_GOAL;
 			break;
 		case MY_GOAL:
@@ -63,7 +63,7 @@ public class TestPlanBody extends AbstractPlanBody {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				dispatchProtectedSubgoalAndListen(new ChildGoal());
+				dispatchSubgoalAndListen(new ChildGoal());// FIXME
 			}
 			this.step = TestStep.CHILD_GOAL;
 			break;
@@ -95,7 +95,7 @@ public class TestPlanBody extends AbstractPlanBody {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				dispatchProtectedSubgoalAndListen(new ParentGoal());
+				dispatchSubgoalAndListen(new ParentGoal());// FIXME
 			}
 
 			this.step = TestStep.PARENT_PROTECTED_GOAL;
@@ -106,7 +106,7 @@ public class TestPlanBody extends AbstractPlanBody {
 				return;
 			} else {
 				printGoal(goalEvent, false);
-				dispatchProtectedSubgoalAndListen(new SiblingGoal());
+				dispatchSubgoalAndListen(new SiblingGoal());// FIXME
 			}
 
 			this.step = TestStep.SIBLING_PROTECTED_GOAL;

@@ -57,34 +57,6 @@ public interface PlanBody extends GoalListener {
 	public void dispatchGoal(Goal goal);
 
 	/**
-	 * Dispatches a goal to be achieved, using the capability (or its children
-	 * capabilities) associated with the plan.
-	 * 
-	 * @param goal
-	 *            the goal to be dispatched.
-	 */
-	public void dispatchProtectedGoal(Goal goal);
-
-	/**
-	 * Dispatches a subgoal to be achieved, using the capability (or its
-	 * children capabilities) associated with the plan.
-	 * 
-	 * @param subgoal
-	 *            the subgoal to be dispatched.
-	 */
-	public void dispatchProtectedSubgoal(Goal subgoal);
-
-	/**
-	 * Dispatches a subgoal to be achieved, using the capability (or its
-	 * children capabilities) associated with the plan, and registers itself as
-	 * a listener to receive a notification of the end of execution of the goal.
-	 * 
-	 * @param subgoal
-	 *            the subgoal to be dispatched.
-	 */
-	public void dispatchProtectedSubgoalAndListen(Goal subgoal);
-
-	/**
 	 * Dispatches a subgoal to be achieved. Dispatched subgoals are goals of an
 	 * agent as long as the plan body that dispatched it is being executed.
 	 * 

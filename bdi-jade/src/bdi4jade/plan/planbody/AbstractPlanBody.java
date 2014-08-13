@@ -76,44 +76,16 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 * @see PlanBody#dispatchGoal(Goal)
 	 */
 	public void dispatchGoal(Goal goal) {
-		this.intention.getMyAgent().addGoal(goal);
-	}
-
-	/**
-	 * @see PlanBody#dispatchProtectedGoal(Goal)
-	 */
-	public void dispatchProtectedGoal(Goal goal) {
 		this.intention.getMyAgent().addGoal(
 				this.plan.getPlanLibrary().getCapability(), goal);
-	}
-
-	/**
-	 * @see PlanBody#dispatchProtectedSubgoal(Goal)
-	 */
-	public void dispatchProtectedSubgoal(Goal subgoal) {
-		this.intention.getMyAgent().addGoal(
-				this.plan.getPlanLibrary().getCapability(), subgoal);
-		synchronized (subgoals) {
-			this.subgoals.add(subgoal);
-		}
-	}
-
-	/**
-	 * @see PlanBody#dispatchProtectedSubgoalAndListen(Goal)
-	 */
-	public void dispatchProtectedSubgoalAndListen(Goal subgoal) {
-		this.intention.getMyAgent().addGoal(
-				this.plan.getPlanLibrary().getCapability(), subgoal, this);
-		synchronized (subgoals) {
-			this.subgoals.add(subgoal);
-		}
 	}
 
 	/**
 	 * @see PlanBody#dispatchSubgoal(Goal)
 	 */
 	public void dispatchSubgoal(Goal subgoal) {
-		this.intention.getMyAgent().addGoal(subgoal);
+		this.intention.getMyAgent().addGoal(
+				this.plan.getPlanLibrary().getCapability(), subgoal);
 		synchronized (subgoals) {
 			this.subgoals.add(subgoal);
 		}
@@ -123,7 +95,8 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 * @see PlanBody#dispatchSubgoalAndListen(Goal)
 	 */
 	public void dispatchSubgoalAndListen(Goal subgoal) {
-		this.intention.getMyAgent().addGoal(subgoal, this);
+		this.intention.getMyAgent().addGoal(
+				this.plan.getPlanLibrary().getCapability(), subgoal, this);
 		synchronized (subgoals) {
 			this.subgoals.add(subgoal);
 		}

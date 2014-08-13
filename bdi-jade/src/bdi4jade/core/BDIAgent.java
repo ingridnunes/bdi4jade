@@ -106,6 +106,7 @@ public class BDIAgent extends Agent {
 			reviewBeliefs();
 
 			synchronized (allIntentions) {
+				// Removing finished goals and generate appropriate goal events
 				GoalUpdateSet agentGoalUpdateSet = processIntentions(agentIntentions);
 				Map<Capability, GoalUpdateSet> capabilityGoalUpdateSets = new HashMap<>();
 				for (Capability capability : capabilities) {
@@ -115,6 +116,7 @@ public class BDIAgent extends Agent {
 							capabilityGoalUpdateSet);
 				}
 
+				// Generating new goals and choosing goals to drop
 				generateGoals(agentGoalUpdateSet, capabilityGoalUpdateSets);
 
 				// Adding generated goals
@@ -223,7 +225,7 @@ public class BDIAgent extends Agent {
 	private final Set<Capability> aggregatedCapabilities;
 	private final Map<Goal, Intention> allIntentions;
 	private final BDIInterpreter bdiInterpreter;
-	private final Set<Capability> capabilities;
+	private Set<Capability> capabilities;
 	protected final List<GoalListener> goalListeners;
 	protected final Log log;
 	private final Set<Softgoal> softgoals;
@@ -243,7 +245,10 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
-	 * Default constructor.
+	 * Creates a new BDIAgent with a capability.
+	 * 
+	 * @param capability
+	 *            the capability to be added to the agent.
 	 */
 	public BDIAgent(Capability capability) {
 		this();
@@ -251,7 +256,10 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
-	 * Default constructor.
+	 * Creates a new BDIAgent with a set of capabilities.
+	 * 
+	 * @param capabilities
+	 *            the capabilities to be added to the agent.
 	 */
 	public BDIAgent(Capability[] capabilities) {
 		this();
@@ -261,7 +269,10 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
-	 * Default constructor.
+	 * Creates a new BDIAgent with a set of capabilities.
+	 * 
+	 * @param capabilities
+	 *            the capabilities to be added to the agent.
 	 */
 	public BDIAgent(Collection<Capability> capabilities) {
 		this();
@@ -276,11 +287,10 @@ public class BDIAgent extends Agent {
 	 * @param capability
 	 *            capability to be added.
 	 */
-	public void addCapability(Capability capability) {
-		synchronized (capabilities) {
-			this.capabilities.add(capability);
-			this.aggregatedCapabilities.add(capability); // FIXME
-			capability.setMyAgent(this);
+	public final void addCapability(Capability capability) {
+		synchronized (aggregatedCapabilities) {
+			this.aggregatedCapabilities.add(capability);
+			resetAllCapabilities();
 		}
 	}
 
@@ -288,28 +298,26 @@ public class BDIAgent extends Agent {
 	 * Adds a new goal to this agent to be achieved.
 	 * 
 	 * @param dispatcher
-	 *            the Capability that dispatched this goal.
+	 *            the capability that dispatched this goal.
 	 * @param goal
 	 *            the goal to be achieved.
 	 */
-	public void addGoal(Capability dispatcher, Goal goal) {
+	public final void addGoal(Capability dispatcher, Goal goal) {
 		addIntention(dispatcher, goal, null);
 	}
 
 	/**
 	 * Adds a new goal to this agent to be achieved and adds a listener to
-	 * observe its end. If this goal has a capability that owns it, only plans
-	 * of this capability and its children capabilities will be considered to
-	 * achieve this goal.
+	 * observe events related to this goal.
 	 * 
 	 * @param dispatcher
 	 *            the Capability that dispatched this goal.
 	 * @param goal
 	 *            the goal to be achieved.
 	 * @param goalListener
-	 *            the listener to be notified.
+	 *            the listener to be notified about this goal events.
 	 */
-	public void addGoal(Capability dispatcher, Goal goal,
+	public final void addGoal(Capability dispatcher, Goal goal,
 			GoalListener goalListener) {
 		addIntention(dispatcher, goal, goalListener);
 	}
@@ -320,21 +328,21 @@ public class BDIAgent extends Agent {
 	 * @param goal
 	 *            the goal to be achieved.
 	 */
-	public void addGoal(Goal goal) {
+	public final void addGoal(Goal goal) {
 		addIntention(null, goal, null);
 	}
 
 	/**
 	 * Adds a new goal to this agent to be achieved and adds a listener to
-	 * observe its end.
+	 * observe events related to this goal.
 	 * 
 	 * @param goal
 	 *            the goal to be achieved.
 	 * @param goalListener
 	 *            the listener to be notified.
 	 */
-	public void addGoal(Goal goal, GoalListener goalListener) {
-		this.addGoal(null, goal, goalListener);
+	public final void addGoal(Goal goal, GoalListener goalListener) {
+		addIntention(null, goal, goalListener);
 	}
 
 	/**
@@ -343,26 +351,24 @@ public class BDIAgent extends Agent {
 	 * @param goalListener
 	 *            the listener to be notified.
 	 */
-	public void addGoalListener(GoalListener goalListener) {
+	public final void addGoalListener(GoalListener goalListener) {
 		synchronized (goalListeners) {
 			goalListeners.add(goalListener);
 		}
 	}
 
 	/**
-	 * Adds a new goal to this agent to be achieved and adds a listener to
-	 * observe its end. If this goal has a capability that owns it, only plans
-	 * of this capability and its children capabilities will be considered to
-	 * achieve this goal.
+	 * Adds a new goal to this agent to be achieved by creating an intention. It
+	 * also may add a listener to observe events related to this goal.
 	 * 
 	 * @param dispatcher
-	 *            the Capability that dispatched this goal.
+	 *            the capability that dispatched this goal.
 	 * @param goal
 	 *            the goal to be achieved.
 	 * @param goalListener
 	 *            the listener to be notified.
 	 */
-	private Intention addIntention(Capability dispatcher, Goal goal,
+	private final Intention addIntention(Capability dispatcher, Goal goal,
 			GoalListener goalListener) {
 		synchronized (allIntentions) {
 			Intention intention = new Intention(goal, this, dispatcher);
@@ -380,28 +386,28 @@ public class BDIAgent extends Agent {
 			return intention;
 		}
 	}
-	
+
 	/**
 	 * Adds a new softgoal to this agent.
 	 * 
 	 * @param softgoal
 	 *            the softgoal to be pursued.
 	 */
-	public void addSoftgoal(Softgoal softgoal) {
+	public final void addSoftgoal(Softgoal softgoal) {
 		synchronized (softgoals) {
 			this.softgoals.add(softgoal);
 		}
 	}
 
-
 	/**
-	 * Drops a given goal of this agent. If the goal is not part of the agent's
-	 * current goals, no action is performed.
+	 * Drops a given goal of this agent, which means setting it as no longer
+	 * desired. If the goal is not part of the agent's current goals, no action
+	 * is performed.
 	 * 
 	 * @param goal
 	 *            the goal to be dropped.
 	 */
-	public void dropGoal(Goal goal) {
+	public final void dropGoal(Goal goal) {
 		synchronized (allIntentions) {
 			Intention intention = allIntentions.get(goal);
 			if (intention != null) {
@@ -418,7 +424,7 @@ public class BDIAgent extends Agent {
 	 *            the softgoal to be dropped.
 	 */
 
-	public void dropSoftoal(Softgoal softgoal) {
+	public final void dropSoftoal(Softgoal softgoal) {
 		synchronized (softgoals) {
 			this.softgoals.remove(softgoal);
 		}
@@ -427,9 +433,16 @@ public class BDIAgent extends Agent {
 	/**
 	 * This method is responsible for selecting a set of goals that must be
 	 * tried to be achieved (intentions) from the set of goals. Its default
-	 * implementation requests each of its capabilities to filter their goals.
-	 * Subclasses may override this method to customize this deliberation
-	 * function.
+	 * implementation selects all agent goals (those not dispatched within the
+	 * scope of a capability) to be achieved, and requests each of its
+	 * capabilities to filter their goals. Subclasses may override this method
+	 * to customize this deliberation function.
+	 * 
+	 * @param agentGoals
+	 *            the set of agent goals, which are goals not dispatched within
+	 *            the scope of a capability.
+	 * @param capabilityGoals
+	 *            the map from capabilities to their set of goals.
 	 */
 	protected Set<GoalDescription> filter(Set<GoalDescription> agentGoals,
 			Map<Capability, Set<GoalDescription>> capabilityGoals) {
@@ -447,7 +460,7 @@ public class BDIAgent extends Agent {
 	 * @param goalEvent
 	 *            the event to notify.
 	 */
-	private void fireGoalEvent(GoalEvent goalEvent) {
+	private final void fireGoalEvent(GoalEvent goalEvent) {
 		synchronized (goalListeners) {
 			for (GoalListener goalListener : goalListeners) {
 				goalListener.goalPerformed(goalEvent);
@@ -462,7 +475,7 @@ public class BDIAgent extends Agent {
 	 * @param intention
 	 *            the intention used to create the goal event.
 	 */
-	private void fireGoalEvent(Intention intention) {
+	private final void fireGoalEvent(Intention intention) {
 		Goal goal = intention.getGoal();
 		GoalStatus status = intention.getStatus();
 		log.debug("Goal: " + goal.getClass().getSimpleName() + " (" + status
@@ -484,6 +497,13 @@ public class BDIAgent extends Agent {
 	 * ones. Its default implementation requests each of its capabilities to
 	 * generate or drop goals. Subclasses may override this method to customize
 	 * this options generation function.
+	 * 
+	 * @param agentGoalUpdateSet
+	 *            the {@link GoalUpdateSet} that contains the set of agent
+	 *            current goals. It has also a set of dropped goals and
+	 *            generated goals, which are used as outputs of this method.
+	 * @param capabilityGoalUpdateSets
+	 *            the map from capabilities to their goal update set.
 	 */
 	protected void generateGoals(GoalUpdateSet agentGoalUpdateSet,
 			Map<Capability, GoalUpdateSet> capabilityGoalUpdateSets) {
@@ -497,8 +517,8 @@ public class BDIAgent extends Agent {
 	 * 
 	 * @return the rootCapability
 	 */
-	public Set<Capability> getAggregatedCapabilities() {
-		synchronized (capabilities) {
+	public final Set<Capability> getAggregatedCapabilities() {
+		synchronized (aggregatedCapabilities) {
 			return aggregatedCapabilities;
 		}
 	}
@@ -509,8 +529,8 @@ public class BDIAgent extends Agent {
 	 * 
 	 * @return the collection of all beliefs of this agent.
 	 */
-	public Collection<Belief<?>> getAllBeliefs() {
-		synchronized (capabilities) {
+	public final Collection<Belief<?>> getAllBeliefs() {
+		synchronized (aggregatedCapabilities) {
 			Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
 			for (Capability capability : capabilities) {
 				beliefs.addAll(capability.getBeliefBase().getBeliefs());
@@ -520,10 +540,13 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
-	 * @return the capabilities
+	 * Returns all capabilities that are part of this agent. This included all
+	 * capabilities composed or associated with other capabilities.
+	 * 
+	 * @return the capabilities.
 	 */
-	public Collection<Capability> getAllCapabilities() {
-		synchronized (capabilities) {
+	public final Collection<Capability> getAllCapabilities() {
+		synchronized (aggregatedCapabilities) {
 			return capabilities;
 		}
 	}
@@ -534,7 +557,7 @@ public class BDIAgent extends Agent {
 	 * 
 	 * @return the set of goals.
 	 */
-	public Set<Goal> getAllGoals() {
+	public final Set<Goal> getAllGoals() {
 		synchronized (allIntentions) {
 			return allIntentions.keySet();
 		}
@@ -545,7 +568,7 @@ public class BDIAgent extends Agent {
 	 * 
 	 * @return the set of softgoals.
 	 */
-	public Set<Softgoal> getAllSoftgoals() {
+	public final Set<Softgoal> getAllSoftgoals() {
 		synchronized (softgoals) {
 			return this.softgoals;
 		}
@@ -556,14 +579,17 @@ public class BDIAgent extends Agent {
 	 * 
 	 * @return the goalListeners.
 	 */
-	public List<GoalListener> getGoalListeners() {
+	public final List<GoalListener> getGoalListeners() {
 		return goalListeners;
 	}
 
 	/**
-	 * @return the intentions
+	 * Returns all agent intentions, which are goals that this agent is
+	 * committed to achieve.
+	 * 
+	 * @return the intentions.
 	 */
-	public Set<Intention> getIntentions() {
+	public final Set<Intention> getIntentions() {
 		synchronized (allIntentions) {
 			Set<Intention> activeIntentions = new HashSet<Intention>();
 			for (Intention intention : activeIntentions) {
@@ -576,7 +602,8 @@ public class BDIAgent extends Agent {
 
 	/**
 	 * This method initializes the BDI agent. It is invoked by the
-	 * {@link #setup()} method.
+	 * {@link #setup()} method. This is an empty method that should be overriden
+	 * by subclasses.
 	 */
 	protected void init() {
 
@@ -588,13 +615,13 @@ public class BDIAgent extends Agent {
 	 * @param capability
 	 *            capability to be removed.
 	 * 
-	 * @return true if the capability exists and was removed.
+	 * @return true if the capability exists and was removed, false otherwise.
 	 */
-	public boolean removeCapability(Capability capability) {
-		synchronized (capabilities) { // FIXME
-			boolean removed = this.capabilities.remove(capability);
+	public final boolean removeCapability(Capability capability) {
+		synchronized (aggregatedCapabilities) {
+			boolean removed = this.aggregatedCapabilities.remove(capability);
 			if (removed) {
-				capability.setMyAgent(null);
+				resetAllCapabilities();
 			}
 			return removed;
 		}
@@ -607,14 +634,52 @@ public class BDIAgent extends Agent {
 	 * @param goalListener
 	 *            the goal listener to be removed.
 	 */
-	public void removeGoalListener(GoalListener goalListener) {
+	public final void removeGoalListener(GoalListener goalListener) {
 		synchronized (goalListeners) {
 			goalListeners.remove(goalListener);
 		}
 	}
 
-	void resetAllCapabilities() {
-		//TODO
+	final void resetAllCapabilities() {
+		synchronized (aggregatedCapabilities) {
+			Set<Capability> allCapabilities = new HashSet<>();
+			Set<Capability> capabilitiesToBeProcessed = new HashSet<>(
+					aggregatedCapabilities);
+
+			while (!capabilitiesToBeProcessed.isEmpty()) {
+				Capability current = capabilitiesToBeProcessed.iterator()
+						.next();
+				allCapabilities.add(current);
+				for (Capability part : current.getPartCapabilities()) {
+					if (!allCapabilities.contains(part))
+						capabilitiesToBeProcessed.add(part);
+				}
+				for (Capability target : current.getAssociatedCapabilities()) {
+					if (!allCapabilities.contains(target))
+						capabilitiesToBeProcessed.add(target);
+				}
+			}
+
+			Set<Capability> removedCapabilities = new HashSet<>(capabilities);
+			removedCapabilities.removeAll(allCapabilities);
+			for (Capability capability : removedCapabilities) {
+				capability.setMyAgent(null);
+			}
+
+			Set<Capability> addedCapabilities = new HashSet<>(allCapabilities);
+			addedCapabilities.removeAll(capabilities);
+			for (Capability capability : addedCapabilities) {
+				if (capability.getMyAgent() != null) {
+					throw new IllegalArgumentException(
+							"Capability already binded to another agent: "
+									+ capability.getFullId());
+				}
+				capability.setMyAgent(this);
+			}
+
+			this.capabilities = allCapabilities;
+			log.debug("Capabilities: " + this.capabilities);
+		}
 	}
 
 	/**
@@ -632,13 +697,13 @@ public class BDIAgent extends Agent {
 	/**
 	 * This method is responsible for selecting plans to achieve a goals of this
 	 * agent. Its default implementation requests each of its capabilities to
-	 * select one of its plans. Subclasses may override this method to customize
-	 * plan selection.
+	 * select one of its plans, and this method selects one of them, randomly.
+	 * Subclasses may override this method to customize plan selection.
 	 * 
 	 * @param goal
 	 *            the goal to be achieved.
 	 * @param capabilityPlans
-	 *            the set of candidate plans of each capability.
+	 *            the set of candidate plans of each capability, as a map.
 	 */
 	protected Plan selectPlan(Goal goal,
 			Map<Capability, Set<Plan>> capabilityPlans) {
@@ -657,7 +722,8 @@ public class BDIAgent extends Agent {
 	/**
 	 * Initializes the BDI agent. It adds the behavior to handle message
 	 * received and can be processed by capabilities and the
-	 * {@link BDIInterpreter} behavior as well..
+	 * {@link BDIInterpreter} behavior as well. It invokes the {@link #init()}
+	 * method, so that customized initializations can be perfomed by subclasses.
 	 * 
 	 * @see jade.core.Agent#setup()
 	 */
@@ -669,11 +735,13 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Removes all capabilities of this agent, before it stops its execution.
+	 * 
 	 * @see jade.core.Agent#takeDown()
 	 */
 	@Override
 	protected void takeDown() {
-		synchronized (capabilities) {
+		synchronized (aggregatedCapabilities) {
 			Iterator<Capability> iterator = aggregatedCapabilities.iterator();
 			while (iterator.hasNext())
 				removeCapability(iterator.next());

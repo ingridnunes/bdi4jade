@@ -56,6 +56,7 @@ import bdi4jade.plan.planbody.PlanBody;
 public class Intention {
 
 	private PlanBody currentPlan;
+	private final Capability owner;
 	private final Set<Plan> executedPlans;
 	private final Goal goal;
 	private final Log log;
@@ -88,10 +89,10 @@ public class Intention {
 	 *            the goal to be achieved.
 	 * @param bdiAgent
 	 *            the bdiAgent associated with this intention.
-	 * @param owner
-	 *            the Capability that is owner of the goal.
+	 * @param dispatcher
+	 *            the Capability that dispatched the goal.
 	 */
-	public Intention(Goal goal, BDIAgent bdiAgent, Capability owner) {
+	public Intention(Goal goal, BDIAgent bdiAgent, Capability dispatcher) {
 		this.log = LogFactory.getLog(this.getClass());
 		this.goal = goal;
 		this.myAgent = bdiAgent;
@@ -100,7 +101,8 @@ public class Intention {
 		this.waiting = true;
 		this.executedPlans = new HashSet<>();
 		this.currentPlan = null;
-		this.dispatcher = owner;
+		this.dispatcher = dispatcher;
+		this.owner = null; // TODO
 		this.goalListeners = new LinkedList<>();
 	}
 
@@ -111,6 +113,7 @@ public class Intention {
 	 * intention is set to unachievable.
 	 */
 	private synchronized void dispatchPlan() {
+		// FIXME
 		Map<Capability, Set<Plan>> options = getCanAchievePlans();
 		for (Set<Plan> plans : options.values()) {
 			plans.removeAll(executedPlans);
@@ -195,23 +198,38 @@ public class Intention {
 	}
 
 	/**
-	 * @return the goal
+	 * Returns the goal associated with this intention.
+	 * 
+	 * @return the goal.
 	 */
 	public Goal getGoal() {
 		return goal;
 	}
 
 	/**
-	 * @return the myAgent
+	 * Returns the agent associated with this intention.
+	 * 
+	 * @return the myAgent.
 	 */
 	public BDIAgent getMyAgent() {
 		return myAgent;
 	}
 
 	/**
-	 * @return the owner
+	 * Returns the capability that owns this goal.
+	 * 
+	 * @return the owner.
 	 */
 	public Capability getOwner() {
+		return owner;
+	}
+
+	/**
+	 * Returns the capability that dispatched this goal.
+	 * 
+	 * @return the dispatcher.
+	 */
+	public Capability getDispatcher() {
 		return dispatcher;
 	}
 
@@ -219,9 +237,9 @@ public class Intention {
 	 * Returns the current goal status that this capability is committed to
 	 * achieve.
 	 * 
-	 * @see GoalStatus
-	 * 
 	 * @return the current goal status.
+	 * 
+	 * @see GoalStatus
 	 */
 	public synchronized GoalStatus getStatus() {
 		if (this.unachievable) {
@@ -296,7 +314,7 @@ public class Intention {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Adds a listener to be notified when about goal events.
 	 * 

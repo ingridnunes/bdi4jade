@@ -58,24 +58,12 @@ public class FSMPlanBody extends FSMBehaviour implements PlanBody {
 		abstractPlanBody.dispatchGoal(goal);
 	}
 
-	public void dispatchProtectedGoal(Goal goal) {
-		abstractPlanBody.dispatchProtectedGoal(goal);
-	}
-
-	public void dispatchProtectedSubgoal(Goal subgoal) {
-		abstractPlanBody.dispatchProtectedSubgoal(subgoal);
-	}
-
-	public void dispatchProtectedSubgoalAndListen(Goal subgoal) {
-		abstractPlanBody.dispatchProtectedSubgoalAndListen(subgoal);
-	}
-
 	public void dispatchSubgoal(Goal subgoal) {
 		abstractPlanBody.dispatchSubgoal(subgoal);
 	}
 
 	public void dispatchSubgoalAndListen(Goal subgoal) {
-		abstractPlanBody.dispatchProtectedSubgoalAndListen(subgoal);
+		abstractPlanBody.dispatchSubgoalAndListen(subgoal);
 	}
 
 	public BeliefBase getBeliefBase() {

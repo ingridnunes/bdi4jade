@@ -59,7 +59,8 @@ public class Capability implements Serializable {
 
 	private static final long serialVersionUID = -4922359927943108421L;
 
-	private final Set<Capability> associatedCapabilities;
+	private final Set<Capability> associationSources;
+	private final Set<Capability> associationTargets;
 	protected final BeliefBase beliefBase;
 	private BeliefRevisionStrategy beliefRevisionStrategy;
 	private DeliberationFunction deliberationFunction;
@@ -157,8 +158,9 @@ public class Capability implements Serializable {
 
 		// Initializing associations
 		this.wholeCapability = null;
-		this.associatedCapabilities = new HashSet<>();
 		this.partCapabilities = new HashSet<>();
+		this.associationSources = new HashSet<>();
+		this.associationTargets = new HashSet<>();
 
 		// Initializing reasoning strategies
 		this.beliefRevisionStrategy = new DefaultBeliefRevisionStrategy();
@@ -198,7 +200,8 @@ public class Capability implements Serializable {
 	 *            the capability to be associated.
 	 */
 	public final void addAssociatedCapability(Capability capability) {
-		this.associatedCapabilities.add(capability);
+		this.associationTargets.add(capability);
+		capability.associationSources.add(this);
 		resetAgentCapabilities();
 	}
 
@@ -215,9 +218,8 @@ public class Capability implements Serializable {
 	 */
 	public final void addPartCapability(Capability partCapability) {
 		if (partCapability.wholeCapability != null) {
-			partCapability.wholeCapability.partCapabilities
-					.remove(partCapability);
-			partCapability.wholeCapability = null;
+			throw new IllegalArgumentException(
+					"Part capability already binded to another whole capability.");
 		}
 		partCapability.wholeCapability = this;
 		this.partCapabilities.add(partCapability);
@@ -285,6 +287,15 @@ public class Capability implements Serializable {
 	 */
 	public final void generateGoals(GoalUpdateSet goalUpdateSet) {
 		this.optionGenerationFunction.generateGoals(goalUpdateSet);
+	}
+
+	/**
+	 * Returns all capabilities with which this capability is associated.
+	 * 
+	 * @return the associated capabilities.
+	 */
+	public Set<Capability> getAssociatedCapabilities() {
+		return associationTargets;
 	}
 
 	/**
@@ -416,7 +427,8 @@ public class Capability implements Serializable {
 	 *            the capability to be dissociated.
 	 */
 	public final void removeAssociatedCapability(Capability capability) {
-		this.associatedCapabilities.remove(capability);
+		this.associationTargets.remove(capability);
+		capability.associationSources.remove(this);
 		resetAgentCapabilities();
 	}
 
@@ -519,10 +531,13 @@ public class Capability implements Serializable {
 	 * @param myAgent
 	 *            the myAgent to set
 	 */
-	public final void setMyAgent(BDIAgent myAgent) {
-		this.myAgent = myAgent;
+	final void setMyAgent(BDIAgent myAgent) {
 		synchronized (this) {
-			if (!started) {
+			if (this.myAgent != null && myAgent == null) {
+				takeDown();
+			}
+			this.myAgent = myAgent;
+			if (this.myAgent != null && !started) {
 				// TODO Adds all annotated fields.
 				setup();
 				this.started = true;
@@ -573,6 +588,14 @@ public class Capability implements Serializable {
 	 * also customize them.
 	 */
 	protected void setup() {
+
+	}
+
+	/**
+	 * This is an empty holder for being overridden by subclasses. It is used to
+	 * clean up a capability when it is removed from an agent.
+	 */
+	protected void takeDown() {
 
 	}
 
