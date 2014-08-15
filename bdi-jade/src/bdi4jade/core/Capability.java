@@ -25,6 +25,7 @@ package bdi4jade.core;
 import jade.lang.acl.ACLMessage;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.security.acl.Owner;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,6 +41,8 @@ import org.apache.commons.logging.LogFactory;
 import bdi4jade.annotation.GoalOwner;
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
+import bdi4jade.belief.TransientBelief;
+import bdi4jade.belief.TransientBeliefSet;
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
@@ -145,6 +148,7 @@ public class Capability implements Serializable {
 		this.log = LogFactory.getLog(getClass());
 		this.intentions = new LinkedList<>();
 		this.parentCapabilities = generateParentCapabilities();
+		this.started = false;
 
 		// Id initialization
 		if (id == null) {
@@ -179,9 +183,9 @@ public class Capability implements Serializable {
 
 		computeGoalOwnersMap();
 
-		synchronized (this) {
-			this.started = false;
-		}
+		log.debug("Parent capabilities: " + parentCapabilities);
+		log.debug("Full access owners: " + fullAccessOwnersMap);
+		log.debug("Restricted access owners: " + restrictedAccessOwnersMap);
 	}
 
 	/**
@@ -202,6 +206,72 @@ public class Capability implements Serializable {
 	public Capability(String id, Set<Belief<?>> initialBeliefs,
 			Set<Plan> initialPlans) {
 		this(id, null, initialBeliefs, null, initialPlans);
+	}
+
+	/**
+	 * Adds by reflection capability components, such as beliefs and plans,
+	 * according to annotated fields. This method is invoked by for capability
+	 * class, and all parent classes.
+	 * 
+	 * @param capabilityClass
+	 *            the capability class of which fields should me added to this
+	 *            capability.
+	 */
+	protected void addAnnotatedFields(
+			Class<? extends Capability> capabilityClass) {
+		for (Field field : capabilityClass.getDeclaredFields()) {
+			boolean b = field.isAccessible();
+			field.setAccessible(true);
+			try {
+				if (field.isAnnotationPresent(bdi4jade.annotation.Belief.class)) {
+					if (Belief.class.isAssignableFrom(field.getType())) {
+						Belief<?> belief = (Belief<?>) field.get(this);
+						this.getBeliefBase().addBelief(belief);
+					}
+				} else if (field
+						.isAnnotationPresent(bdi4jade.annotation.TransientBelief.class)) {
+					bdi4jade.annotation.TransientBelief annotation = field
+							.getAnnotation(bdi4jade.annotation.TransientBelief.class);
+					String name = "".equals(annotation.name()) ? field
+							.getName() : annotation.name();
+					Object value = field.get(this);
+					this.getBeliefBase().addBelief(
+							new TransientBelief(name, value));
+				} else if (field
+						.isAnnotationPresent(bdi4jade.annotation.TransientBeliefSet.class)) {
+					bdi4jade.annotation.TransientBeliefSet annotation = field
+							.getAnnotation(bdi4jade.annotation.TransientBeliefSet.class);
+					String name = "".equals(annotation.name()) ? field
+							.getName() : annotation.name();
+					Object value = field.get(this);
+					if (Set.class.isAssignableFrom(field.getType())) {
+						this.getBeliefBase().addBelief(
+								new TransientBeliefSet(name, (Set) value));
+					}
+				} else if (field
+						.isAnnotationPresent(bdi4jade.annotation.Plan.class)) {
+					if (Plan.class.isAssignableFrom(field.getType())) {
+						Plan plan = (Plan) field.get(this);
+						this.getPlanLibrary().addPlan(plan);
+					}
+				} else if (field
+						.isAnnotationPresent(bdi4jade.annotation.AssociatedCapability.class)) {
+					if (Capability.class.isAssignableFrom(field.getType())) {
+						Capability capability = (Capability) field.get(this);
+						this.addAssociatedCapability(capability);
+					}
+				} else if (field
+						.isAnnotationPresent(bdi4jade.annotation.PartCapability.class)) {
+					if (Capability.class.isAssignableFrom(field.getType())) {
+						Capability capability = (Capability) field.get(this);
+						this.addPartCapability(capability);
+					}
+				}
+			} catch (Exception exc) {
+				log.warn(exc);
+			}
+			field.setAccessible(b);
+		}
 	}
 
 	/**
@@ -230,7 +300,10 @@ public class Capability implements Serializable {
 	 */
 	public void addCandidatePlans(Goal goal,
 			Map<Capability, Set<Plan>> candidatePlansMap) {
-		candidatePlansMap.put(this, planLibrary.getCandidatePlans(goal));
+		Set<Plan> plans = planLibrary.getCandidatePlans(goal);
+		if (!plans.isEmpty()) {
+			candidatePlansMap.put(this, plans);
+		}
 		for (Capability part : partCapabilities) {
 			part.addCandidatePlans(goal, candidatePlansMap);
 		}
@@ -282,11 +355,11 @@ public class Capability implements Serializable {
 		return false;
 	}
 
-	private void computeGoalOwnersMap() {
+	private final void computeGoalOwnersMap() {
 		this.fullAccessOwnersMap = new HashMap<>();
 		ReflectionUtils.addGoalOwner(fullAccessOwnersMap, this);
 		if (wholeCapability != null) {
-			ReflectionUtils.addGoalOwner(fullAccessOwnersMap, this);
+			ReflectionUtils.addGoalOwner(fullAccessOwnersMap, wholeCapability);
 		}
 		this.restrictedAccessOwnersMap = new HashMap<>();
 		for (Capability capability : associationTargets) {
@@ -348,13 +421,12 @@ public class Capability implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<Class<? extends Capability>> generateParentCapabilities() {
+	private final List<Class<? extends Capability>> generateParentCapabilities() {
 		List<Class<? extends Capability>> parentCapabilities = new LinkedList<>();
-		Class<?> currentClass = this.getClass();
+		Class<?> currentClass = this.getClass().getSuperclass();
 		while (Capability.class.isAssignableFrom(currentClass)
 				&& !Capability.class.equals(currentClass)) {
-			parentCapabilities.add((Class<Capability>) currentClass
-					.getSuperclass());
+			parentCapabilities.add((Class<Capability>) currentClass);
 			currentClass = currentClass.getSuperclass();
 		}
 		return parentCapabilities;
@@ -365,7 +437,7 @@ public class Capability implements Serializable {
 	 * 
 	 * @return the associated capabilities.
 	 */
-	public Set<Capability> getAssociatedCapabilities() {
+	public final Set<Capability> getAssociatedCapabilities() {
 		return associationTargets;
 	}
 
@@ -439,7 +511,7 @@ public class Capability implements Serializable {
 	 *         capability has no access to goals owned by capability of the
 	 *         given class.
 	 */
-	public Set<Capability> getGoalOwner(GoalOwner owner) {
+	public final Set<Capability> getGoalOwner(GoalOwner owner) {
 		Set<Capability> owners = new HashSet<>();
 
 		Set<Capability> fullAccessOwners = fullAccessOwnersMap.get(owner
@@ -493,7 +565,7 @@ public class Capability implements Serializable {
 	 * 
 	 * @return the parentCapabilities.
 	 */
-	public List<Class<? extends Capability>> getParentCapabilities() {
+	public final List<Class<? extends Capability>> getParentCapabilities() {
 		return parentCapabilities;
 	}
 
@@ -654,17 +726,18 @@ public class Capability implements Serializable {
 	 * @param myAgent
 	 *            the myAgent to set
 	 */
-	final void setMyAgent(AbstractBDIAgent myAgent) {
-		synchronized (this) {
-			if (this.myAgent != null && myAgent == null) {
-				takeDown();
+	final synchronized void setMyAgent(AbstractBDIAgent myAgent) {
+		if (this.myAgent != null && myAgent == null) {
+			takeDown();
+		}
+		this.myAgent = myAgent;
+		if (this.myAgent != null && !started) {
+			addAnnotatedFields(this.getClass());
+			for (Class<? extends Capability> parentCapabilityClass : parentCapabilities) {
+				addAnnotatedFields(parentCapabilityClass);
 			}
-			this.myAgent = myAgent;
-			if (this.myAgent != null && !started) {
-				// TODO Adds all annotated fields.
-				setup();
-				this.started = true;
-			}
+			setup();
+			this.started = true;
 		}
 	}
 

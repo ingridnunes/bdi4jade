@@ -20,28 +20,29 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.planparameter;
+package bdi4jade.examples.helloworld;
 
+import bdi4jade.annotation.GoalOwner;
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.core.Capability;
-import bdi4jade.core.SingleCapabilityAgent;
-import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.DefaultPlan;
+import bdi4jade.plan.Plan;
+import bdi4jade.plan.Plan.EndState;
+import bdi4jade.plan.planbody.AbstractPlanBody;
 
-public class HelloWorldParamAgent extends SingleCapabilityAgent implements
-		GoalListener {
+public class HelloWorldAnnotatedCapability extends Capability {
 
-	public class HelloWorldParamGoal implements Goal {
+	@GoalOwner(capability = HelloWorldAnnotatedCapability.class)
+	public static class HelloWorldGoal implements Goal {
 
 		private static final long serialVersionUID = -9039447524062487795L;
 
 		private String name;
 		private long time;
 
-		public HelloWorldParamGoal(String name) {
+		public HelloWorldGoal(String name) {
 			this.name = name;
 		}
 
@@ -67,24 +68,35 @@ public class HelloWorldParamAgent extends SingleCapabilityAgent implements
 
 	}
 
+	public static class HelloWorldPlan extends AbstractPlanBody {
+
+		private static final long serialVersionUID = -9039447524062487795L;
+
+		private String name;
+		private long time;
+
+		public void action() {
+			System.out.println("Hello, " + name + "!");
+			this.time = System.currentTimeMillis();
+			setEndState(EndState.SUCCESSFULL);
+		}
+
+		@Parameter(direction = Direction.OUT)
+		public long getTime() {
+			return time;
+		}
+
+		@Parameter(direction = Direction.IN)
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	}
+
 	private static final long serialVersionUID = 2712019445290687786L;
 
-	protected void init() {
-		Capability capability = new Capability();
-		capability.getPlanLibrary().addPlan(
-				new DefaultPlan(HelloWorldParamGoal.class,
-						HelloWorldParamPlan.class));
-		setCapability(capability);
-
-		addGoal(new HelloWorldParamGoal("reader"), this);
-	}
-
-	@Override
-	public void goalPerformed(GoalEvent event) {
-		if (event.getStatus().isFinished()) {
-			System.out.println("Hello World Goal Finished! Time: "
-					+ event.getGoal());
-		}
-	}
+	@bdi4jade.annotation.Plan
+	private Plan plan = new DefaultPlan(HelloWorldGoal.class,
+			HelloWorldPlan.class);
 
 }

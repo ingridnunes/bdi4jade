@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/prosoft/bdi4jade/
+// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -32,23 +32,15 @@ import bdi4jade.core.Capability;
 
 /**
  * This annotation allows to specify that an attribute of a {@link Capability}
- * is an association between capabilities. The annotated field should be of the
- * type {@link Capability}.
+ * is a composition relationship between capabilities, whose whole capability is
+ * the annotated capability. The annotated field should be of the type
+ * {@link Capability}.
  * 
  * @author Ingrid Nunes
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CapabilityAssociation {
-
-	/**
-	 * This attributes indicated whether the relationship between the
-	 * capabilities is a simple association or a composition.
-	 * 
-	 * @return true if the capability relationship is a composition, false if it
-	 *         is an association.
-	 */
-	boolean isComposition() default false;
+public @interface PartCapability {
 
 }

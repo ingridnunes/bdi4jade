@@ -63,10 +63,14 @@ public abstract class ReflectionUtils {
 	public static void addGoalOwner(
 			Map<Class<? extends Capability>, Set<Capability>> goalOwnersMap,
 			Capability capability) {
-		addGoalOwner(goalOwnersMap, capability.getClass(), capability);
-		for (Class<? extends Capability> parentCapability : capability
-				.getParentCapabilities()) {
-			addGoalOwner(goalOwnersMap, parentCapability, capability);
+		if (!Capability.class.equals(capability.getClass())) {
+			addGoalOwner(goalOwnersMap, capability.getClass(), capability);
+			for (Class<? extends Capability> parentCapability : capability
+					.getParentCapabilities()) {
+				addGoalOwner(goalOwnersMap, parentCapability, capability);
+			}
+		} else {
+			assert capability.getParentCapabilities().isEmpty();
 		}
 	}
 

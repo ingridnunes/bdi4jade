@@ -9,11 +9,15 @@ import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import bdi4jade.core.AbstractBDIAgent;
+import bdi4jade.core.SingleCapabilityAgent;
+import bdi4jade.event.GoalEvent;
+import bdi4jade.event.GoalListener;
 import bdi4jade.examples.helloworld.HelloWorldAgent;
-import bdi4jade.examples.helloworld.HelloWorldAgent.HelloWorldGoal;
+import bdi4jade.examples.helloworld.HelloWorldAnnotatedCapability;
 
 /**
  * This class is a panel that is used as content pane of the application with
@@ -37,7 +41,9 @@ public class BDI4JADEExamplesPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			helloWorldAgent.addGoal(new HelloWorldGoal("reader"));
+			String name = JOptionPane.showInputDialog(
+					BDI4JADEExamplesPanel.this, "Please, inform your name:");
+			helloWorldAgent.addGoal(new HelloWorldAgent.HelloWorldGoal(name));
 		}
 
 		@Override
@@ -48,12 +54,49 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 	}
 
+	private class HelloWorldAnnotatedAction extends BDI4JADEExamplesAction
+			implements GoalListener {
+
+		private static final long serialVersionUID = 2100583035268414082L;
+
+		private final SingleCapabilityAgent helloWorldAnnotatedAgent;
+
+		public HelloWorldAnnotatedAction() {
+			super.putValue(Action.NAME, "Hello World Annotated Capability");
+			this.helloWorldAnnotatedAgent = new SingleCapabilityAgent(
+					new HelloWorldAnnotatedCapability());
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String name = JOptionPane.showInputDialog(
+					BDI4JADEExamplesPanel.this, "Please, inform your name:");
+			helloWorldAnnotatedAgent.addGoal(
+					new HelloWorldAnnotatedCapability.HelloWorldGoal(name),
+					this);
+		}
+
+		@Override
+		public Set<AbstractBDIAgent> getAgents() {
+			Set<AbstractBDIAgent> agents = new HashSet<>();
+			agents.add(helloWorldAnnotatedAgent);
+			return agents;
+		}
+
+		@Override
+		public void goalPerformed(GoalEvent event) {
+			if (event.getStatus().isFinished()) {
+				System.out.println("Hello World Goal Finished! Time: "
+						+ event.getGoal());
+			}
+		}
+
+	}
+
 	private static final long serialVersionUID = -1080267169700651610L;
 
 	private final BDI4JADEExamplesAction[] actions;
 
-	// agents.put(HelloWorldParamAgent.class.getSimpleName(),
-	// new HelloWorldParamAgent());
 	// agents.put(BDIAgent1.MY_NAME, new BDIAgent1());
 	// agents.put(BDIAgent2.MY_NAME, new BDIAgent2());
 	// agents.put(MyAgent.class.getSimpleName(), new MyAgent());
@@ -61,7 +104,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 	// new NestedCapabilitiesAgent());
 
 	public BDI4JADEExamplesPanel() {
-		this.actions = new BDI4JADEExamplesAction[] { new HelloWorldAction() };
+		this.actions = new BDI4JADEExamplesAction[] { new HelloWorldAction(),
+				new HelloWorldAnnotatedAction() };
 		this.setLayout(new GridLayout(actions.length, 1));
 		for (BDI4JADEExamplesAction action : actions) {
 			this.add(new JButton(action));
