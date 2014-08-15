@@ -22,32 +22,25 @@
 
 package bdi4jade.examples.compositegoal;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import bdi4jade.annotation.GoalOwner;
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.core.Capability;
-import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalListener;
-import bdi4jade.goal.CompositeGoal;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalTemplateFactory;
-import bdi4jade.goal.ParallelGoal;
-import bdi4jade.goal.SequentialGoal;
 import bdi4jade.plan.DefaultPlan;
-import bdi4jade.plan.Plan;
+import bdi4jade.plan.Plan.EndState;
+import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
-public class CompositeGoalCapability extends Capability implements GoalListener {
+public class CompositeGoalCapability extends Capability {
 
-	public class MyGoal1 implements Goal {
+	@GoalOwner(capability = CompositeGoalCapability.class)
+	public static class MyGoal1 implements Goal {
 		private static final long serialVersionUID = 3405041038738876061L;
 
 		private String msg;
@@ -65,10 +58,10 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 		public String toString() {
 			return getClass().getSimpleName() + ": " + msg;
 		}
+	}
 
-	};
-
-	public class MyGoal2 implements Goal {
+	@GoalOwner(capability = CompositeGoalCapability.class)
+	public static class MyGoal2 implements Goal {
 		private static final long serialVersionUID = 3405041038738876061L;
 
 		private String message;
@@ -86,10 +79,10 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 		public String toString() {
 			return getClass().getSimpleName() + ": " + message;
 		}
+	}
 
-	};
-
-	public class MyGoal3 implements Goal {
+	@GoalOwner(capability = CompositeGoalCapability.class)
+	public static class MyGoal3 implements Goal {
 		private static final long serialVersionUID = 3405041038738876061L;
 
 		private String msg;
@@ -107,52 +100,43 @@ public class CompositeGoalCapability extends Capability implements GoalListener 
 		public String toString() {
 			return getClass().getSimpleName() + ": " + msg;
 		}
+	}
 
-	};
+	public static class MyPlan extends AbstractPlanBody {
+		private static final long serialVersionUID = -220345270457161508L;
 
-	private static final Log log = LogFactory
-			.getLog(CompositeGoalCapability.class);
+		public void action() {
+			long random = new Random().nextLong();
+			log.info("Random: " + random);
+			if (random % 7 != 0)
+				setEndState(EndState.SUCCESSFULL);
+			else
+				setEndState(EndState.FAILED);
+			log.info(getGoal() + " Plan#" + getPlan().getId() + " EndState: "
+					+ getEndState());
+		}
+	}
+
 	private static final long serialVersionUID = -4800805796961540570L;
 
-	private static Set<Plan> getPlans() {
-		Set<Plan> plans = new HashSet<Plan>();
-		DefaultPlan plan = new DefaultPlan(MyPlan.class);
-		plan.addGoalTemplate(GoalTemplateFactory.goalType(MyGoal1.class));
-		plan.addGoalTemplate(GoalTemplateFactory.goalType(MyGoal2.class));
-		plan.addGoalTemplate(GoalTemplateFactory.goalType(MyGoal3.class));
-		plans.add(plan);
-		return plans;
-	}
+	@bdi4jade.annotation.Plan
+	private DefaultPlan multigoalPlan1;
 
-	private boolean sequential;
+	@bdi4jade.annotation.Plan
+	private DefaultPlan multigoalPlan2;
 
-	public CompositeGoalCapability(boolean sequential) {
-		super(null, getPlans());
-		this.sequential = sequential;
-	}
+	public CompositeGoalCapability() {
+		this.multigoalPlan1 = new DefaultPlan("multigoalPlan1", MyPlan.class);
+		multigoalPlan1.addGoalTemplate(GoalTemplateFactory
+				.goalType(MyGoal1.class));
+		multigoalPlan1.addGoalTemplate(GoalTemplateFactory
+				.goalType(MyGoal2.class));
 
-	@Override
-	public void goalPerformed(GoalEvent event) {
-		if (event.getStatus().isFinished()
-				&& event.getGoal() instanceof CompositeGoal) {
-			log.info(event.getGoal() + " Status: " + event.getStatus());
-			log.info("Goal finished!! Removing capability of this agent...");
-			//getMyAgent().removeCapability(this);
-
-		}
-	}
-
-	@Override
-	protected void setup() {
-		Goal[] goals = { new MyGoal1("Hello World!"), new MyGoal2(),
-				new MyGoal3() };
-		CompositeGoal compositeGoal = null;
-		if (this.sequential) {
-			compositeGoal = new SequentialGoal(goals);
-		} else {
-			compositeGoal = new ParallelGoal(goals);
-		}
-		this.getMyAgent().addGoal(compositeGoal, this);
+		this.multigoalPlan2 = new DefaultPlan("multigoalPlan2", MyPlan.class);
+		multigoalPlan2.addGoalTemplate(GoalTemplateFactory
+				.goalType(MyGoal2.class));
+		multigoalPlan2.addGoalTemplate(GoalTemplateFactory
+				.goalType(MyGoal3.class));
 	}
 
 }

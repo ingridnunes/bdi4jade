@@ -16,9 +16,17 @@ import bdi4jade.core.AbstractBDIAgent;
 import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
+import bdi4jade.examples.compositegoal.CompositeGoalCapability;
+import bdi4jade.examples.compositegoal.CompositeGoalCapability.MyGoal1;
+import bdi4jade.examples.compositegoal.CompositeGoalCapability.MyGoal2;
+import bdi4jade.examples.compositegoal.CompositeGoalCapability.MyGoal3;
 import bdi4jade.examples.helloworld.HelloWorldAgent;
 import bdi4jade.examples.helloworld.HelloWorldAnnotatedCapability;
 import bdi4jade.examples.ping.PingPongCapability;
+import bdi4jade.goal.CompositeGoal;
+import bdi4jade.goal.Goal;
+import bdi4jade.goal.ParallelGoal;
+import bdi4jade.goal.SequentialGoal;
 
 /**
  * This class is a panel that is used as content pane of the application with
@@ -130,6 +138,52 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 	}
 
+	private class CompositeGoalAction extends BDI4JADEExamplesAction implements
+			GoalListener {
+		private static final long serialVersionUID = 2100583035268414082L;
+
+		private final AbstractBDIAgent compositeGoalAgent;
+
+		public CompositeGoalAction() {
+			super.putValue(Action.NAME, "Composite Goal Agent");
+			this.compositeGoalAgent = new SingleCapabilityAgent(
+					new CompositeGoalCapability());
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int answer = JOptionPane.showConfirmDialog(
+					BDI4JADEExamplesPanel.this,
+					"Should goals be achieved sequentially?",
+					"Sequential vs. Parallel Goals", JOptionPane.YES_NO_OPTION);
+			Goal[] goals = { new MyGoal1("Hello World!"), new MyGoal2(),
+					new MyGoal3() };
+			CompositeGoal compositeGoal = null;
+			if (JOptionPane.YES_OPTION == answer) {
+				compositeGoal = new SequentialGoal(goals);
+			} else {
+				compositeGoal = new ParallelGoal(goals);
+			}
+			compositeGoalAgent.addGoal(compositeGoal, this);
+		}
+
+		@Override
+		public void goalPerformed(GoalEvent event) {
+			if (event.getStatus().isFinished()
+					&& event.getGoal() instanceof CompositeGoal) {
+				log.info("Goal finished!");
+				log.info(event.getGoal() + " Status: " + event.getStatus());
+			}
+		}
+
+		@Override
+		public Set<AbstractBDIAgent> getAgents() {
+			Set<AbstractBDIAgent> agents = new HashSet<>();
+			agents.add(compositeGoalAgent);
+			return agents;
+		}
+	}
+
 	private static final long serialVersionUID = -1080267169700651610L;
 
 	private final BDI4JADEExamplesAction[] actions;
@@ -144,7 +198,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 
 	public BDI4JADEExamplesPanel() {
 		this.actions = new BDI4JADEExamplesAction[] { new HelloWorldAction(),
-				new HelloWorldAnnotatedAction(), new PingPongAction() };
+				new HelloWorldAnnotatedAction(), new PingPongAction(),
+				new CompositeGoalAction() };
 		this.setLayout(new GridLayout(actions.length, 1));
 		for (BDI4JADEExamplesAction action : actions) {
 			this.add(new JButton(action));

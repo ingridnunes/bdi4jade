@@ -160,8 +160,12 @@ public class Intention {
 			}
 		}
 
-		for (Set<Plan> plans : options.values()) {
+		for (Capability capability : options.keySet()) {
+			Set<Plan> plans = options.get(capability);
 			plans.removeAll(executedPlans);
+			if (plans.isEmpty()) {
+				options.remove(capability);
+			}
 		}
 
 		while (this.currentPlan == null && !options.isEmpty()) {

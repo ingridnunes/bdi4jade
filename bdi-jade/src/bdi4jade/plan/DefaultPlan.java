@@ -139,6 +139,25 @@ public class DefaultPlan extends AbstractPlan {
 	}
 
 	/**
+	 * Creates a new simple plan. It is a plan whose body is the specified class
+	 * and its id is the given id. Goal templates can be specified by overriding
+	 * the {@link #initGoalTemplates()} method or invoking the
+	 * {@link #addGoalTemplate(GoalTemplate)} method, while more message
+	 * templates can be specified by overriding the
+	 * {@link #initMessageTemplates()} method or invoking the
+	 * {@link #addMessageTemplate(MessageTemplate)} method.
+	 * 
+	 * @param id
+	 *            the plan id.
+	 * @param planBodyClass
+	 *            the class of this plan body.
+	 */
+	public DefaultPlan(String id, Class<? extends PlanBody> planBodyClass) {
+		super(id);
+		this.planBodyClass = planBodyClass;
+	}
+
+	/**
 	 * Creates a new simple plan, which is able to achieve goals that match the
 	 * provided template. It is a plan whose body is the specified class and its
 	 * id is the given id. It sets that this plan can achieve goals of the
