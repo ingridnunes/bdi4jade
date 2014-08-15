@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
+import bdi4jade.goal.Goal;
 
 /**
  * This class is the default implementation of the strategy
@@ -43,8 +44,12 @@ public class DefaultDeliberationFunction extends AbstractReasoningStrategy
 	 * @see DeliberationFunction#filter(Set)
 	 */
 	@Override
-	public Set<GoalDescription> filter(Set<GoalDescription> goals) {
-		return new HashSet<>(goals);
+	public Set<Goal> filter(Set<GoalDescription> goals) {
+		Set<Goal> selectedGoals = new HashSet<>();
+		for (GoalDescription goalDescription : goals) {
+			selectedGoals.add(goalDescription.getGoal());
+		}
+		return selectedGoals;
 	}
 
 }

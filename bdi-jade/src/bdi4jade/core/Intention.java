@@ -62,7 +62,7 @@ public class Intention {
 	private final Goal goal;
 	private final List<GoalListener> goalListeners;
 	private final Log log;
-	private final BDIAgent myAgent;
+	private final AbstractBDIAgent myAgent;
 	private boolean noLongerDesired;
 	private final Set<Capability> owners;
 	private boolean unachievable;
@@ -77,7 +77,7 @@ public class Intention {
 	 * @param bdiAgent
 	 *            the bdiAgent associated with this intention.
 	 */
-	public Intention(Goal goal, BDIAgent bdiAgent)
+	public Intention(Goal goal, AbstractBDIAgent bdiAgent)
 			throws IllegalAccessException {
 		this(goal, bdiAgent, null);
 	}
@@ -94,7 +94,7 @@ public class Intention {
 	 * @param dispatcher
 	 *            the Capability that dispatched the goal.
 	 */
-	public Intention(Goal goal, BDIAgent bdiAgent, Capability dispatcher)
+	public Intention(Goal goal, AbstractBDIAgent bdiAgent, Capability dispatcher)
 			throws IllegalAccessException {
 		this.log = LogFactory.getLog(this.getClass());
 		this.goal = goal;
@@ -243,7 +243,7 @@ public class Intention {
 	 * 
 	 * @return the myAgent.
 	 */
-	public BDIAgent getMyAgent() {
+	public AbstractBDIAgent getMyAgent() {
 		return myAgent;
 	}
 

@@ -28,8 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.TransientBelief;
-import bdi4jade.core.BDIAgent;
-import bdi4jade.core.Capability;
+import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
 import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
 import bdi4jade.goal.Softgoal;
@@ -39,7 +38,7 @@ import bdi4jade.plan.Plan;
  * @author ingrid
  * 
  */
-public class TransportationAgent extends BDIAgent {
+public class TransportationAgent extends SingleCapabilityAgent {
 
 	public static final String SATISFACTION = "Satisfaction";
 
@@ -47,17 +46,11 @@ public class TransportationAgent extends BDIAgent {
 
 	private final Log log;
 	private final Random rand;
-	private final Capability rootCapability;
 
 	public TransportationAgent() {
+		super(new UtilityBasedBDIAgent());
 		this.log = LogFactory.getLog(this.getClass());
 		this.rand = new Random(System.currentTimeMillis());
-		this.rootCapability = new UtilityBasedBDIAgent();
-		this.addCapability(rootCapability);
-	}
-
-	public Capability getRootCapability() {
-		return rootCapability;
 	}
 
 	protected void init() {
@@ -65,19 +58,16 @@ public class TransportationAgent extends BDIAgent {
 			this.addSoftgoal(softgoal);
 		}
 		for (Plan plan : Plans.PLANS) {
-			this.getRootCapability().getPlanLibrary().addPlan(plan);
+			getCapability().getPlanLibrary().addPlan(plan);
 		}
-		this.getRootCapability()
-				.getBeliefBase()
-				.addBelief(
-						new TransientBelief<GenericValueFunction<Integer>>(
-								SATISFACTION,
-								new GenericValueFunction<Integer>()));
+		getCapability().getBeliefBase().addBelief(
+				new TransientBelief<GenericValueFunction<Integer>>(
+						SATISFACTION, new GenericValueFunction<Integer>()));
 	}
 
 	public void updatePreferences() {
 		SoftgoalPreferences preferences = (SoftgoalPreferences) this
-				.getRootCapability().getBeliefBase()
+				.getCapability().getBeliefBase()
 				.getBelief(SoftgoalPreferences.NAME);
 
 		double total = 0;

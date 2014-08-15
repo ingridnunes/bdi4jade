@@ -23,8 +23,8 @@
 package bdi4jade.examples.nestedcapabilities;
 
 import bdi4jade.belief.TransientBelief;
-import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
+import bdi4jade.core.MultipleCapabilityAgent;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.planbody.PlanBody;
@@ -37,7 +37,7 @@ class MyGoal implements Goal {
 	private static final long serialVersionUID = -5054184951317760743L;
 }
 
-public class NestedCapabilitiesAgent extends BDIAgent {
+public class NestedCapabilitiesAgent extends MultipleCapabilityAgent {
 
 	public enum Belief {
 

@@ -25,6 +25,7 @@ package bdi4jade.reasoning;
 import java.util.Set;
 
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
+import bdi4jade.goal.Goal;
 
 /**
  * This interface defines the deliberation function to be used within the scope
@@ -43,9 +44,8 @@ public interface DeliberationFunction extends ReasoningStrategy {
 	 *            the list of current goals dispatched by the capability
 	 *            associated with this strategy.
 	 * 
-	 * @return the list of selected goals (which are in the for of
-	 *         {@link GoalDescription}), which will become intentions.
+	 * @return the list of selected goals, which will become intentions.
 	 */
-	public Set<GoalDescription> filter(Set<GoalDescription> goals);
+	public Set<Goal> filter(Set<GoalDescription> goals);
 
 }

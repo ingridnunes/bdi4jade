@@ -74,7 +74,7 @@ public class Capability implements Serializable {
 	protected final String id;
 	private final Collection<Intention> intentions;
 	protected final Log log;
-	private BDIAgent myAgent;
+	private AbstractBDIAgent myAgent;
 	private OptionGenerationFunction optionGenerationFunction;
 	private final List<Class<? extends Capability>> parentCapabilities;
 	private final Set<Capability> partCapabilities;
@@ -328,7 +328,7 @@ public class Capability implements Serializable {
 	 * 
 	 * @see DeliberationFunction
 	 */
-	public final Set<GoalDescription> filter(Set<GoalDescription> goals) {
+	public final Set<Goal> filter(Set<GoalDescription> goals) {
 		return this.deliberationFunction.filter(goals);
 	}
 
@@ -654,7 +654,7 @@ public class Capability implements Serializable {
 	 * @param myAgent
 	 *            the myAgent to set
 	 */
-	final void setMyAgent(BDIAgent myAgent) {
+	final void setMyAgent(AbstractBDIAgent myAgent) {
 		synchronized (this) {
 			if (this.myAgent != null && myAgent == null) {
 				takeDown();

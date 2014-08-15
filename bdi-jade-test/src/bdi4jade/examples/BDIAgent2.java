@@ -22,14 +22,14 @@
 
 package bdi4jade.examples;
 
-import bdi4jade.core.BDIAgent;
+import bdi4jade.core.MultipleCapabilityAgent;
 import bdi4jade.examples.ping.PingPongCapability;
 
 /**
  * @author ingrid
  * 
  */
-public class BDIAgent2 extends BDIAgent {
+public class BDIAgent2 extends MultipleCapabilityAgent {
 
 	private static final long serialVersionUID = -8505187840524213951L;
 	public static final String MY_NAME = "AGENT_2";

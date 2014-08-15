@@ -22,8 +22,8 @@
 
 package bdi4jade.examples.template;
 
-import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
+import bdi4jade.core.MultipleCapabilityAgent;
 import bdi4jade.examples.template.goal.MyGoal;
 import bdi4jade.examples.template.plan.MyPlan1;
 import bdi4jade.examples.template.plan.MyPlan2;
@@ -35,7 +35,7 @@ import bdi4jade.goal.Softgoal;
  * @author ingrid
  * 
  */
-public class MyAgent extends BDIAgent {
+public class MyAgent extends MultipleCapabilityAgent {
 
 	static final long serialVersionUID = 2712019445290687786L;
 

@@ -85,7 +85,7 @@ public class PlanFailedCapability extends Capability implements GoalListener {
 			counter++;
 			if (counter >= GOALS) {
 				log.info("Goal finished!! Removing capability of this agent...");
-				getMyAgent().removeCapability(this);
+				// TODO getMyAgent().removeCapability(this);
 			}
 		}
 	}

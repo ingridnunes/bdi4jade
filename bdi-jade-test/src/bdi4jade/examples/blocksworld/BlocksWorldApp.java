@@ -21,7 +21,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
-import bdi4jade.examples.AgentStarter;
+import bdi4jade.examples.BDI4JADEExamplesApp;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.examples.blocksworld.goal.AchieveBlocksStacked;
@@ -39,7 +39,7 @@ public class BlocksWorldApp implements GoalListener {
 			new On(Thing.BLOCK_1, Thing.BLOCK_2) };
 
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(AgentStarter.class
+		PropertyConfigurator.configure(BDI4JADEExamplesApp.class
 				.getResource("log4j.properties"));
 		new BlocksWorldApp();
 	}

@@ -23,57 +23,48 @@
 package bdi4jade.examples;
 
 import jade.BootProfileImpl;
-import jade.core.Agent;
 import jade.core.ProfileImpl;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.PlatformController;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
 
-import bdi4jade.examples.helloworld.HelloWorldAgent;
-import bdi4jade.examples.planparameter.HelloWorldParamAgent;
+import bdi4jade.core.AbstractBDIAgent;
 
 /**
- * @author ingrid
+ * This class is responsible for initiating the BDI4JADE app. It bootstraps
+ * JADE, runs agents of a {@link BDI4JADEExamplesPanel}, and makes a GUI visible
+ * when it is created and has its {@link #createAndShowGUI()} executed.
  * 
+ * @author Ingrid Nunes
  */
-public class AgentStarter {
-
-	private static final Map<String, Agent> agents;
-
-	static {
-		agents = new HashMap<String, Agent>();
-		agents.put(HelloWorldAgent.class.getSimpleName(), new HelloWorldAgent());
-		agents.put(HelloWorldParamAgent.class.getSimpleName(),
-				new HelloWorldParamAgent());
-		// agents.put(BDIAgent1.MY_NAME, new BDIAgent1());
-		// agents.put(BDIAgent2.MY_NAME, new BDIAgent2());
-		// agents.put(MyAgent.class.getSimpleName(), new MyAgent());
-		// agents.put(NestedCapabilitiesAgent.class.getSimpleName(),
-		// new NestedCapabilitiesAgent());
-	};
+public class BDI4JADEExamplesApp {
 
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(AgentStarter.class
+		PropertyConfigurator.configure(BDI4JADEExamplesApp.class
 				.getResource("log4j.properties"));
-		new AgentStarter();
+
+		new BDI4JADEExamplesApp().createAndShowGUI();
 	}
 
+	private final BDI4JADEExamplesPanel agentTestPanel;
 	private ProfileImpl bootProfile;
 	private final Log log;
-
 	private jade.core.Runtime runtime;
 
-	public AgentStarter() {
-		log = LogFactory.getLog(this.getClass());
+	public BDI4JADEExamplesApp() {
+		this.log = LogFactory.getLog(this.getClass());
+		this.agentTestPanel = new BDI4JADEExamplesPanel();
 
 		List<String> params = new ArrayList<String>();
 		params.add("-gui");
@@ -87,6 +78,7 @@ public class AgentStarter {
 		PlatformController controller = runtime
 				.createMainContainer(bootProfile);
 
+		Map<String, AbstractBDIAgent> agents = agentTestPanel.getAgents();
 		for (String agentName : agents.keySet()) {
 			try {
 				AgentController ac = ((AgentContainer) controller)
@@ -96,6 +88,24 @@ public class AgentStarter {
 				log.error(e);
 			}
 		}
+	}
+
+	/**
+	 * Creates and shows a GUI whose content pane is an
+	 * {@link BDI4JADEExamplesPanel}.
+	 */
+	public void createAndShowGUI() {
+		final JFrame frame = new JFrame();
+		frame.setTitle("BDI4JADE Examples");
+		frame.setContentPane(agentTestPanel);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				frame.setVisible(true);
+			}
+		});
 	}
 
 }

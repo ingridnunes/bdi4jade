@@ -24,8 +24,8 @@ package bdi4jade.examples.blocksworld;
 
 import bdi4jade.belief.BeliefSet;
 import bdi4jade.belief.TransientBeliefSet;
-import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
+import bdi4jade.core.MultipleCapabilityAgent;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
@@ -42,7 +42,7 @@ import bdi4jade.plan.DefaultPlan;
  * @author ingrid
  * 
  */
-public class BlocksWorldAgent extends BDIAgent {
+public class BlocksWorldAgent extends MultipleCapabilityAgent {
 
 	public static final String BELIEF_CLEAR = "clear";
 	public static final String BELIEF_ON = "on";

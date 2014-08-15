@@ -24,14 +24,15 @@ package bdi4jade.examples.planparameter;
 
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
-import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
+import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.DefaultPlan;
 
-public class HelloWorldParamAgent extends BDIAgent implements GoalListener {
+public class HelloWorldParamAgent extends SingleCapabilityAgent implements
+		GoalListener {
 
 	public class HelloWorldParamGoal implements Goal {
 
@@ -73,7 +74,7 @@ public class HelloWorldParamAgent extends BDIAgent implements GoalListener {
 		capability.getPlanLibrary().addPlan(
 				new DefaultPlan(HelloWorldParamGoal.class,
 						HelloWorldParamPlan.class));
-		addCapability(capability);
+		setCapability(capability);
 
 		addGoal(new HelloWorldParamGoal("reader"), this);
 	}

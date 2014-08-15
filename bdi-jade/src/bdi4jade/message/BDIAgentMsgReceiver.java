@@ -28,16 +28,10 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.MessageTemplate.MatchExpression;
 import jade.proto.states.MsgReceiver;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.core.BDIAgent;
-import bdi4jade.core.Capability;
+import bdi4jade.core.AbstractBDIAgent;
 
 /**
  * This class extends the {@link MsgReceiver} behavior from the JADE platform
@@ -63,29 +57,16 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 
 		private static final long serialVersionUID = -1076583615928481034L;
 
-		private Set<Capability> getCanProcessCapabilities(final ACLMessage msg) {
-			Set<Capability> capabilities = new HashSet<Capability>();
-			for (Capability capability : getMyAgent()
-					.getAggregatedCapabilities()) {
-				if (capability.canHandle(msg)) {
-					capabilities.add(capability);
-				}
-			}
-			return capabilities;
-		}
-
 		/**
 		 * @see jade.lang.acl.MessageTemplate.MatchExpression#match(jade.lang.acl.ACLMessage)
 		 */
 		@Override
 		public boolean match(ACLMessage msg) {
-			Set<Capability> capabilities = getCanProcessCapabilities(msg);
-			if (!capabilities.isEmpty()) {
-				synchronized (msgs) {
-					msgs.put(msg, capabilities);
-				}
+			log.debug("Message received.");
+			if (getMyAgent().canHandle(msg)) {
 				return true;
 			} else {
+				log.debug("Message cannot be handled:" + msg);
 				return false;
 			}
 		}
@@ -96,7 +77,6 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 	private static final long serialVersionUID = -4435254708782532901L;
 
 	private final Log log;
-	private final Map<ACLMessage, Set<Capability>> msgs;
 
 	/**
 	 * Initializes this message receiver, which is associated with a BDI agent.
@@ -104,11 +84,10 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 	 * @param agent
 	 *            the BDI agent that this behavior is associated with.
 	 */
-	public BDIAgentMsgReceiver(BDIAgent agent) {
+	public BDIAgentMsgReceiver(AbstractBDIAgent agent) {
 		super(agent, MessageTemplate.MatchAll(), INFINITE, new DataStore(),
 				MSG_KEY);
 		this.template = new MessageTemplate(new BDIAgentMatchExpression());
-		this.msgs = new HashMap<ACLMessage, Set<Capability>>();
 		this.log = LogFactory.getLog(this.getClass());
 	}
 
@@ -123,8 +102,8 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 		return false;
 	}
 
-	private BDIAgent getMyAgent() {
-		return (BDIAgent) this.myAgent;
+	private AbstractBDIAgent getMyAgent() {
+		return (AbstractBDIAgent) this.myAgent;
 	}
 
 	/**
@@ -136,18 +115,9 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 	@Override
 	protected void handleMessage(ACLMessage msg) {
 		log.debug("Message received.");
-		synchronized (msgs) {
-			Set<Capability> capabilities = msgs.get(msg);
-			if (capabilities != null) {
-				MessageGoal goal = new MessageGoal(msg);
-				log.debug("This capabilities can process the message:");
-				for (Capability capability : capabilities) {
-					log.debug("* " + capability);
-				}
-				getMyAgent().addGoal(goal);
-				msgs.remove(msg);
-			}
-		}
+		MessageGoal goal = new MessageGoal(msg);
+		getMyAgent().addGoal(goal);
+		log.debug("Message goal added for message: " + msg);
 	}
 
 }

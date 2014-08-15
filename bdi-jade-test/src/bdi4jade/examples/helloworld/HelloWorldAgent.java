@@ -22,41 +22,48 @@
 
 package bdi4jade.examples.helloworld;
 
-import bdi4jade.core.BDIAgent;
-import bdi4jade.core.Capability;
+import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.DefaultPlan;
+import bdi4jade.plan.Plan.EndState;
+import bdi4jade.plan.planbody.AbstractPlanBody;
 
-public class HelloWorldAgent extends BDIAgent {
+public class HelloWorldAgent extends SingleCapabilityAgent {
+
+	public static class HelloWorldGoal implements Goal {
+
+		private static final long serialVersionUID = -9039447524062487795L;
+
+		private String name;
+
+		public HelloWorldGoal(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+
+	public static class HelloWorldPlanBody extends AbstractPlanBody {
+
+		private static final long serialVersionUID = -9039447524062487795L;
+
+		public void action() {
+			System.out.println("Hello, "
+					+ ((HelloWorldGoal) getGoal()).getName() + "!");
+			setEndState(EndState.SUCCESSFULL);
+		}
+
+	}
 
 	private static final long serialVersionUID = 2712019445290687786L;
 
-	protected void init() {
-		Capability capability = new Capability();
-		capability.getPlanLibrary().addPlan(
-				new DefaultPlan(HelloWorldGoal.class, HelloWorldPlan.class));
-		this.addCapability(capability);
-
-		addGoal(new HelloWorldGoal("reader"));
+	public HelloWorldAgent() {
+		getCapability().getPlanLibrary()
+				.addPlan(
+						new DefaultPlan(HelloWorldGoal.class,
+								HelloWorldPlanBody.class));
 	}
 
-}
-
-/**
- * @author ingridn
- * 
- */
-class HelloWorldGoal implements Goal {
-
-	private static final long serialVersionUID = -9039447524062487795L;
-
-	private String name;
-
-	public HelloWorldGoal(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
 }

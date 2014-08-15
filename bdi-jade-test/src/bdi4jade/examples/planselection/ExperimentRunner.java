@@ -37,7 +37,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
-import bdi4jade.examples.AgentStarter;
+import bdi4jade.examples.BDI4JADEExamplesApp;
 
 /**
  * @author ingrid
@@ -48,7 +48,7 @@ public class ExperimentRunner implements GoalListener {
 	public static final int ITERATIONS = 5000;
 
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(AgentStarter.class
+		PropertyConfigurator.configure(BDI4JADEExamplesApp.class
 				.getResource("log4j.properties"));
 		ExperimentRunner runner = new ExperimentRunner();
 		runner.run();
@@ -98,7 +98,7 @@ public class ExperimentRunner implements GoalListener {
 			} else {
 				log.info("Iterations finished!!");
 				log.info(((GenericValueFunction<?>) transportationAgent
-						.getRootCapability().getBeliefBase()
+						.getCapability().getBeliefBase()
 						.getBelief(TransportationAgent.SATISFACTION).getValue())
 						.stats());
 			}
