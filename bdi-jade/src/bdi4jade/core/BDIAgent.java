@@ -38,6 +38,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.annotation.GoalOwner;
 import bdi4jade.belief.Belief;
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
 import bdi4jade.event.GoalEvent;
@@ -47,6 +48,7 @@ import bdi4jade.goal.GoalStatus;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.message.BDIAgentMsgReceiver;
 import bdi4jade.plan.Plan;
+import bdi4jade.util.ReflectionUtils;
 
 /**
  * This class is an extension of {@link Agent} that has a current set of goals,
@@ -124,7 +126,8 @@ public class BDIAgent extends Agent {
 						.getGeneratedGoals()) {
 					Intention intention = addIntention(goal.getDispatcher(),
 							goal.getGoal(), null);
-					agentGoalUpdateSet.addIntention(intention);
+					if (intention != null)
+						agentGoalUpdateSet.addIntention(intention);
 				}
 				for (GoalUpdateSet goalUpdateSet : capabilityGoalUpdateSets
 						.values()) {
@@ -132,7 +135,8 @@ public class BDIAgent extends Agent {
 							.getGeneratedGoals()) {
 						Intention intention = addIntention(
 								goal.getDispatcher(), goal.getGoal(), null);
-						goalUpdateSet.addIntention(intention);
+						if (intention != null)
+							goalUpdateSet.addIntention(intention);
 					}
 				}
 
@@ -228,6 +232,7 @@ public class BDIAgent extends Agent {
 	private Set<Capability> capabilities;
 	protected final List<GoalListener> goalListeners;
 	protected final Log log;
+	private Map<Class<? extends Capability>, Set<Capability>> restrictedAccessOwnersMap;
 	private final Set<Softgoal> softgoals;
 
 	/**
@@ -237,6 +242,7 @@ public class BDIAgent extends Agent {
 		this.log = LogFactory.getLog(this.getClass());
 		this.bdiInterpreter = new BDIInterpreter(this);
 		this.capabilities = new HashSet<>();
+		this.restrictedAccessOwnersMap = new HashMap<>();
 		this.allIntentions = new HashMap<>();
 		this.aggregatedCapabilities = new HashSet<>();
 		this.agentIntentions = new LinkedList<>();
@@ -291,6 +297,7 @@ public class BDIAgent extends Agent {
 		synchronized (aggregatedCapabilities) {
 			this.aggregatedCapabilities.add(capability);
 			resetAllCapabilities();
+			computeGoalOwnersMap();
 		}
 	}
 
@@ -370,8 +377,15 @@ public class BDIAgent extends Agent {
 	 */
 	private final Intention addIntention(Capability dispatcher, Goal goal,
 			GoalListener goalListener) {
+		Intention intention = null;
+		try {
+			intention = new Intention(goal, this, dispatcher);
+		} catch (IllegalAccessException exc) {
+			log.error(exc);
+			return null;
+		}
+
 		synchronized (allIntentions) {
-			Intention intention = new Intention(goal, this, dispatcher);
 			this.allIntentions.put(goal, intention);
 			if (dispatcher == null) {
 				agentIntentions.add(intention);
@@ -396,6 +410,13 @@ public class BDIAgent extends Agent {
 	public final void addSoftgoal(Softgoal softgoal) {
 		synchronized (softgoals) {
 			this.softgoals.add(softgoal);
+		}
+	}
+
+	private void computeGoalOwnersMap() {
+		this.restrictedAccessOwnersMap = new HashMap<>();
+		for (Capability capability : aggregatedCapabilities) {
+			ReflectionUtils.addGoalOwner(restrictedAccessOwnersMap, capability);
 		}
 	}
 
@@ -584,6 +605,25 @@ public class BDIAgent extends Agent {
 	}
 
 	/**
+	 * Returns the capability instances that owns a dispatched goal, considering
+	 * the aggregated capabilities of this agent.
+	 * 
+	 * If this method returns an empty set, it means that this agent cannot add
+	 * a goal without the scope of a dispatcher that has access to it.
+	 * 
+	 * @param owner
+	 *            the annotation with the goal owner.
+	 * @return the capability instances related to this capability that owns the
+	 *         goal, or an empty set if the agent cannot add this goal.
+	 */
+	public Set<Capability> getGoalOwner(GoalOwner owner) {
+		Set<Capability> restrictedAccessOwners = restrictedAccessOwnersMap
+				.get(owner.capability());
+		return restrictedAccessOwners == null ? new HashSet<Capability>()
+				: restrictedAccessOwners;
+	}
+
+	/**
 	 * Returns all agent intentions, which are goals that this agent is
 	 * committed to achieve.
 	 * 
@@ -622,6 +662,7 @@ public class BDIAgent extends Agent {
 			boolean removed = this.aggregatedCapabilities.remove(capability);
 			if (removed) {
 				resetAllCapabilities();
+				computeGoalOwnersMap();
 			}
 			return removed;
 		}

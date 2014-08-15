@@ -32,6 +32,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.annotation.GoalOwner;
 import bdi4jade.event.GoalListener;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
@@ -76,7 +77,8 @@ public class Intention {
 	 * @param bdiAgent
 	 *            the bdiAgent associated with this intention.
 	 */
-	public Intention(Goal goal, BDIAgent bdiAgent) {
+	public Intention(Goal goal, BDIAgent bdiAgent)
+			throws IllegalAccessException {
 		this(goal, bdiAgent, null);
 	}
 
@@ -92,7 +94,8 @@ public class Intention {
 	 * @param dispatcher
 	 *            the Capability that dispatched the goal.
 	 */
-	public Intention(Goal goal, BDIAgent bdiAgent, Capability dispatcher) {
+	public Intention(Goal goal, BDIAgent bdiAgent, Capability dispatcher)
+			throws IllegalAccessException {
 		this.log = LogFactory.getLog(this.getClass());
 		this.goal = goal;
 		this.myAgent = bdiAgent;
@@ -101,9 +104,29 @@ public class Intention {
 		this.waiting = true;
 		this.executedPlans = new HashSet<>();
 		this.currentPlan = null;
-		this.dispatcher = dispatcher;
-		this.owners = new HashSet<>(); // TODO
 		this.goalListeners = new LinkedList<>();
+		this.dispatcher = dispatcher;
+
+		GoalOwner owner = null;
+		if (goal.getClass().isAnnotationPresent(GoalOwner.class)) {
+			owner = goal.getClass().getAnnotation(GoalOwner.class);
+		}
+		if (owner == null) {
+			this.owners = new HashSet<>();
+		} else {
+			if (dispatcher == null) {
+				this.owners = myAgent.getGoalOwner(owner);
+			} else {
+				this.owners = dispatcher.getGoalOwner(owner);
+				if (owners.isEmpty()) {
+					throw new IllegalAccessException("Capability " + dispatcher
+							+ " has no access to goal "
+							+ goal.getClass().getSimpleName()
+							+ " of capability "
+							+ owner.getClass().getSimpleName());
+				}
+			}
+		}
 	}
 
 	/**

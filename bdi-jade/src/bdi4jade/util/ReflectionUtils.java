@@ -23,12 +23,16 @@
 package bdi4jade.util;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
+import bdi4jade.core.Capability;
 import bdi4jade.exception.ParameterException;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.planbody.PlanBody;
@@ -45,6 +49,29 @@ public abstract class ReflectionUtils {
 	private static final String GETTER_PREFIX = "get";
 	private static final Log log = LogFactory.getLog(ReflectionUtils.class);
 	private static final String SETTER_PREFIX = "set";
+
+	// TODO
+	public static void addGoalOwner(
+			Map<Class<? extends Capability>, Set<Capability>> goalOwnersMap,
+			Capability capability) {
+		addGoalOwner(goalOwnersMap, capability.getClass(), capability);
+		for (Class<? extends Capability> parentCapability : capability
+				.getParentCapabilities()) {
+			addGoalOwner(goalOwnersMap, parentCapability, capability);
+		}
+	}
+
+	// TODO
+	public static void addGoalOwner(
+			Map<Class<? extends Capability>, Set<Capability>> goalOwnersMap,
+			Class<? extends Capability> cababilityClass, Capability capability) {
+		Set<Capability> owners = goalOwnersMap.get(cababilityClass);
+		if (owners == null) {
+			owners = new HashSet<>();
+			goalOwnersMap.put(cababilityClass, owners);
+		}
+		owners.add(capability);
+	}
 
 	private static void checkSkipIsOK(Parameter parameter, String msg,
 			Exception cause) throws ParameterException {

@@ -25,15 +25,19 @@ package bdi4jade.core;
 import jade.lang.acl.ACLMessage;
 
 import java.io.Serializable;
+import java.security.acl.Owner;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.annotation.GoalOwner;
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
@@ -48,6 +52,7 @@ import bdi4jade.reasoning.DefaultPlanSelectionStrategy;
 import bdi4jade.reasoning.DeliberationFunction;
 import bdi4jade.reasoning.OptionGenerationFunction;
 import bdi4jade.reasoning.PlanSelectionStrategy;
+import bdi4jade.util.ReflectionUtils;
 
 /**
  * This capability represents a component that aggregates the mental attitudes
@@ -65,16 +70,18 @@ public class Capability implements Serializable {
 	protected final BeliefBase beliefBase;
 	private BeliefRevisionStrategy beliefRevisionStrategy;
 	private DeliberationFunction deliberationFunction;
+	private Map<Class<? extends Capability>, Set<Capability>> fullAccessOwnersMap;
 	protected final String id;
 	private final Collection<Intention> intentions;
 	protected final Log log;
 	private BDIAgent myAgent;
 	private OptionGenerationFunction optionGenerationFunction;
+	private final List<Class<? extends Capability>> parentCapabilities;
 	private final Set<Capability> partCapabilities;
 	protected final PlanLibrary planLibrary;
 	private PlanSelectionStrategy planSelectionStrategy;
+	private Map<Class<? extends Capability>, Set<Capability>> restrictedAccessOwnersMap;
 	private boolean started;
-
 	private Capability wholeCapability;
 
 	/**
@@ -137,6 +144,7 @@ public class Capability implements Serializable {
 			Set<Plan> initialPlans) {
 		this.log = LogFactory.getLog(getClass());
 		this.intentions = new LinkedList<>();
+		this.parentCapabilities = generateParentCapabilities();
 
 		// Id initialization
 		if (id == null) {
@@ -168,6 +176,8 @@ public class Capability implements Serializable {
 		this.optionGenerationFunction = new DefaultOptionGenerationFunction();
 		this.deliberationFunction = new DefaultDeliberationFunction();
 		this.planSelectionStrategy = new DefaultPlanSelectionStrategy();
+
+		computeGoalOwnersMap();
 
 		synchronized (this) {
 			this.started = false;
@@ -203,6 +213,7 @@ public class Capability implements Serializable {
 	public final void addAssociatedCapability(Capability capability) {
 		this.associationTargets.add(capability);
 		capability.associationSources.add(this);
+		computeGoalOwnersMap();
 		resetAgentCapabilities();
 	}
 
@@ -244,6 +255,7 @@ public class Capability implements Serializable {
 		partCapability.wholeCapability = this;
 		this.partCapabilities.add(partCapability);
 
+		computeGoalOwnersMap();
 		resetAgentCapabilities();
 	}
 
@@ -268,6 +280,21 @@ public class Capability implements Serializable {
 			}
 		}
 		return false;
+	}
+
+	private void computeGoalOwnersMap() {
+		this.fullAccessOwnersMap = new HashMap<>();
+		ReflectionUtils.addGoalOwner(fullAccessOwnersMap, this);
+		if (wholeCapability != null) {
+			ReflectionUtils.addGoalOwner(fullAccessOwnersMap, this);
+		}
+		this.restrictedAccessOwnersMap = new HashMap<>();
+		for (Capability capability : associationTargets) {
+			ReflectionUtils.addGoalOwner(restrictedAccessOwnersMap, capability);
+		}
+		for (Capability capability : partCapabilities) {
+			ReflectionUtils.addGoalOwner(restrictedAccessOwnersMap, capability);
+		}
 	}
 
 	/**
@@ -318,6 +345,19 @@ public class Capability implements Serializable {
 	 */
 	public final void generateGoals(GoalUpdateSet goalUpdateSet) {
 		this.optionGenerationFunction.generateGoals(goalUpdateSet);
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<Class<? extends Capability>> generateParentCapabilities() {
+		List<Class<? extends Capability>> parentCapabilities = new LinkedList<>();
+		Class<?> currentClass = this.getClass();
+		while (Capability.class.isAssignableFrom(currentClass)
+				&& !Capability.class.equals(currentClass)) {
+			parentCapabilities.add((Class<Capability>) currentClass
+					.getSuperclass());
+			currentClass = currentClass.getSuperclass();
+		}
+		return parentCapabilities;
 	}
 
 	/**
@@ -377,6 +417,47 @@ public class Capability implements Serializable {
 	}
 
 	/**
+	 * Returns the capability instances that owns a dispatched goal, considering
+	 * the superclasses of this capability, its associations and compositions.
+	 * 
+	 * A capability may dispatch its own goals and goals of its parents. It may
+	 * also dispatch external goals of associated or part capabilities (and
+	 * their parents), and all goals of whole capabilities.
+	 * 
+	 * This method thus searches all capabilities that have a relationship with
+	 * this capability (either inheritance, composition or association) and
+	 * finds the concrete capability instances whose definition owns a goal
+	 * (specified with the {@link Owner} annotation in goals).
+	 * 
+	 * If this method returns an empty set, it means that this capability has no
+	 * access to the goal owned by capabilities of the given class.
+	 * 
+	 * @param owner
+	 *            the annotation with the goal owner.
+	 * @return the capability instances related to this capability (or the
+	 *         capability itself) that owns the goal, or an empty set if the
+	 *         capability has no access to goals owned by capability of the
+	 *         given class.
+	 */
+	public Set<Capability> getGoalOwner(GoalOwner owner) {
+		Set<Capability> owners = new HashSet<>();
+
+		Set<Capability> fullAccessOwners = fullAccessOwnersMap.get(owner
+				.capability());
+		if (fullAccessOwners != null)
+			owners.addAll(fullAccessOwners);
+
+		if (!owner.internal()) {
+			Set<Capability> restrictedAccessOwners = restrictedAccessOwnersMap
+					.get(owner.capability());
+			if (restrictedAccessOwners != null)
+				owners.addAll(restrictedAccessOwners);
+		}
+
+		return owners;
+	}
+
+	/**
 	 * Returns this capability id.
 	 * 
 	 * @return the id.
@@ -405,6 +486,15 @@ public class Capability implements Serializable {
 	 */
 	public final OptionGenerationFunction getOptionGenerationFunction() {
 		return optionGenerationFunction;
+	}
+
+	/**
+	 * Returns the classes of all parent capabilities of this capability.
+	 * 
+	 * @return the parentCapabilities.
+	 */
+	public List<Class<? extends Capability>> getParentCapabilities() {
+		return parentCapabilities;
 	}
 
 	/**
@@ -460,6 +550,7 @@ public class Capability implements Serializable {
 	public final void removeAssociatedCapability(Capability capability) {
 		this.associationTargets.remove(capability);
 		capability.associationSources.remove(this);
+		computeGoalOwnersMap();
 		resetAgentCapabilities();
 	}
 
@@ -480,6 +571,7 @@ public class Capability implements Serializable {
 		boolean removed = this.partCapabilities.remove(partCapability);
 		if (removed) {
 			partCapability.wholeCapability = null;
+			computeGoalOwnersMap();
 			resetAgentCapabilities();
 		}
 		return removed;
