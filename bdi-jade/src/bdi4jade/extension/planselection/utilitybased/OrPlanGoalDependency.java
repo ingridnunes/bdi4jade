@@ -35,7 +35,7 @@ import bdi4jade.plan.Plan;
  * be achieved, this class stores the probability of each particular goal to be
  * achieved during the plan execution.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class OrPlanGoalDependency extends PlanGoalDependency {
 

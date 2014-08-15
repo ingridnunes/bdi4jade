@@ -22,54 +22,39 @@
 
 package bdi4jade.examples.template;
 
-import bdi4jade.core.Capability;
-import bdi4jade.core.MultipleCapabilityAgent;
 import bdi4jade.examples.template.goal.MyGoal;
 import bdi4jade.examples.template.plan.MyPlan1;
 import bdi4jade.examples.template.plan.MyPlan2;
-import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
-import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
+import bdi4jade.extension.planselection.utilitybased.UtilityBasedCabability;
 import bdi4jade.goal.Softgoal;
+import bdi4jade.plan.Plan;
 
 /**
- * @author ingrid
- * 
+ * @author IngridNunes
  */
-public class MyAgent extends MultipleCapabilityAgent {
+public class MyCapability extends UtilityBasedCabability {
 
 	static final long serialVersionUID = 2712019445290687786L;
 
-	private final Capability rootCapability;
+	@bdi4jade.annotation.Plan
+	private Plan myPlan1 = new MyPlan1();
 
-	public MyAgent() {
-		this.rootCapability = new UtilityBasedBDIAgent();
-		this.addCapability(rootCapability);
-	}
+	@bdi4jade.annotation.Plan
+	private Plan myPlan2 = new MyPlan2();
 
-	public Capability getRootCapability() {
-		return rootCapability;
-	}
-
-	protected void init() {
+	protected void setup() {
 		for (Softgoal softgoal : MyAgentSoftgoals.ALL_SOFTGOALS) {
-			this.addSoftgoal(softgoal);
+			getMyAgent().addSoftgoal(softgoal);
 		}
-
-		this.getRootCapability().getPlanLibrary().addPlan(new MyPlan1());
-		this.getRootCapability().getPlanLibrary().addPlan(new MyPlan2());
-
 		initPreferences();
-
-		addGoal(new MyGoal());
+		getMyAgent().addGoal(new MyGoal());
 	}
 
 	public void initPreferences() {
-		SoftgoalPreferences preferences = (SoftgoalPreferences) this
-				.getRootCapability().getBeliefBase()
-				.getBelief(SoftgoalPreferences.NAME);
-
-		preferences.setPreferenceForSoftgoal(MyAgentSoftgoals.Softgoal1, 0.3);
-		preferences.setPreferenceForSoftgoal(MyAgentSoftgoals.Softgoal2, 0.7);
+		this.softgoalPreferences.setPreferenceForSoftgoal(
+				MyAgentSoftgoals.Softgoal1, 0.3);
+		this.softgoalPreferences.setPreferenceForSoftgoal(
+				MyAgentSoftgoals.Softgoal2, 0.7);
 
 	}
 

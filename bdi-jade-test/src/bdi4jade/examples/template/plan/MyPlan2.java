@@ -34,8 +34,7 @@ import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.DefaultPlan;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class MyPlan2 extends DefaultPlan {
 

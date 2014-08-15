@@ -28,7 +28,7 @@ import bdi4jade.plan.Plan;
  * This abstract class has the common properties and operations of all kinds of
  * plan-goal dependency.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public abstract class PlanGoalDependency {
 

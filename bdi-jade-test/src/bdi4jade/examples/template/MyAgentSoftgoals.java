@@ -26,8 +26,7 @@ import bdi4jade.goal.NamedSoftgoal;
 import bdi4jade.goal.Softgoal;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class MyAgentSoftgoals {
 

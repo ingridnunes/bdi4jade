@@ -28,8 +28,7 @@ import bdi4jade.goal.Softgoal;
  * This class stores the probability of a plan promoting a value with respect to
  * a softgoal.
  * 
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class PlanContribution {
 

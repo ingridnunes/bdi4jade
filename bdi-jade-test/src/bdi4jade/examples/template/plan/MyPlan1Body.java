@@ -26,8 +26,7 @@ import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class MyPlan1Body extends AbstractPlanBody {
 

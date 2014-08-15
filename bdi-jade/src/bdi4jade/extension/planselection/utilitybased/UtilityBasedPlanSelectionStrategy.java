@@ -40,17 +40,15 @@ import bdi4jade.reasoning.PlanSelectionStrategy;
  * selects the plan that has the best expected value based on the plan
  * contributions and the agent current preferences.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class UtilityBasedPlanSelectionStrategy extends
 		AbstractReasoningStrategy implements PlanSelectionStrategy {
 
 	private final Log log;
-	private final UtilityBasedBDIAgent myAgent;
 
-	public UtilityBasedPlanSelectionStrategy(UtilityBasedBDIAgent myAgent) {
+	public UtilityBasedPlanSelectionStrategy() {
 		this.log = LogFactory.getLog(getClass());
-		this.myAgent = myAgent;
 	}
 
 	@SuppressWarnings("unchecked")

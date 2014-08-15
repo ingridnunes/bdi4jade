@@ -32,7 +32,7 @@ import bdi4jade.goal.Softgoal;
  * This is an agent transient belief (@see {@link TransientBelief}) that stores
  * the preferences for softgoals.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class SoftgoalPreferences extends TransientBelief<Map<Softgoal, Double>> {
 

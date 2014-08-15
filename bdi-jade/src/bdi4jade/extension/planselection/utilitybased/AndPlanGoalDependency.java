@@ -33,7 +33,7 @@ import bdi4jade.plan.Plan;
  * means that this plan needs that all goals that it depends on must be achieved
  * so that the plan can be completed.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class AndPlanGoalDependency extends PlanGoalDependency {
 

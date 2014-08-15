@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import bdi4jade.belief.TransientBelief;
 import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
-import bdi4jade.extension.planselection.utilitybased.UtilityBasedBDIAgent;
+import bdi4jade.extension.planselection.utilitybased.UtilityBasedCabability;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
 
@@ -48,7 +48,7 @@ public class TransportationAgent extends SingleCapabilityAgent {
 	private final Random rand;
 
 	public TransportationAgent() {
-		super(new UtilityBasedBDIAgent());
+		super(new UtilityBasedCabability());
 		this.log = LogFactory.getLog(this.getClass());
 		this.rand = new Random(System.currentTimeMillis());
 	}
