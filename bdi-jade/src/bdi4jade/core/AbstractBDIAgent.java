@@ -321,15 +321,20 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 */
 	private final Intention addIntention(Capability dispatcher, Goal goal,
 			GoalListener goalListener) {
-		Intention intention = null;
-		try {
-			intention = new Intention(goal, this, dispatcher);
-		} catch (IllegalAccessException exc) {
-			log.error(exc);
-			return null;
-		}
-
 		synchronized (allIntentions) {
+			if (allIntentions.get(goal) != null) {
+				log.warn("This agent already has this goal.");
+				return null;
+			}
+
+			Intention intention = null;
+			try {
+				intention = new Intention(goal, this, dispatcher);
+			} catch (IllegalAccessException exc) {
+				log.error(exc);
+				return null;
+			}
+
 			this.allIntentions.put(goal, intention);
 			if (dispatcher == null) {
 				agentIntentions.add(intention);

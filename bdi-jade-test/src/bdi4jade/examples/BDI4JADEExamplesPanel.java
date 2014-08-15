@@ -22,6 +22,7 @@ import bdi4jade.examples.bdicycle.CompositeGoalCapability.MyGoal2;
 import bdi4jade.examples.bdicycle.CompositeGoalCapability.MyGoal3;
 import bdi4jade.examples.bdicycle.PlanFailureCapability;
 import bdi4jade.examples.bdicycle.PlanFailureCapability.MyGoal;
+import bdi4jade.examples.bdicycle.SubgoalCapability;
 import bdi4jade.examples.helloworld.HelloWorldAgent;
 import bdi4jade.examples.helloworld.HelloWorldAnnotatedCapability;
 import bdi4jade.examples.ping.PingPongCapability;
@@ -237,17 +238,41 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 	}
 
+	private class SubgoalCapabilityAction extends BDI4JADEExamplesAction {
+		private static final long serialVersionUID = 2100583035268414082L;
+
+		private final AbstractBDIAgent subgoalCapability;
+
+		public SubgoalCapabilityAction() {
+			super.putValue(Action.NAME, "Subgoal Goal Agent");
+			this.subgoalCapability = new SingleCapabilityAgent(
+					new SubgoalCapability());
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			subgoalCapability.addGoal(new SubgoalCapability.ParentGoal());
+		}
+
+		@Override
+		public Set<AbstractBDIAgent> getAgents() {
+			Set<AbstractBDIAgent> agents = new HashSet<>();
+			agents.add(subgoalCapability);
+			return agents;
+		}
+	}
+
 	private static final long serialVersionUID = -1080267169700651610L;
 
 	private final BDI4JADEExamplesAction[] actions;
 
 	// new NestedCapabilitiesAgent());
-	// this.addCapability(new SubgoalCapability());
 
 	public BDI4JADEExamplesPanel() {
 		this.actions = new BDI4JADEExamplesAction[] { new HelloWorldAction(),
 				new HelloWorldAnnotatedAction(), new PingPongAction(),
-				new CompositeGoalAction(), new PlanFailureAction() };
+				new CompositeGoalAction(), new PlanFailureAction(),
+				new SubgoalCapabilityAction() };
 		this.setLayout(new GridLayout(actions.length, 1));
 		for (BDI4JADEExamplesAction action : actions) {
 			this.add(new JButton(action));
