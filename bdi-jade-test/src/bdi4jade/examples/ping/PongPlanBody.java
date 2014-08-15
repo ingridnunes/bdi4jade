@@ -23,23 +23,19 @@
 package bdi4jade.examples.ping;
 
 import jade.lang.acl.ACLMessage;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import bdi4jade.message.MessageGoal;
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
-public class PongPlan extends AbstractPlanBody {
+public class PongPlanBody extends AbstractPlanBody {
 
+	public static final String MSG_CONTENT = "pong";
 	private static final long serialVersionUID = -3352874506241004611L;
 
-	private Log log;
 	private ACLMessage pingMsg;
 
 	@Override
@@ -47,17 +43,15 @@ public class PongPlan extends AbstractPlanBody {
 		log.info("Ping received from agent " + pingMsg.getSender().getName()
 				+ "!");
 		ACLMessage reply = pingMsg.createReply();
-		reply.setContent(PingPongCapability.PONG);
+		reply.setContent(MSG_CONTENT);
 		this.myAgent.send(reply);
-		log.info("Pong sent to agent" + pingMsg.getSender().getName() + "!");
+		log.info("Pong sent to agent " + pingMsg.getSender().getName() + "!");
 		setEndState(EndState.SUCCESSFULL);
 	}
 
-	@Override
-	public void onStart() {
-		this.log = LogFactory.getLog(this.getClass());
-		MessageGoal goal = (MessageGoal) getGoal();
-		pingMsg = goal.getMessage();
+	@Parameter(direction = Direction.IN)
+	public void setMessage(ACLMessage pingMsg) {
+		this.pingMsg = pingMsg;
 	}
 
 }

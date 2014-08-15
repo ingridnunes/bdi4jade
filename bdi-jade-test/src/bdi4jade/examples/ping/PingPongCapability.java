@@ -23,43 +23,43 @@
 package bdi4jade.examples.ping;
 
 import jade.lang.acl.MessageTemplate;
-
-import java.util.HashSet;
-import java.util.Set;
-
+import bdi4jade.annotation.GoalOwner;
+import bdi4jade.belief.Belief;
+import bdi4jade.belief.TransientBelief;
 import bdi4jade.core.Capability;
+import bdi4jade.goal.Goal;
 import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class PingPongCapability extends Capability {
 
-	public static final String PING = "ping";
-	public static final String PONG = "pong";
-
 	private static final long serialVersionUID = -4800805796961540570L;
 
-	private static Set<Plan> getPlans() {
-		Set<Plan> plans = new HashSet<Plan>();
-		plans.add(new DefaultPlan(Ping.class, PingPlan.class));
-		plans.add(new DefaultPlan(MessageTemplate.MatchContent(PING),
-				PongPlan.class));
-		return plans;
+	@GoalOwner(capability = PingPongCapability.class)
+	public static class PingGoal implements Goal {
+		private static final long serialVersionUID = -7733145369836002329L;
 	}
 
-	private String otherAgent;
+	@bdi4jade.annotation.Belief
+	Belief<String> neighbour;
 
-	public PingPongCapability(String id, String otherAgent) {
-		super(id, null, getPlans());
-		this.otherAgent = otherAgent;
-	}
+	@bdi4jade.annotation.Belief
+	Belief<Integer> pingTimes;
 
-	@Override
-	protected void setup() {
-		getMyAgent().addGoal(new Ping(otherAgent));
+	@bdi4jade.annotation.Plan
+	private Plan pingPlan = new DefaultPlan(PingGoal.class, PingPlanBody.class);
+
+	@bdi4jade.annotation.Plan
+	private Plan pongPlan = new DefaultPlan(
+			MessageTemplate.MatchContent(PingPlanBody.MSG_CONTENT),
+			PongPlanBody.class);
+
+	public PingPongCapability(String neighbour, int pingTimes) {
+		this.neighbour = new TransientBelief<String>("neighbour", neighbour);
+		this.pingTimes = new TransientBelief<Integer>("pingTimes", pingTimes);
 	}
 
 }

@@ -290,6 +290,7 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 		this.intention = intention;
 		try {
 			ReflectionUtils.setPlanBodyInput(this, intention.getGoal());
+			ReflectionUtils.setupBeliefs(this);
 		} catch (ParameterException exc) {
 			throw new PlanInstantiationException(exc);
 		}

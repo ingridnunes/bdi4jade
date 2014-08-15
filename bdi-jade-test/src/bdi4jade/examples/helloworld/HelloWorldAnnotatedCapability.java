@@ -32,11 +32,13 @@ import bdi4jade.plan.Plan;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
+/**
+ * @author Ingrid Nunes
+ */
 public class HelloWorldAnnotatedCapability extends Capability {
 
 	@GoalOwner(capability = HelloWorldAnnotatedCapability.class)
 	public static class HelloWorldGoal implements Goal {
-
 		private static final long serialVersionUID = -9039447524062487795L;
 
 		private String name;
@@ -65,11 +67,9 @@ public class HelloWorldAnnotatedCapability extends Capability {
 			return getClass().getSimpleName() + " - name: " + name
 					+ " / time: " + time;
 		}
-
 	}
 
 	public static class HelloWorldPlan extends AbstractPlanBody {
-
 		private static final long serialVersionUID = -9039447524062487795L;
 
 		private String name;
@@ -90,7 +90,6 @@ public class HelloWorldAnnotatedCapability extends Capability {
 		public void setName(String name) {
 			this.name = name;
 		}
-
 	}
 
 	private static final long serialVersionUID = 2712019445290687786L;

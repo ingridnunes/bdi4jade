@@ -25,34 +25,32 @@ package bdi4jade.examples.ping;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import bdi4jade.belief.Belief;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
-public class PingPlan extends AbstractPlanBody {
+public class PingPlanBody extends AbstractPlanBody {
 
+	public static final String MSG_CONTENT = "ping";
 	private static final long serialVersionUID = -6288758975856575305L;
 
-	private String agent;
 	private int counter;
-	private Log log;
 	private MessageTemplate mt;
+	@bdi4jade.annotation.Belief
+	private Belief<String> neighbour;
+	@bdi4jade.annotation.Belief
+	private Belief<Integer> pingTimes;
 	private boolean sent;
-	private int times;
 
 	@Override
 	public void action() {
 		if (!sent) {
 			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-			msg.setContent(PingPongCapability.PING);
-			msg.addReceiver(new AID(agent, false));
+			msg.setContent(MSG_CONTENT);
+			msg.addReceiver(new AID(neighbour.getValue(), false));
 			msg.setConversationId("cin" + System.currentTimeMillis());
 			msg.setReplyWith("inform" + System.currentTimeMillis());
 			myAgent.send(msg);
@@ -60,7 +58,7 @@ public class PingPlan extends AbstractPlanBody {
 					.MatchConversationId(msg.getConversationId()),
 					MessageTemplate.MatchInReplyTo(msg.getReplyWith()));
 			this.sent = true;
-			log.info("Ping sent to agent " + agent + "!");
+			log.info("Ping sent to agent " + neighbour.getValue() + "!");
 		} else {
 			ACLMessage reply = myAgent.receive(mt);
 			if (reply != null) {
@@ -68,7 +66,7 @@ public class PingPlan extends AbstractPlanBody {
 						+ "!");
 				log.info("Content: " + reply.getContent());
 				counter++;
-				if (counter == times) {
+				if (counter == pingTimes.getValue()) {
 					setEndState(EndState.SUCCESSFULL);
 				} else {
 					this.sent = false;
@@ -81,12 +79,8 @@ public class PingPlan extends AbstractPlanBody {
 
 	@Override
 	public void onStart() {
-		this.log = LogFactory.getLog(this.getClass());
-		Ping ping = (Ping) getGoal();
-		this.agent = ping.getAgent();
 		this.sent = false;
 		this.counter = 0;
-		this.times = 1;
 	}
 
 }

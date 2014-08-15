@@ -28,10 +28,12 @@ import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
+/**
+ * @author Ingrid Nunes
+ */
 public class HelloWorldAgent extends SingleCapabilityAgent {
 
 	public static class HelloWorldGoal implements Goal {
-
 		private static final long serialVersionUID = -9039447524062487795L;
 
 		private String name;
@@ -46,7 +48,6 @@ public class HelloWorldAgent extends SingleCapabilityAgent {
 	}
 
 	public static class HelloWorldPlanBody extends AbstractPlanBody {
-
 		private static final long serialVersionUID = -9039447524062487795L;
 
 		public void action() {
@@ -54,7 +55,6 @@ public class HelloWorldAgent extends SingleCapabilityAgent {
 					+ ((HelloWorldGoal) getGoal()).getName() + "!");
 			setEndState(EndState.SUCCESSFULL);
 		}
-
 	}
 
 	private static final long serialVersionUID = 2712019445290687786L;

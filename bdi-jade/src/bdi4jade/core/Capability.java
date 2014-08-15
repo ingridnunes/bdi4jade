@@ -227,6 +227,9 @@ public class Capability implements Serializable {
 					if (Belief.class.isAssignableFrom(field.getType())) {
 						Belief<?> belief = (Belief<?>) field.get(this);
 						this.getBeliefBase().addBelief(belief);
+					} else {
+						throw new ClassCastException("Field " + field.getName()
+								+ " should be a Belief");
 					}
 				} else if (field
 						.isAnnotationPresent(bdi4jade.annotation.TransientBelief.class)) {
@@ -253,18 +256,27 @@ public class Capability implements Serializable {
 					if (Plan.class.isAssignableFrom(field.getType())) {
 						Plan plan = (Plan) field.get(this);
 						this.getPlanLibrary().addPlan(plan);
+					} else {
+						throw new ClassCastException("Field " + field.getName()
+								+ " should be a Plan");
 					}
 				} else if (field
 						.isAnnotationPresent(bdi4jade.annotation.AssociatedCapability.class)) {
 					if (Capability.class.isAssignableFrom(field.getType())) {
 						Capability capability = (Capability) field.get(this);
 						this.addAssociatedCapability(capability);
+					} else {
+						throw new ClassCastException("Field " + field.getName()
+								+ " should be a Capability");
 					}
 				} else if (field
 						.isAnnotationPresent(bdi4jade.annotation.PartCapability.class)) {
 					if (Capability.class.isAssignableFrom(field.getType())) {
 						Capability capability = (Capability) field.get(this);
 						this.addPartCapability(capability);
+					} else {
+						throw new ClassCastException("Field " + field.getName()
+								+ " should be a Capability");
 					}
 				}
 			} catch (Exception exc) {

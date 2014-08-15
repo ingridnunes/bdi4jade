@@ -29,11 +29,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import bdi4jade.core.Capability;
+import bdi4jade.plan.planbody.PlanBody;
 
 /**
  * This annotation allows to specify that an attribute of a {@link Capability}
- * is a belief that should be added to the capability belief base. The annotated
- * field should be of the type {@link bdi4jade.belief.Belief}.
+ * is a belief that should be added to the capability belief base. It can also
+ * be used in plan bodies ({@link PlanBody}) so that beliefs are injected in
+ * plan body attributes. The annotated field should be of the type
+ * {@link bdi4jade.belief.Belief}.
  * 
  * @author Ingrid Nunes
  */

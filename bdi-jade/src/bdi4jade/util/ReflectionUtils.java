@@ -22,6 +22,7 @@
 
 package bdi4jade.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
+import bdi4jade.belief.Belief;
 import bdi4jade.core.Capability;
 import bdi4jade.exception.ParameterException;
 import bdi4jade.goal.Goal;
@@ -167,6 +169,41 @@ public abstract class ReflectionUtils {
 		setupParameters(goal,
 				new Direction[] { Direction.OUT, Direction.INOUT }, planBody,
 				new Direction[] { Direction.OUT, Direction.INOUT });
+	}
+
+	/**
+	 * Sets plan body fields annotated with {@link bdi4jade.annotation.Belief}.
+	 * 
+	 * @param planBody
+	 *            the plan body to be setup with beliefs.
+	 */
+	public static void setupBeliefs(PlanBody planBody) {
+		Capability capability = planBody.getPlan().getPlanLibrary()
+				.getCapability();
+		Class<?> currentClass = planBody.getClass();
+		while (PlanBody.class.isAssignableFrom(currentClass)) {
+			for (Field field : currentClass.getDeclaredFields()) {
+				boolean b = field.isAccessible();
+				field.setAccessible(true);
+				try {
+					if (field
+							.isAnnotationPresent(bdi4jade.annotation.Belief.class)) {
+						if (Belief.class.isAssignableFrom(field.getType())) {
+							Belief<?> belief = capability.getBeliefBase()
+									.getBelief(field.getName());
+							field.set(planBody, belief);
+						} else {
+							throw new ClassCastException("Field "
+									+ field.getName() + " should be a Belief");
+						}
+					}
+				} catch (Exception exc) {
+					log.warn(exc);
+				}
+				field.setAccessible(b);
+			}
+			currentClass = currentClass.getSuperclass();
+		}
 	}
 
 	/**

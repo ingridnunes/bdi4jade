@@ -18,6 +18,7 @@ import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.examples.helloworld.HelloWorldAgent;
 import bdi4jade.examples.helloworld.HelloWorldAnnotatedCapability;
+import bdi4jade.examples.ping.PingPongCapability;
 
 /**
  * This class is a panel that is used as content pane of the application with
@@ -93,19 +94,57 @@ public class BDI4JADEExamplesPanel extends JPanel {
 
 	}
 
+	private class PingPongAction extends BDI4JADEExamplesAction {
+
+		public static final String AGENT_1 = "Alice";
+		public static final String AGENT_2 = "Bob";
+		private static final long serialVersionUID = 2100583035268414082L;
+
+		private final AbstractBDIAgent agent1;
+		private final AbstractBDIAgent agent2;
+
+		public PingPongAction() {
+			super.putValue(Action.NAME, "Ping Pong Agents");
+			this.agent1 = new SingleCapabilityAgent(new PingPongCapability(
+					AGENT_2, 2));
+			this.agent2 = new SingleCapabilityAgent(new PingPongCapability(
+					AGENT_1, 1));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.agent1.addGoal(new PingPongCapability.PingGoal());
+			this.agent2.addGoal(new PingPongCapability.PingGoal());
+		}
+
+		public Map<String, AbstractBDIAgent> getAgentMap() {
+			Map<String, AbstractBDIAgent> agentMap = new HashMap<>();
+			agentMap.put(AGENT_1, agent1);
+			agentMap.put(AGENT_2, agent2);
+			return agentMap;
+		}
+
+		@Override
+		public Set<AbstractBDIAgent> getAgents() {
+			return new HashSet<>(getAgentMap().values());
+		}
+	}
+
 	private static final long serialVersionUID = -1080267169700651610L;
 
 	private final BDI4JADEExamplesAction[] actions;
 
-	// agents.put(BDIAgent1.MY_NAME, new BDIAgent1());
-	// agents.put(BDIAgent2.MY_NAME, new BDIAgent2());
 	// agents.put(MyAgent.class.getSimpleName(), new MyAgent());
 	// agents.put(NestedCapabilitiesAgent.class.getSimpleName(),
 	// new NestedCapabilitiesAgent());
+	// this.addCapability(new PlanFailedCapability());
+	// this.addCapability(new SubgoalCapability());
+	// this.addCapability(new CompositeGoalCapability(true));
+	// this.addCapability(new CompositeGoalCapability(false));
 
 	public BDI4JADEExamplesPanel() {
 		this.actions = new BDI4JADEExamplesAction[] { new HelloWorldAction(),
-				new HelloWorldAnnotatedAction() };
+				new HelloWorldAnnotatedAction(), new PingPongAction() };
 		this.setLayout(new GridLayout(actions.length, 1));
 		for (BDI4JADEExamplesAction action : actions) {
 			this.add(new JButton(action));

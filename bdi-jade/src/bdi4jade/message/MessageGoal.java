@@ -23,6 +23,8 @@
 package bdi4jade.message;
 
 import jade.lang.acl.ACLMessage;
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.goal.Goal;
 
 /**
@@ -59,6 +61,7 @@ public class MessageGoal implements Goal {
 	 * 
 	 * @return the message
 	 */
+	@Parameter(direction = Direction.IN)
 	public ACLMessage getMessage() {
 		return message;
 	}

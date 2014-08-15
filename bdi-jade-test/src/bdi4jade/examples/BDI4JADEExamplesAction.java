@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.core.AbstractBDIAgent;
+import bdi4jade.core.SingleCapabilityAgent;
 
 /**
  * This class is an abstract action used as a base for actions to test BDI4JADE
@@ -44,7 +45,13 @@ public abstract class BDI4JADEExamplesAction extends AbstractAction {
 	public Map<String, AbstractBDIAgent> getAgentMap() {
 		Map<String, AbstractBDIAgent> agentMap = new HashMap<>();
 		for (AbstractBDIAgent agent : getAgents()) {
-			agentMap.put(agent.getClass().getSimpleName(), agent);
+			if (SingleCapabilityAgent.class.equals(agent.getClass())) {
+				SingleCapabilityAgent singleCapAgent = (SingleCapabilityAgent) agent;
+				agentMap.put(singleCapAgent.getCapability().getId() + "Agent",
+						agent);
+			} else {
+				agentMap.put(agent.getClass().getSimpleName(), agent);
+			}
 		}
 		return agentMap;
 	}

@@ -324,7 +324,7 @@ public class BeliefBase implements Serializable {
 			sb.append(" NO ID");
 		else
 			sb.append(capability.getId());
-		sb.append(" = ").append(beliefs);
+		sb.append(" = ").append(beliefs.values());
 		return sb.toString();
 	}
 
