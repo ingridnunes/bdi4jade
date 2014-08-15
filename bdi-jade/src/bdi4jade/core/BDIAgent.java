@@ -22,6 +22,7 @@
 
 package bdi4jade.core;
 
+import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Collection;
@@ -130,6 +131,13 @@ public interface BDIAgent {
 	 */
 
 	public void dropSoftoal(Softgoal softgoal);
+
+	/**
+	 * Returns the id of this agent.
+	 * 
+	 * @return the agent id.
+	 */
+	public AID getAID();
 
 	/**
 	 * Returns a collection of all beliefs from all capabilities of this agent.
