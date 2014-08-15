@@ -20,29 +20,29 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.planfailed;
+package bdi4jade.examples.bdicycle;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.annotation.GoalOwner;
 import bdi4jade.core.Capability;
-import bdi4jade.event.GoalEvent;
-import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalTemplateFactory;
 import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan;
+import bdi4jade.plan.Plan.EndState;
+import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
-public class PlanFailedCapability extends Capability implements GoalListener {
+public class PlanFailureCapability extends Capability {
 
-	class MyGoal implements Goal {
+	@GoalOwner(capability = PlanFailureCapability.class)
+	public static class MyGoal implements Goal {
 		private static final long serialVersionUID = 3405041038738876061L;
 
 		private int id;
@@ -54,48 +54,39 @@ public class PlanFailedCapability extends Capability implements GoalListener {
 		public String toString() {
 			return "Goal: " + id;
 		}
+	}
+
+	public static class MyPlan extends AbstractPlanBody {
+
+		private static final long serialVersionUID = -220345270457161508L;
+
+		private Log log = LogFactory.getLog(this.getClass());
+
+		public void action() {
+			long random = new Random().nextLong();
+			log.info("Random: " + random);
+			if (random % 3 == 0)
+				setEndState(EndState.SUCCESSFULL);
+			else
+				setEndState(EndState.FAILED);
+			log.info(getGoal() + " Plan#" + getPlan().getId() + " EndState: "
+					+ getEndState());
+		}
+
 	};
 
-	private static final int GOALS = 10;
-	private static final Log log = LogFactory
-			.getLog(PlanFailedCapability.class);
 	private static final long serialVersionUID = -4800805796961540570L;
 
-	private static Set<Plan> getPlans() {
-		Set<Plan> plans = new HashSet<Plan>();
-		plans.add(new DefaultPlan("Plan1", GoalTemplateFactory
-				.goalType(MyGoal.class), MyPlan.class));
-		plans.add(new DefaultPlan("Plan2", GoalTemplateFactory
-				.goalType(MyGoal.class), MyPlan.class));
-		plans.add(new DefaultPlan("Plan3", GoalTemplateFactory
-				.goalType(MyGoal.class), MyPlan.class));
-		return plans;
-	}
+	@bdi4jade.annotation.Plan
+	private Plan plan1 = new DefaultPlan("Plan1",
+			GoalTemplateFactory.goalType(MyGoal.class), MyPlan.class);
 
-	private int counter;
+	@bdi4jade.annotation.Plan
+	private Plan plan2 = new DefaultPlan("Plan2",
+			GoalTemplateFactory.goalType(MyGoal.class), MyPlan.class);
 
-	public PlanFailedCapability() {
-		super(null, getPlans());
-	}
-
-	@Override
-	public void goalPerformed(GoalEvent event) {
-		if (event.getStatus().isFinished() && event.getGoal() instanceof MyGoal) {
-			log.info(event.getGoal() + " Status: " + event.getStatus());
-			counter++;
-			if (counter >= GOALS) {
-				log.info("Goal finished!! Removing capability of this agent...");
-				// TODO getMyAgent().removeCapability(this);
-			}
-		}
-	}
-
-	@Override
-	protected void setup() {
-		this.counter = 0;
-		for (int i = 0; i < GOALS; i++) {
-			getMyAgent().addGoal(new MyGoal(i), this);
-		}
-	}
+	@bdi4jade.annotation.Plan
+	private Plan plan3 = new DefaultPlan("Plan3",
+			GoalTemplateFactory.goalType(MyGoal.class), MyPlan.class);
 
 }

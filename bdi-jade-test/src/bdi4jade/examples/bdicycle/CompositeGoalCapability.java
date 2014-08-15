@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.compositegoal;
+package bdi4jade.examples.bdicycle;
 
 import java.util.Random;
 
