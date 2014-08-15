@@ -32,10 +32,10 @@ import bdi4jade.core.Capability;
 
 /**
  * This annotation allows to specify that an attribute of a {@link Capability}
- * is an association between capabilities.
+ * is an association between capabilities. The annotated field should be of the
+ * type {@link Capability}.
  * 
- * @author ingridnunes
- * 
+ * @author Ingrid Nunes
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

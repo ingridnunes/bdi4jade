@@ -53,7 +53,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	 */
 	@Override
 	public T getValue() {
-		// TODO PersistentBelief.getValue()
+		// TODO Future: PersistentBelief.getValue()
 		throw new RuntimeException("Not implemented yet!");
 	}
 
@@ -63,7 +63,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
 	 */
 	protected void updateValue(T value) {
-		// TODO PersistentBelief.setValue(T value)
+		// TODO Future: PersistentBelief.setValue(T value)
 		throw new RuntimeException("Not implemented yet!");
 	}
 

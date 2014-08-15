@@ -40,9 +40,9 @@ import bdi4jade.plan.planbody.SequentialGoalPlanBody;
  * This class represents the plan library of a capability. It aggregates the
  * plans that can be used to achieve goals.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
-// TODO PlanLibrary - create indexes to optimize plan matches
+// TODO Future: PlanLibrary - create indexes to optimize plan matches
 public class PlanLibrary implements Serializable {
 
 	private static final long serialVersionUID = 3038533629659859857L;

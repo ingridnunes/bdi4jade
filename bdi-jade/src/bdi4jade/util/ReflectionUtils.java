@@ -50,7 +50,16 @@ public abstract class ReflectionUtils {
 	private static final Log log = LogFactory.getLog(ReflectionUtils.class);
 	private static final String SETTER_PREFIX = "set";
 
-	// TODO
+	/**
+	 * Adds to the goal owners map the capability classes that owns a goal to
+	 * the capability instance passed as parameter.
+	 * 
+	 * @param goalOwnersMap
+	 *            the goal owners map to which the owners of the given
+	 *            capability should be added.
+	 * @param capability
+	 *            the capability that should be added to the map.
+	 */
 	public static void addGoalOwner(
 			Map<Class<? extends Capability>, Set<Capability>> goalOwnersMap,
 			Capability capability) {
@@ -61,8 +70,7 @@ public abstract class ReflectionUtils {
 		}
 	}
 
-	// TODO
-	public static void addGoalOwner(
+	private static void addGoalOwner(
 			Map<Class<? extends Capability>, Set<Capability>> goalOwnersMap,
 			Class<? extends Capability> cababilityClass, Capability capability) {
 		Set<Capability> owners = goalOwnersMap.get(cababilityClass);

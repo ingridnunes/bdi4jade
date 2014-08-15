@@ -36,7 +36,7 @@ import bdi4jade.plan.planbody.PlanBody;
  * has the {@link Behaviour} class as superclass is provides and it is
  * instantiates in the {@link DefaultPlan#createPlanBody()} method.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class DefaultPlan extends AbstractPlan {
 

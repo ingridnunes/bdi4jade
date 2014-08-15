@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // 
 // To contact the authors:
-// http://inf.ufrgs.br/prosoft/bdi4jade/
+// http://inf.ufrgs.br/~ingridnunes/bdi4jade/
 //
 //----------------------------------------------------------------------------
 
@@ -27,19 +27,28 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Set;
 
 import bdi4jade.core.Capability;
 
 /**
  * This annotation allows to specify that an attribute of a {@link Capability}
- * is a belief that should be added to the capability belief base. The annotated
- * field should be of the type {@link bdi4jade.belief.Belief}.
+ * is a belief set value that should be added to the capability belief base. A
+ * name for the belief may be given. If it is not provided, the field name is
+ * used. The annotated field should be of the type {@link Set}.
  * 
  * @author Ingrid Nunes
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Belief {
+public @interface TransientBeliefSet {
+
+	/**
+	 * Returns the belief name.
+	 * 
+	 * @return the belief name.
+	 */
+	String name() default "";
 
 }

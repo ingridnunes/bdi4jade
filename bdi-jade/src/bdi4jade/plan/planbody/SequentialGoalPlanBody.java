@@ -39,7 +39,7 @@ import bdi4jade.util.ReflectionUtils;
  * This plan body provides the set of actions to achieve a
  * {@link SequentialGoal}.
  * 
- * @author ingrid
+ * @author Ingrid Nunes
  */
 public class SequentialGoalPlanBody extends AbstractPlanBody implements
 		OutputPlanBody {

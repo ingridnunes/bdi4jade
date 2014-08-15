@@ -22,11 +22,24 @@
 
 package bdi4jade.annotation;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import bdi4jade.core.Capability;
+
 /**
- * @author ingridnunes
- *
+ * This annotation allows to specify that an attribute of a {@link Capability}
+ * is a plan that should be added to the capability plan library. The annotated
+ * field should be of the type {@link bdi4jade.plan.Plan}.
+ * 
+ * @author Ingrid Nunes
  */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface Plan {
 
-	
 }
