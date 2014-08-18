@@ -20,27 +20,23 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.nestedcapabilities;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+package bdi4jade.examples.capabilities;
 
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
+/**
+ * @author Ingrid Nunes
+ */
 public class SuccessPlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -9039447524062487795L;
 
-	private Log log;
-
 	public void action() {
-		log.info(this.getClass().getSimpleName() + " executed.");
+		log.info("Plan " + getPlan().getId() + " executed from capability "
+				+ getPlan().getPlanLibrary().getCapability()
+				+ " to achieve goal " + getGoal());
 		setEndState(EndState.SUCCESSFULL);
-	}
-
-	public void onStart() {
-		this.log = LogFactory.getLog(this.getClass());
 	}
 
 }

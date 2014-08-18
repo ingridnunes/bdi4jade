@@ -40,6 +40,24 @@ import bdi4jade.plan.planbody.PlanBody;
  */
 public class DefaultPlan extends AbstractPlan {
 
+	private static String generateId(Class<? extends Goal> goalClass,
+			GoalTemplate goalTemplate, MessageTemplate messageTemplate,
+			Class<? extends PlanBody> planBodyClass) {
+		StringBuffer sb = new StringBuffer("[");
+		if (goalClass != null) {
+			sb.append(" ").append(goalClass.getName());
+		}
+		if (goalTemplate != null) {
+			sb.append(" ").append(goalTemplate);
+		}
+		if (messageTemplate != null) {
+			sb.append(" ").append(messageTemplate);
+		}
+		sb.append(" ] :: ");
+		sb.append(planBodyClass.getName());
+		return sb.toString();
+	}
+
 	protected final Class<? extends PlanBody> planBodyClass;
 
 	/**
@@ -54,8 +72,8 @@ public class DefaultPlan extends AbstractPlan {
 	 */
 	public DefaultPlan(Class<? extends Goal> goalClass,
 			Class<? extends PlanBody> planBodyClass) {
-		super(planBodyClass.getSimpleName(), GoalTemplateFactory
-				.goalType(goalClass));
+		super(generateId(goalClass, null, null, planBodyClass),
+				GoalTemplateFactory.goalType(goalClass));
 		this.planBodyClass = planBodyClass;
 	}
 
@@ -68,7 +86,7 @@ public class DefaultPlan extends AbstractPlan {
 	 *            the class of this plan body.
 	 */
 	public DefaultPlan(Class<? extends PlanBody> planBodyClass) {
-		super(planBodyClass.getSimpleName());
+		super(generateId(null, null, null, planBodyClass));
 		this.planBodyClass = planBodyClass;
 	}
 
@@ -87,7 +105,7 @@ public class DefaultPlan extends AbstractPlan {
 	 */
 	public DefaultPlan(GoalTemplate goalTemplate,
 			Class<? extends PlanBody> planBodyClass) {
-		super(planBodyClass.getSimpleName(), goalTemplate);
+		super(generateId(null, goalTemplate, null, planBodyClass), goalTemplate);
 		this.planBodyClass = planBodyClass;
 	}
 
@@ -114,7 +132,8 @@ public class DefaultPlan extends AbstractPlan {
 	public DefaultPlan(GoalTemplate goalTemplate,
 			MessageTemplate messageTemplate,
 			Class<? extends PlanBody> planBodyClass) {
-		super(planBodyClass.getSimpleName(), goalTemplate, messageTemplate);
+		super(generateId(null, goalTemplate, messageTemplate, planBodyClass),
+				goalTemplate, messageTemplate);
 		this.planBodyClass = planBodyClass;
 	}
 
@@ -134,7 +153,8 @@ public class DefaultPlan extends AbstractPlan {
 	 */
 	public DefaultPlan(MessageTemplate messageTemplate,
 			Class<? extends PlanBody> planBodyClass) {
-		super(planBodyClass.getSimpleName(), messageTemplate);
+		super(generateId(null, null, messageTemplate, planBodyClass),
+				messageTemplate);
 		this.planBodyClass = planBodyClass;
 	}
 

@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import bdi4jade.core.AbstractBDIAgent;
+import bdi4jade.core.MultipleCapabilityAgent;
 import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
@@ -23,6 +24,8 @@ import bdi4jade.examples.bdicycle.CompositeGoalCapability.MyGoal3;
 import bdi4jade.examples.bdicycle.PlanFailureCapability;
 import bdi4jade.examples.bdicycle.PlanFailureCapability.MyGoal;
 import bdi4jade.examples.bdicycle.SubgoalCapability;
+import bdi4jade.examples.capabilities.Middle1Capability;
+import bdi4jade.examples.capabilities.TopCapability;
 import bdi4jade.examples.helloworld.HelloWorldAgent;
 import bdi4jade.examples.helloworld.HelloWorldAnnotatedCapability;
 import bdi4jade.examples.ping.PingPongCapability;
@@ -150,6 +153,30 @@ public class BDI4JADEExamplesPanel extends JPanel {
 
 	}
 
+	private class MultiCapabilityAgentAction extends BDI4JADEExamplesAction {
+		private static final long serialVersionUID = 2100583035268414082L;
+
+		private final MultipleCapabilityAgent multiCapabilityAgent;
+
+		public MultiCapabilityAgentAction() {
+			super.putValue(Action.NAME, "Multi-capability Agent");
+			this.multiCapabilityAgent = new MultipleCapabilityAgent(
+					new TopCapability());
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			multiCapabilityAgent.addGoal(new Middle1Capability.TestGoal());
+		}
+
+		@Override
+		public Set<AbstractBDIAgent> getAgents() {
+			Set<AbstractBDIAgent> agents = new HashSet<>();
+			agents.add(multiCapabilityAgent);
+			return agents;
+		}
+	}
+
 	private class PingPongAction extends BDI4JADEExamplesAction {
 
 		public static final String AGENT_1 = "Alice";
@@ -266,13 +293,11 @@ public class BDI4JADEExamplesPanel extends JPanel {
 
 	private final BDI4JADEExamplesAction[] actions;
 
-	// new NestedCapabilitiesAgent());
-
 	public BDI4JADEExamplesPanel() {
 		this.actions = new BDI4JADEExamplesAction[] { new HelloWorldAction(),
 				new HelloWorldAnnotatedAction(), new PingPongAction(),
 				new CompositeGoalAction(), new PlanFailureAction(),
-				new SubgoalCapabilityAction() };
+				new SubgoalCapabilityAction(), new MultiCapabilityAgentAction() };
 		this.setLayout(new GridLayout(actions.length, 1));
 		for (BDI4JADEExamplesAction action : actions) {
 			this.add(new JButton(action));

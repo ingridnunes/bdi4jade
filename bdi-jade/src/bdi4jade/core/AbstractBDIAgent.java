@@ -631,33 +631,23 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 
 	final void resetAllCapabilities() {
 		synchronized (aggregatedCapabilities) {
+			Set<Capability> oldCapabilities = this.capabilities;
 			Set<Capability> allCapabilities = new HashSet<>();
-			Set<Capability> capabilitiesToBeProcessed = new HashSet<>(
-					aggregatedCapabilities);
-
-			while (!capabilitiesToBeProcessed.isEmpty()) {
-				Capability current = capabilitiesToBeProcessed.iterator()
-						.next();
-				capabilitiesToBeProcessed.remove(current);
-				allCapabilities.add(current);
-				for (Capability part : current.getPartCapabilities()) {
-					if (!allCapabilities.contains(part))
-						capabilitiesToBeProcessed.add(part);
-				}
-				for (Capability target : current.getAssociatedCapabilities()) {
-					if (!allCapabilities.contains(target))
-						capabilitiesToBeProcessed.add(target);
-				}
+			for (Capability capability : aggregatedCapabilities) {
+				allCapabilities.add(capability);
+				capability.addRelatedCapabilities(allCapabilities);
 			}
+			this.capabilities = allCapabilities;
+			log.debug("Capabilities: " + this.capabilities);
 
-			Set<Capability> removedCapabilities = new HashSet<>(capabilities);
+			Set<Capability> removedCapabilities = new HashSet<>(oldCapabilities);
 			removedCapabilities.removeAll(allCapabilities);
 			for (Capability capability : removedCapabilities) {
 				capability.setMyAgent(null);
 			}
 
 			Set<Capability> addedCapabilities = new HashSet<>(allCapabilities);
-			addedCapabilities.removeAll(capabilities);
+			addedCapabilities.removeAll(oldCapabilities);
 			for (Capability capability : addedCapabilities) {
 				if (capability.getMyAgent() != null) {
 					throw new IllegalArgumentException(
@@ -666,9 +656,6 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 				}
 				capability.setMyAgent(this);
 			}
-
-			this.capabilities = allCapabilities;
-			log.debug("Capabilities: " + this.capabilities);
 		}
 	}
 

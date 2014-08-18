@@ -148,16 +148,17 @@ public class Capability implements Serializable {
 		this.log = LogFactory.getLog(getClass());
 		this.intentions = new LinkedList<>();
 		this.parentCapabilities = generateParentCapabilities();
+		log.debug("Parent capabilities: " + parentCapabilities);
 		this.started = false;
 
 		// Id initialization
 		if (id == null) {
 			if (this.getClass().getCanonicalName() == null
 					|| Capability.class.equals(this.getClass())) {
-				this.id = Capability.class.getSimpleName()
+				this.id = Capability.class.getName()
 						+ System.currentTimeMillis();
 			} else {
-				this.id = this.getClass().getSimpleName();
+				this.id = this.getClass().getName();
 			}
 		} else {
 			this.id = id;
@@ -182,10 +183,6 @@ public class Capability implements Serializable {
 		this.planSelectionStrategy = new DefaultPlanSelectionStrategy();
 
 		computeGoalOwnersMap();
-
-		log.debug("Parent capabilities: " + parentCapabilities);
-		log.debug("Full access owners: " + fullAccessOwnersMap);
-		log.debug("Restricted access owners: " + restrictedAccessOwnersMap);
 	}
 
 	/**
@@ -295,7 +292,8 @@ public class Capability implements Serializable {
 	public final void addAssociatedCapability(Capability capability) {
 		this.associationTargets.add(capability);
 		capability.associationSources.add(this);
-		computeGoalOwnersMap();
+		this.computeGoalOwnersMap();
+		capability.computeGoalOwnersMap();
 		resetAgentCapabilities();
 	}
 
@@ -340,8 +338,25 @@ public class Capability implements Serializable {
 		partCapability.wholeCapability = this;
 		this.partCapabilities.add(partCapability);
 
-		computeGoalOwnersMap();
+		partCapability.computeGoalOwnersMap();
+		this.computeGoalOwnersMap();
 		resetAgentCapabilities();
+	}
+
+	final Set<Capability> addRelatedCapabilities(Set<Capability> capabilities) {
+		for (Capability part : partCapabilities) {
+			if (!capabilities.contains(part)) {
+				capabilities.add(part);
+				part.addRelatedCapabilities(capabilities);
+			}
+		}
+		for (Capability target : associationTargets) {
+			if (!capabilities.contains(target)) {
+				capabilities.add(target);
+				target.addRelatedCapabilities(capabilities);
+			}
+		}
+		return capabilities;
 	}
 
 	/**
@@ -380,6 +395,8 @@ public class Capability implements Serializable {
 		for (Capability capability : partCapabilities) {
 			ReflectionUtils.addGoalOwner(restrictedAccessOwnersMap, capability);
 		}
+		log.debug("Full access owners: " + fullAccessOwnersMap);
+		log.debug("Restricted access owners: " + restrictedAccessOwnersMap);
 	}
 
 	/**

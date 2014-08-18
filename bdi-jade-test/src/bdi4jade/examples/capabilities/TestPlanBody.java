@@ -20,123 +20,79 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.nestedcapabilities;
+package bdi4jade.examples.capabilities;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import bdi4jade.belief.Belief;
 import bdi4jade.event.GoalEvent;
-import bdi4jade.examples.nestedcapabilities.NestedCapabilitiesAgent.Belief;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
+/**
+ * @author Ingrid Nunes
+ */
 public class TestPlanBody extends AbstractPlanBody {
 
 	enum TestStep {
-		BELIEF, CHILD_GOAL, COMPLETED, MY_GOAL, PARENT_GOAL, PARENT_PROTECTED_GOAL, SIBLING_GOAL, SIBLING_PROTECTED_GOAL;
+		BELIEF, CHILD_GOAL, COMPLETED, MY_EXTERNAL_GOAL, MY_INTERNAL_GOAL, PARENT_GOAL, PARENT_PROTECTED_GOAL, SIBLING_GOAL, SIBLING_PROTECTED_GOAL;
 	}
 
 	private static final long serialVersionUID = -9039447524062487795L;
 
-	private Log log;
+	@bdi4jade.annotation.Belief
+	private Belief<String> bottomBelief;
+	@bdi4jade.annotation.Belief
+	private Belief<String> middle1Belief;
+	@bdi4jade.annotation.Belief
+	private Belief<String> middle2Belief;
 	private TestStep step;
+	@bdi4jade.annotation.Belief
+	private Belief<String> topBelief;
 
 	public void action() {
 		switch (step) {
 		case BELIEF:
 			log.info("Testing beliefs...");
 			log.info("These should be not null:");
-			printBelief(Belief.MY_BELIEF);
-			printBelief(Belief.PARENT_BELIEF);
+			log.info("topBelief: " + topBelief);
+			log.info("middle1Belief: " + middle1Belief);
 			log.info("These should be null:");
-			printBelief(Belief.SIBLING_BELIEF);
-			printBelief(Belief.CHILD_BELIEF);
+			log.info("middle2Belief: " + middle2Belief);
+			log.info("bottomBelief: " + bottomBelief);
 
 			log.info("Testing plans...");
-			dispatchSubgoalAndListen(new MyGoal());// FIXME
-			this.step = TestStep.MY_GOAL;
+			dispatchSubgoalAndListen(new Middle1Capability.Middle1ExternalGoal());
+			this.step = TestStep.MY_EXTERNAL_GOAL;
 			break;
-		case MY_GOAL:
+		case MY_EXTERNAL_GOAL:
 			GoalEvent goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				dispatchSubgoalAndListen(new ChildGoal());// FIXME
+				dispatchSubgoalAndListen(new Middle1Capability.Middle1InternalGoal());
 			}
-			this.step = TestStep.CHILD_GOAL;
+			this.step = TestStep.MY_INTERNAL_GOAL;
 			break;
-		case CHILD_GOAL:
+		case MY_INTERNAL_GOAL:
 			goalEvent = getGoalEvent();
 			if (goalEvent == null) {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				dispatchSubgoalAndListen(new ParentGoal());
-			}
-
-			this.step = TestStep.PARENT_GOAL;
-			break;
-		case PARENT_GOAL:
-			goalEvent = getGoalEvent();
-			if (goalEvent == null) {
-				return;
-			} else {
-				printGoal(goalEvent, true);
-				dispatchSubgoalAndListen(new SiblingGoal());
-			}
-
-			this.step = TestStep.SIBLING_GOAL;
-			break;
-		case SIBLING_GOAL:
-			goalEvent = getGoalEvent();
-			if (goalEvent == null) {
-				return;
-			} else {
-				printGoal(goalEvent, true);
-				dispatchSubgoalAndListen(new ParentGoal());// FIXME
-			}
-
-			this.step = TestStep.PARENT_PROTECTED_GOAL;
-			break;
-		case PARENT_PROTECTED_GOAL:
-			goalEvent = getGoalEvent();
-			if (goalEvent == null) {
-				return;
-			} else {
-				printGoal(goalEvent, false);
-				dispatchSubgoalAndListen(new SiblingGoal());// FIXME
-			}
-
-			this.step = TestStep.SIBLING_PROTECTED_GOAL;
-			break;
-		case SIBLING_PROTECTED_GOAL:
-			goalEvent = getGoalEvent();
-			if (goalEvent == null) {
-				return;
-			} else {
-				printGoal(goalEvent, false);
+				// FIXME dispatchSubgoalAndListen(new TopGoal());
 			}
 
 			this.step = TestStep.COMPLETED;
 			break;
 		case COMPLETED:
+			setEndState(EndState.SUCCESSFULL);
 			break;
 		}
-
-		if (TestStep.COMPLETED.equals(step))
-			setEndState(EndState.SUCCESSFULL);
 	}
 
 	public void onStart() {
-		this.log = LogFactory.getLog(this.getClass());
 		this.step = TestStep.BELIEF;
-	}
-
-	private void printBelief(Belief belief) {
-		log.info(belief + ": " + getBeliefBase().getBelief(belief.name()));
-
 	}
 
 	private void printGoal(GoalEvent goalEvent, boolean achievedExpected) {

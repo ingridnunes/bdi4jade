@@ -49,6 +49,10 @@ public abstract class GoalTemplateFactory {
 				}
 				return false;
 			}
+
+			public String toString() {
+				return "belief(" + beliefName + ")";
+			}
 		};
 	}
 
@@ -76,6 +80,11 @@ public abstract class GoalTemplateFactory {
 				}
 				return false;
 			}
+
+			public String toString() {
+				return "beliefSet<" + beliefValueClass.getName() + ">("
+						+ beliefName + "(?))";
+			}
 		};
 	}
 
@@ -101,6 +110,10 @@ public abstract class GoalTemplateFactory {
 							&& beliefValue.equals(bg.getValue());
 				}
 				return false;
+			}
+
+			public String toString() {
+				return "beliefSet(" + beliefName + "(" + beliefValue + "))";
 			}
 		};
 	}
@@ -129,6 +142,11 @@ public abstract class GoalTemplateFactory {
 				}
 				return false;
 			}
+
+			public String toString() {
+				return "belief<" + beliefValueClass.getName() + ">("
+						+ beliefName + "(?))";
+			}
 		};
 	}
 
@@ -155,6 +173,10 @@ public abstract class GoalTemplateFactory {
 				}
 				return false;
 			}
+
+			public String toString() {
+				return "belief(" + beliefName + "(" + beliefValue + "))";
+			}
 		};
 	}
 
@@ -170,6 +192,10 @@ public abstract class GoalTemplateFactory {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				return goalClass.isInstance(goal);
+			}
+
+			public String toString() {
+				return "goal(" + goalClass.getName() + ")";
 			}
 		};
 	}
@@ -193,6 +219,10 @@ public abstract class GoalTemplateFactory {
 							&& bg.getValue() == null;
 				}
 				return false;
+			}
+
+			public String toString() {
+				return "belief(" + beliefName + "(null))";
 			}
 		};
 	}

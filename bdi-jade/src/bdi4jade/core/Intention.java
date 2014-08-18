@@ -121,9 +121,8 @@ public class Intention {
 				if (owners.isEmpty()) {
 					throw new IllegalAccessException("Capability " + dispatcher
 							+ " has no access to goal "
-							+ goal.getClass().getSimpleName()
-							+ " of capability "
-							+ owner.getClass().getSimpleName());
+							+ goal.getClass().getName() + " of capability "
+							+ owner.getClass().getName());
 				}
 			}
 		}
