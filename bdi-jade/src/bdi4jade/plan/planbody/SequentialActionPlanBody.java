@@ -54,16 +54,16 @@ public class SequentialActionPlanBody extends SequentialBehaviour implements
 		};
 	}
 
-	public void dispatchGoal(Goal goal) {
-		abstractPlanBody.dispatchGoal(goal);
+	public boolean dispatchGoal(Goal goal) {
+		return abstractPlanBody.dispatchGoal(goal);
 	}
 
-	public void dispatchSubgoal(Goal subgoal) {
-		abstractPlanBody.dispatchSubgoal(subgoal);
+	public boolean dispatchSubgoal(Goal subgoal) {
+		return abstractPlanBody.dispatchSubgoal(subgoal);
 	}
 
-	public void dispatchSubgoalAndListen(Goal subgoal) {
-		abstractPlanBody.dispatchSubgoalAndListen(subgoal);
+	public boolean dispatchSubgoalAndListen(Goal subgoal) {
+		return abstractPlanBody.dispatchSubgoalAndListen(subgoal);
 	}
 
 	public BeliefBase getBeliefBase() {

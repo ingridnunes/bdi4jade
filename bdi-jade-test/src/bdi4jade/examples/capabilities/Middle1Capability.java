@@ -33,7 +33,7 @@ import bdi4jade.plan.Plan;
 /**
  * @author Ingrid Nunes
  */
-public class Middle1Capability extends Capability {
+public class Middle1Capability extends Middle1ParentCapability {
 
 	@GoalOwner(capability = Middle1Capability.class, internal = false)
 	public static class Middle1ExternalGoal implements Goal {
@@ -51,9 +51,6 @@ public class Middle1Capability extends Capability {
 	}
 
 	private static final long serialVersionUID = -2281419044730158505L;
-
-	@PartCapability
-	private Capability bottomCapability = new BottomCapability();
 
 	@bdi4jade.annotation.Plan
 	private Plan externalGoalPlan = new DefaultPlan(Middle1ExternalGoal.class,

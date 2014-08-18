@@ -33,35 +33,23 @@ import bdi4jade.plan.Plan;
 /**
  * @author Ingrid Nunes
  */
-public class TopCapability extends TopParentCapability {
+public class Middle1ParentCapability extends Capability {
 
-	@GoalOwner(capability = TopCapability.class, internal = false)
-	public static class TopExternalGoal implements Goal {
-		private static final long serialVersionUID = 1371943799864265143L;
+	@GoalOwner(capability = Middle1ParentCapability.class, internal = true)
+	public static class Middle1ParentInternalGoal implements Goal {
+		private static final long serialVersionUID = -5054184951317760743L;
 	}
 
-	@GoalOwner(capability = TopCapability.class, internal = true)
-	public static class TopInternalGoal implements Goal {
-		private static final long serialVersionUID = 1371943799864265143L;
-	}
-
-	private static final long serialVersionUID = -8981563986693758609L;
-
-	@bdi4jade.annotation.Plan
-	private Plan externalGoalPlan = new DefaultPlan(TopExternalGoal.class,
-			SuccessPlanBody.class);
-
-	@bdi4jade.annotation.Plan
-	private Plan internalGoalPlan = new DefaultPlan(TopInternalGoal.class,
-			SuccessPlanBody.class);
+	private static final long serialVersionUID = -2281419044730158505L;
 
 	@PartCapability
-	private Capability middle1Capability = new Middle1Capability();
+	private Capability bottomCapability = new BottomCapability();
 
-	@PartCapability
-	private Capability middle2Capability = new Middle2Capability();
+	@bdi4jade.annotation.Plan
+	private Plan internalGoalParentPlan = new DefaultPlan(
+			Middle1ParentInternalGoal.class, SuccessPlanBody.class);
 
 	@TransientBelief
-	private String topBelief = "TOP_BELIEF";
+	private String middle1ParentBelief = "MIDDLE1_PARENT_BELIEF";
 
 }

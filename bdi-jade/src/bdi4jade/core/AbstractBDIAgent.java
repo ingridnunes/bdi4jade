@@ -267,8 +267,8 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 *      bdi4jade.goal.Goal)
 	 */
 	@Override
-	public final void addGoal(Capability dispatcher, Goal goal) {
-		addIntention(dispatcher, goal, null);
+	public final boolean addGoal(Capability dispatcher, Goal goal) {
+		return addIntention(dispatcher, goal, null) == null ? false : true;
 	}
 
 	/**
@@ -276,17 +276,18 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 *      bdi4jade.goal.Goal, bdi4jade.event.GoalListener)
 	 */
 	@Override
-	public final void addGoal(Capability dispatcher, Goal goal,
+	public final boolean addGoal(Capability dispatcher, Goal goal,
 			GoalListener goalListener) {
-		addIntention(dispatcher, goal, goalListener);
+		return addIntention(dispatcher, goal, goalListener) == null ? false
+				: true;
 	}
 
 	/**
 	 * @see bdi4jade.core.BDIAgent#addGoal(bdi4jade.goal.Goal)
 	 */
 	@Override
-	public final void addGoal(Goal goal) {
-		addIntention(null, goal, null);
+	public final boolean addGoal(Goal goal) {
+		return addIntention(null, goal, null) == null ? false : true;
 	}
 
 	/**
@@ -294,8 +295,8 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 *      bdi4jade.event.GoalListener)
 	 */
 	@Override
-	public final void addGoal(Goal goal, GoalListener goalListener) {
-		addIntention(null, goal, goalListener);
+	public final boolean addGoal(Goal goal, GoalListener goalListener) {
+		return addIntention(null, goal, goalListener) == null ? false : true;
 	}
 
 	/**

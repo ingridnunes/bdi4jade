@@ -53,8 +53,10 @@ public interface PlanBody extends GoalListener {
 	 * 
 	 * @param goal
 	 *            the goal to be dispatched.
+	 * 
+	 * @return true if the goal could be dispatched, false otherwise.
 	 */
-	public void dispatchGoal(Goal goal);
+	public boolean dispatchGoal(Goal goal);
 
 	/**
 	 * Dispatches a subgoal to be achieved. Dispatched subgoals are goals of an
@@ -62,8 +64,10 @@ public interface PlanBody extends GoalListener {
 	 * 
 	 * @param subgoal
 	 *            the subgoal to be dispatched.
+	 * 
+	 * @return true if the goal could be dispatched, false otherwise.
 	 */
-	public void dispatchSubgoal(Goal subgoal);
+	public boolean dispatchSubgoal(Goal subgoal);
 
 	/**
 	 * Dispatches a subgoal to be achieved and registers itself as a listener to
@@ -71,8 +75,10 @@ public interface PlanBody extends GoalListener {
 	 * 
 	 * @param subgoal
 	 *            the subgoal to be dispatched.
+	 * 
+	 * @return true if the goal could be dispatched, false otherwise.
 	 */
-	public void dispatchSubgoalAndListen(Goal subgoal);
+	public boolean dispatchSubgoalAndListen(Goal subgoal);
 
 	/**
 	 * Returns the belief base of the capability associated with the plan of

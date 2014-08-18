@@ -51,8 +51,10 @@ public interface BDIAgent {
 	 *            the capability that dispatched this goal.
 	 * @param goal
 	 *            the goal to be achieved.
+	 * 
+	 * @return true if the goal was added, false otherwise.
 	 */
-	public void addGoal(Capability dispatcher, Goal goal);
+	public boolean addGoal(Capability dispatcher, Goal goal);
 
 	/**
 	 * Adds a new goal to this agent to be achieved and adds a listener to
@@ -64,8 +66,10 @@ public interface BDIAgent {
 	 *            the goal to be achieved.
 	 * @param goalListener
 	 *            the listener to be notified about this goal events.
+	 * 
+	 * @return true if the goal was added, false otherwise.
 	 */
-	public void addGoal(Capability dispatcher, Goal goal,
+	public boolean addGoal(Capability dispatcher, Goal goal,
 			GoalListener goalListener);
 
 	/**
@@ -73,8 +77,10 @@ public interface BDIAgent {
 	 * 
 	 * @param goal
 	 *            the goal to be achieved.
+	 * 
+	 * @return true if the goal was added, false otherwise.
 	 */
-	public void addGoal(Goal goal);
+	public boolean addGoal(Goal goal);
 
 	/**
 	 * Adds a new goal to this agent to be achieved and adds a listener to
@@ -84,8 +90,10 @@ public interface BDIAgent {
 	 *            the goal to be achieved.
 	 * @param goalListener
 	 *            the listener to be notified.
+	 * 
+	 * @return true if the goal was added, false otherwise.
 	 */
-	public void addGoal(Goal goal, GoalListener goalListener);
+	public boolean addGoal(Goal goal, GoalListener goalListener);
 
 	/**
 	 * Adds a listener to be notified when about goal events.

@@ -24,6 +24,7 @@ package bdi4jade.examples.capabilities;
 
 import bdi4jade.belief.Belief;
 import bdi4jade.event.GoalEvent;
+import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
@@ -34,7 +35,7 @@ import bdi4jade.plan.planbody.AbstractPlanBody;
 public class TestPlanBody extends AbstractPlanBody {
 
 	enum TestStep {
-		BELIEF, CHILD_GOAL, COMPLETED, MY_EXTERNAL_GOAL, MY_INTERNAL_GOAL, PARENT_GOAL, PARENT_PROTECTED_GOAL, SIBLING_GOAL, SIBLING_PROTECTED_GOAL;
+		BELIEF, BOTTOM_EXTERNAL_GOAL, BOTTOM_INTERNAL_GOAL, COMPLETED, MIDDLE2_EXTERNAL_GOAL, MY_EXTERNAL_GOAL, MY_INTERNAL_GOAL, MY_PARENT_INTERNAL_GOAL, TOP_EXTERNAL_GOAL, TOP_INTERNAL_GOAL, TOP_PARENT_INTERNAL_GOAL;
 	}
 
 	private static final long serialVersionUID = -9039447524062487795L;
@@ -44,17 +45,23 @@ public class TestPlanBody extends AbstractPlanBody {
 	@bdi4jade.annotation.Belief
 	private Belief<String> middle1Belief;
 	@bdi4jade.annotation.Belief
+	private Belief<String> middle1ParentBelief;
+	@bdi4jade.annotation.Belief
 	private Belief<String> middle2Belief;
 	private TestStep step;
 	@bdi4jade.annotation.Belief
 	private Belief<String> topBelief;
+	@bdi4jade.annotation.Belief
+	private Belief<String> topParentBelief;
 
 	public void action() {
 		switch (step) {
 		case BELIEF:
 			log.info("Testing beliefs...");
 			log.info("These should be not null:");
+			log.info("topParentBelief: " + topParentBelief);
 			log.info("topBelief: " + topBelief);
+			log.info("middle1ParentBelief: " + middle1ParentBelief);
 			log.info("middle1Belief: " + middle1Belief);
 			log.info("These should be null:");
 			log.info("middle2Belief: " + middle2Belief);
@@ -80,9 +87,67 @@ public class TestPlanBody extends AbstractPlanBody {
 				return;
 			} else {
 				printGoal(goalEvent, true);
-				// FIXME dispatchSubgoalAndListen(new TopGoal());
+				dispatchSubgoalAndListen(new Middle1ParentCapability.Middle1ParentInternalGoal());
 			}
-
+			this.step = TestStep.MY_PARENT_INTERNAL_GOAL;
+			break;
+		case MY_PARENT_INTERNAL_GOAL:
+			goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else {
+				printGoal(goalEvent, true);
+				dispatchSubgoalAndListen(new TopCapability.TopExternalGoal());
+			}
+			this.step = TestStep.TOP_EXTERNAL_GOAL;
+			break;
+		case TOP_EXTERNAL_GOAL:
+			goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else {
+				printGoal(goalEvent, true);
+				dispatchSubgoalAndListen(new TopCapability.TopInternalGoal());
+			}
+			this.step = TestStep.TOP_INTERNAL_GOAL;
+			break;
+		case TOP_INTERNAL_GOAL:
+			goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else {
+				printGoal(goalEvent, true);
+				dispatchSubgoalAndListen(new TopParentCapability.TopParentInternalGoal());
+			}
+			this.step = TestStep.TOP_PARENT_INTERNAL_GOAL;
+			break;
+		case TOP_PARENT_INTERNAL_GOAL:
+			goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else {
+				printGoal(goalEvent, true);
+				Goal goal = new Middle2Capability.Middle2ExternalGoal();
+				printGoal(goal, dispatchSubgoal(goal), false);
+			}
+			this.step = TestStep.MIDDLE2_EXTERNAL_GOAL;
+			break;
+		case MIDDLE2_EXTERNAL_GOAL:
+			dispatchSubgoalAndListen(new BottomCapability.BottomExternalGoal());
+			this.step = TestStep.BOTTOM_EXTERNAL_GOAL;
+			break;
+		case BOTTOM_EXTERNAL_GOAL:
+			goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else {
+				printGoal(goalEvent, true);
+				Goal goal = new BottomCapability.BottomInternalGoal();
+				printGoal(goal, dispatchSubgoal(goal), false);
+			}
+			this.step = TestStep.BOTTOM_INTERNAL_GOAL;
+			break;
+		case BOTTOM_INTERNAL_GOAL:
 			this.step = TestStep.COMPLETED;
 			break;
 		case COMPLETED:
@@ -93,6 +158,11 @@ public class TestPlanBody extends AbstractPlanBody {
 
 	public void onStart() {
 		this.step = TestStep.BELIEF;
+	}
+
+	private void printGoal(Goal goal, boolean observed, boolean expected) {
+		log.debug("Goal " + goal.getClass().getSimpleName() + " dispatched - "
+				+ ((observed == expected) ? "" : "un") + "expected result");
 	}
 
 	private void printGoal(GoalEvent goalEvent, boolean achievedExpected) {
