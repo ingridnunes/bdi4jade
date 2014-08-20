@@ -22,58 +22,59 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
+import bdi4jade.annotation.Belief;
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.BeliefSet;
-import bdi4jade.examples.blocksworld.BlocksWorldAgent;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
-import bdi4jade.examples.blocksworld.goal.PerformMove;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class PerformMovePlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private BeliefSet<Clear> clearSet;
-	private BeliefSet<On> onSet;
+	@Belief
+	private BeliefSet<Clear> clear;
+	@Belief
+	private BeliefSet<On> on;
 	private Thing thing1;
 	private Thing thing2;
 
 	@Override
 	public void action() {
+		// If thing1 was over something, this something will now be clear
 		for (Thing thing : Thing.THINGS) {
-			On on = new On(thing1, thing);
-			if (onSet.hasValue(on)) {
-				onSet.removeValue(on);
+			On onVal = new On(thing1, thing);
+			if (on.hasValue(onVal)) {
+				on.removeValue(onVal);
 				if (!Thing.TABLE.equals(thing)) {
-					clearSet.addValue(new Clear(thing));
+					clear.addValue(new Clear(thing));
 				}
 			}
 		}
 
 		if (!thing2.equals(Thing.TABLE)) {
-			clearSet.removeValue(new Clear(thing2));
+			clear.removeValue(new Clear(thing2));
 		}
-		onSet.addValue(new On(thing1, thing2));
+		on.addValue(new On(thing1, thing2));
 
 		setEndState(EndState.SUCCESSFULL);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void onStart() {
-		this.onSet = (BeliefSet<On>) getBeliefBase().getBelief(
-				BlocksWorldAgent.BELIEF_ON);
-		this.clearSet = (BeliefSet<Clear>) getBeliefBase().getBelief(
-				BlocksWorldAgent.BELIEF_CLEAR);
-		PerformMove goal = (PerformMove) getGoal();
-		this.thing1 = goal.getThing1();
-		this.thing2 = goal.getThing2();
+	@Parameter(direction = Direction.IN, mandatory = true)
+	public void setThing1(Thing thing1) {
+		this.thing1 = thing1;
+	}
+
+	@Parameter(direction = Direction.IN, mandatory = true)
+	public void setThing2(Thing thing2) {
+		this.thing2 = thing2;
 	}
 
 }

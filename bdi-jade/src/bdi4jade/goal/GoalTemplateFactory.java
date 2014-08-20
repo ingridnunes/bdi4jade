@@ -73,7 +73,7 @@ public abstract class GoalTemplateFactory {
 			final Class<?> beliefValueClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
-				if (goal instanceof BeliefValueGoal) {
+				if (goal instanceof BeliefSetValueGoal) {
 					BeliefSetValueGoal<?> bg = (BeliefSetValueGoal<?>) goal;
 					return bg.getBeliefName().equals(beliefName)
 							&& beliefValueClass.isInstance(bg.getValue());
@@ -104,7 +104,7 @@ public abstract class GoalTemplateFactory {
 			final Object beliefValue) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
-				if (goal instanceof BeliefValueGoal) {
+				if (goal instanceof BeliefSetValueGoal) {
 					BeliefSetValueGoal<?> bg = (BeliefSetValueGoal<?>) goal;
 					return bg.getBeliefName().equals(beliefName)
 							&& beliefValue.equals(bg.getValue());

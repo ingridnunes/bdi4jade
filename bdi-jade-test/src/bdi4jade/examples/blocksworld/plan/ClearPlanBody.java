@@ -22,47 +22,64 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
+import bdi4jade.annotation.Belief;
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.BeliefSet;
-import bdi4jade.examples.blocksworld.BlocksWorldAgent;
+import bdi4jade.event.GoalEvent;
+import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.goal.BeliefSetValueGoal;
+import bdi4jade.goal.GoalStatus;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.BeliefGoalPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class ClearPlanBody extends BeliefGoalPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	private BeliefSet<On> onSet;
+	private boolean goalDispatched;
+	@Belief
+	private BeliefSet<On> on;
 	private Thing thing;
 
 	@Override
 	public void execute() {
-		for (int i = 0; i < Thing.THINGS.length; i++) {
-			Thing t = Thing.THINGS[i];
-			On on = new On(t, thing);
-			if (onSet.hasValue(on)) {
-				dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
-						BlocksWorldAgent.BELIEF_ON, new On(t, Thing.TABLE)));
-				getGoalEvent();
-				break;
+		if (!goalDispatched) {
+			for (int i = 0; i < Thing.THINGS.length; i++) {
+				Thing t = Thing.THINGS[i];
+				if (on.hasValue(new On(t, thing))) {
+					dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
+							BlocksWorldCapability.BELIEF_ON, new On(t,
+									Thing.TABLE)));
+					this.goalDispatched = true;
+					break;
+				}
+			}
+		} else {
+			GoalEvent goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else if (!GoalStatus.ACHIEVED.equals(goalEvent.getStatus())) {
+				setEndState(EndState.FAILED);
+				return;
 			}
 		}
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void onStart() {
-		super.onStart();
-		this.onSet = (BeliefSet<On>) getBeliefBase().getBelief(
-				BlocksWorldAgent.BELIEF_ON);
-		BeliefSetValueGoal<Clear> achieveClear = (BeliefSetValueGoal<Clear>) getGoal();
-		this.thing = achieveClear.getValue().getThing();
+		this.goalDispatched = false;
+	}
+
+	@Parameter(direction = Direction.IN, mandatory = true)
+	public void setValue(Clear clear) {
+		this.thing = clear.getThing();
 	}
 
 }

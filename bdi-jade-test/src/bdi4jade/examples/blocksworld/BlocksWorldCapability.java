@@ -23,6 +23,9 @@
 package bdi4jade.examples.blocksworld;
 
 import bdi4jade.annotation.Belief;
+import bdi4jade.annotation.GoalOwner;
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.annotation.Plan;
 import bdi4jade.belief.BeliefSet;
 import bdi4jade.belief.TransientBeliefSet;
@@ -30,9 +33,8 @@ import bdi4jade.core.Capability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
-import bdi4jade.examples.blocksworld.goal.AchieveBlocksStacked;
-import bdi4jade.examples.blocksworld.goal.PerformMove;
 import bdi4jade.examples.blocksworld.plan.AchieveOnPlanBody;
+import bdi4jade.examples.blocksworld.plan.ClearPlanBody;
 import bdi4jade.examples.blocksworld.plan.PerformMovePlanBody;
 import bdi4jade.examples.blocksworld.plan.TopLevelPlanBody;
 import bdi4jade.goal.Goal;
@@ -40,70 +42,117 @@ import bdi4jade.goal.GoalTemplateFactory;
 import bdi4jade.plan.DefaultPlan;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class BlocksWorldCapability extends Capability {
 
-	public static final String BELIEF_CLEAR = "clear";
+	@GoalOwner(capability = BlocksWorldCapability.class, internal = false)
+	public static class AchieveBlocksStacked implements Goal {
+		private static final long serialVersionUID = -8126833927953226126L;
 
+		private On[] target;
+
+		public AchieveBlocksStacked(On[] target) {
+			this.target = target;
+		}
+
+		@Parameter(direction = Direction.IN)
+		public On[] getTarget() {
+			return target;
+		}
+
+		@Override
+		public String toString() {
+			StringBuffer sb = new StringBuffer("AchieveBlocksStacked: ");
+			for (On on : target) {
+				sb.append(on).append(" ");
+			}
+			return sb.toString();
+		}
+
+	}
+
+	@GoalOwner(capability = BlocksWorldCapability.class, internal = true)
+	public static class PerformMove implements Goal {
+		private static final long serialVersionUID = 8286023371969088149L;
+
+		private Thing thing1;
+		private Thing thing2;
+
+		public PerformMove(Thing thing1, Thing thing2) {
+			this.thing1 = thing1;
+			this.thing2 = thing2;
+		}
+
+		@Parameter(direction = Direction.IN)
+		public Thing getThing1() {
+			return thing1;
+		}
+
+		@Parameter(direction = Direction.IN)
+		public Thing getThing2() {
+			return thing2;
+		}
+
+		@Override
+		public String toString() {
+			return "PerformMove: " + thing1 + " to " + thing2;
+		}
+
+	}
+
+	public static final String BELIEF_CLEAR = "clear";
 	public static final String BELIEF_ON = "on";
 	private static final long serialVersionUID = 2298178213927064463L;
 
 	@Plan
-	private bdi4jade.plan.Plan achieveBlocksStackedPlan;
+	private bdi4jade.plan.Plan achieveBlocksStackedPlan = new DefaultPlan(
+			AchieveBlocksStacked.class, TopLevelPlanBody.class);
 
 	@Plan
-	private bdi4jade.plan.Plan achieveOnPlan;
+	private bdi4jade.plan.Plan achieveOnPlan = new DefaultPlan(
+			GoalTemplateFactory.beliefSetTypeGoal(BELIEF_ON, On.class),
+			AchieveOnPlanBody.class);
 
 	@Belief
-	private BeliefSet<Clear> clear;
+	private BeliefSet<Clear> clear = new TransientBeliefSet<Clear>(BELIEF_CLEAR);
 
 	@Plan
-	private bdi4jade.plan.Plan clearPlan;
+	private bdi4jade.plan.Plan clearPlan = new DefaultPlan(
+			GoalTemplateFactory.beliefSetTypeGoal(BELIEF_CLEAR, Clear.class),
+			ClearPlanBody.class);
 
 	@Belief
-	private BeliefSet<On> on;
+	private BeliefSet<On> on = new TransientBeliefSet<On>(BELIEF_ON);
 
 	@Plan
 	private bdi4jade.plan.Plan performMovePlan;
 
 	public BlocksWorldCapability() {
-		this.on = new TransientBeliefSet<On>(BELIEF_ON);
+		this.performMovePlan = new DefaultPlan(PerformMove.class,
+				PerformMovePlanBody.class) {
+			@Override
+			public boolean isContextApplicable(Goal goal) {
+				if (goal instanceof PerformMove) {
+					PerformMove performMove = (PerformMove) goal;
+					return clear.hasValue(new Clear(performMove.getThing1()))
+							&& clear.hasValue(new Clear(performMove.getThing2()));
+				}
+				return false;
+			}
+		};
+	}
+
+	@Override
+	protected void setup() {
+		clear.addValue(new Clear(Thing.BLOCK_4));
+		clear.addValue(new Clear(Thing.TABLE));
+
 		on.addValue(new On(Thing.BLOCK_1, Thing.TABLE));
 		on.addValue(new On(Thing.BLOCK_3, Thing.BLOCK_1));
 		on.addValue(new On(Thing.BLOCK_2, Thing.BLOCK_3));
 		on.addValue(new On(Thing.BLOCK_5, Thing.BLOCK_2));
 		on.addValue(new On(Thing.BLOCK_4, Thing.BLOCK_5));
-
-		this.clear = new TransientBeliefSet<Clear>(BELIEF_CLEAR);
-		clear.addValue(new Clear(Thing.BLOCK_4));
-		clear.addValue(new Clear(Thing.TABLE));
-
-		this.achieveOnPlan = new DefaultPlan(
-				GoalTemplateFactory.beliefSetTypeGoal(
-						BlocksWorldAgent.BELIEF_ON, On.class),
-				AchieveOnPlanBody.class);
-		this.clearPlan = new DefaultPlan(GoalTemplateFactory.beliefSetTypeGoal(
-				BlocksWorldAgent.BELIEF_CLEAR, Clear.class),
-				AchieveOnPlanBody.class);
-		this.performMovePlan = new DefaultPlan(PerformMove.class,
-				PerformMovePlanBody.class) {
-			@Override
-			@SuppressWarnings("unchecked")
-			public boolean isContextApplicable(Goal goal) {
-				if (goal instanceof PerformMove) {
-					PerformMove performMove = (PerformMove) goal;
-					BeliefSet<Clear> set = (BeliefSet<Clear>) getPlanLibrary()
-							.getCapability().getBeliefBase()
-							.getBelief(BlocksWorldAgent.BELIEF_CLEAR);
-					return set.hasValue(new Clear(performMove.getThing1()))
-							&& set.hasValue(new Clear(performMove.getThing2()));
-				}
-				return false;
-			}
-		};
-		this.achieveBlocksStackedPlan = new DefaultPlan(
-				AchieveBlocksStacked.class, TopLevelPlanBody.class);
 	}
+
 }

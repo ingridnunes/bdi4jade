@@ -22,8 +22,7 @@
 package bdi4jade.examples.blocksworld.domain;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public interface Thing {
 

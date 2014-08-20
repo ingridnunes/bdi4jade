@@ -22,6 +22,8 @@
 
 package bdi4jade.goal;
 
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
 
@@ -61,6 +63,7 @@ public class BeliefValueGoal<T> extends BeliefGoal {
 	 * 
 	 * @return the belief value.
 	 */
+	@Parameter(direction = Direction.IN)
 	public T getValue() {
 		return value;
 	}
@@ -95,7 +98,8 @@ public class BeliefValueGoal<T> extends BeliefGoal {
 	@Override
 	public String toString() {
 		return new StringBuffer(getClass().getName()).append(": ")
-				.append(getBeliefName()).append(" should be ").append(value).toString();
+				.append(getBeliefName()).append(" should be ").append(value)
+				.toString();
 	}
 
 }

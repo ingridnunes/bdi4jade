@@ -9,8 +9,10 @@ import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import bdi4jade.core.AbstractBDIAgent;
 import bdi4jade.core.MultipleCapabilityAgent;
@@ -24,6 +26,10 @@ import bdi4jade.examples.bdicycle.CompositeGoalCapability.MyGoal3;
 import bdi4jade.examples.bdicycle.PlanFailureCapability;
 import bdi4jade.examples.bdicycle.PlanFailureCapability.MyGoal;
 import bdi4jade.examples.bdicycle.SubgoalCapability;
+import bdi4jade.examples.blocksworld.BlocksWorldCapability;
+import bdi4jade.examples.blocksworld.BlocksWorldView;
+import bdi4jade.examples.blocksworld.domain.On;
+import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.examples.capabilities.Middle1Capability;
 import bdi4jade.examples.capabilities.TopCapability;
 import bdi4jade.examples.helloworld.HelloWorldAgent;
@@ -42,6 +48,52 @@ import bdi4jade.goal.SequentialGoal;
  * @author Ingrid Nunes
  */
 public class BDI4JADEExamplesPanel extends JPanel {
+
+	private class BlocksWorldAction extends BDI4JADEExamplesAction implements
+			GoalListener {
+
+		private static final long serialVersionUID = 2100583035268414082L;
+
+		private final SingleCapabilityAgent blocksWorldAgent;
+
+		public BlocksWorldAction() {
+			super.putValue(Action.NAME, "Blocks World");
+			this.blocksWorldAgent = new SingleCapabilityAgent(
+					new BlocksWorldCapability());
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			final JFrame frame = new JFrame();
+			frame.setTitle((String) this.getValue(Action.NAME));
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.setVisible(false);
+			frame.setContentPane(new BlocksWorldView(blocksWorldAgent
+					.getCapability().getBeliefBase()));
+
+			frame.pack();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					frame.setVisible(true);
+				}
+			});
+			blocksWorldAgent.addGoal(
+					new BlocksWorldCapability.AchieveBlocksStacked(target),
+					this);
+		}
+
+		@Override
+		public Set<AbstractBDIAgent> getAgents() {
+			Set<AbstractBDIAgent> agents = new HashSet<>();
+			agents.add(blocksWorldAgent);
+			return agents;
+		}
+
+		@Override
+		public void goalPerformed(GoalEvent event) {
+			log.info("Goal achieved!!");
+		}
+	}
 
 	private class CompositeGoalAction extends BDI4JADEExamplesAction implements
 			GoalListener {
@@ -291,13 +343,20 @@ public class BDI4JADEExamplesPanel extends JPanel {
 
 	private static final long serialVersionUID = -1080267169700651610L;
 
+	private static final On[] target = { new On(Thing.BLOCK_5, Thing.TABLE),
+			new On(Thing.BLOCK_4, Thing.BLOCK_5),
+			new On(Thing.BLOCK_3, Thing.BLOCK_4),
+			new On(Thing.BLOCK_2, Thing.BLOCK_3),
+			new On(Thing.BLOCK_1, Thing.BLOCK_2) };
+
 	private final BDI4JADEExamplesAction[] actions;
 
 	public BDI4JADEExamplesPanel() {
 		this.actions = new BDI4JADEExamplesAction[] { new HelloWorldAction(),
 				new HelloWorldAnnotatedAction(), new PingPongAction(),
 				new CompositeGoalAction(), new PlanFailureAction(),
-				new SubgoalCapabilityAction(), new MultiCapabilityAgentAction() };
+				new SubgoalCapabilityAction(),
+				new MultiCapabilityAgentAction(), new BlocksWorldAction() };
 		this.setLayout(new GridLayout(actions.length, 1));
 		for (BDI4JADEExamplesAction action : actions) {
 			this.add(new JButton(action));

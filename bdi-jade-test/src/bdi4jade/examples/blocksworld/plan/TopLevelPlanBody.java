@@ -22,50 +22,48 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import bdi4jade.examples.blocksworld.BlocksWorldAgent;
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
+import bdi4jade.event.GoalEvent;
+import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.On;
-import bdi4jade.examples.blocksworld.goal.AchieveBlocksStacked;
 import bdi4jade.goal.BeliefSetValueGoal;
+import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class TopLevelPlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	private int counter;
-	private Log log;
 	private On[] target;
-
-	public TopLevelPlanBody() {
-		this.counter = 0;
-		this.log = LogFactory.getLog(this.getClass());
-	}
 
 	@Override
 	public void action() {
 		// If a subgoal has been dispatched, wait for its completion
 		if (counter != 0) {
-			if ((getGoalEvent() == null)) {
+			GoalEvent goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else if (!GoalStatus.ACHIEVED.equals(goalEvent.getStatus())) {
+				setEndState(EndState.FAILED);
 				return;
 			}
 		}
 		// Dispatch the next subgoal, if there are subgoals left
-		if (counter != target.length) {
+		if (counter < target.length) {
 			dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
-					BlocksWorldAgent.BELIEF_ON, target[counter]));
+					BlocksWorldCapability.BELIEF_ON, target[counter]));
 		}
 		counter++;
 
-		if (counter > target.length)
+		if (counter > target.length) {
 			setEndState(EndState.SUCCESSFULL);
+		}
 	}
 
 	@Override
@@ -77,9 +75,15 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 
 	@Override
 	public void onStart() {
+		this.counter = 0;
+
 		log.info("World Model at start is:");
-		this.target = ((AchieveBlocksStacked) getGoal()).getTarget();
 		log.info(getBeliefBase());
+	}
+
+	@Parameter(direction = Direction.IN, mandatory = true)
+	public void setTarget(On[] target) {
+		this.target = target;
 	}
 
 }

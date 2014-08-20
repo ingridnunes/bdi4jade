@@ -22,22 +22,26 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
-import bdi4jade.examples.blocksworld.BlocksWorldAgent;
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
+import bdi4jade.event.GoalEvent;
+import bdi4jade.examples.blocksworld.BlocksWorldCapability;
+import bdi4jade.examples.blocksworld.BlocksWorldCapability.PerformMove;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
-import bdi4jade.examples.blocksworld.goal.PerformMove;
 import bdi4jade.goal.BeliefSetValueGoal;
+import bdi4jade.goal.GoalStatus;
+import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.BeliefGoalPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class AchieveOnPlanBody extends BeliefGoalPlanBody {
 
 	enum Step {
-		CLEAR_1, CLEAR_2, PERFORM_MOVE, WAIT_CLEAR_1, WAIT_CLEAR_2, WAIT_DONE;
+		CLEAR_1, CLEAR_2, DONE, PERFORM_MOVE, WAIT_DONE;
 	}
 
 	private static final long serialVersionUID = -5919677537834351951L;
@@ -51,40 +55,52 @@ public class AchieveOnPlanBody extends BeliefGoalPlanBody {
 		switch (step) {
 		case CLEAR_1:
 			dispatchSubgoalAndListen(new BeliefSetValueGoal<Clear>(
-					BlocksWorldAgent.BELIEF_CLEAR, new Clear(thing1)));
-			step = Step.WAIT_CLEAR_1;
-		case WAIT_CLEAR_1:
-			if (getGoalEvent() != null) {
-				step = Step.CLEAR_2;
-			}
-			break;
+					BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing1)));
+			step = Step.CLEAR_2;
 		case CLEAR_2:
-			dispatchSubgoalAndListen(new BeliefSetValueGoal<Clear>(
-					BlocksWorldAgent.BELIEF_CLEAR, new Clear(thing2)));
-			step = Step.WAIT_CLEAR_2;
-		case WAIT_CLEAR_2:
-			if (getGoalEvent() != null) {
+			if (isSubgoalAchieved()) {
+				dispatchSubgoalAndListen(new BeliefSetValueGoal<Clear>(
+						BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing2)));
 				step = Step.PERFORM_MOVE;
 			}
 			break;
 		case PERFORM_MOVE:
-			dispatchSubgoalAndListen(new PerformMove(thing1, thing2));
-			step = Step.WAIT_DONE;
+			if (isSubgoalAchieved()) {
+				dispatchSubgoalAndListen(new PerformMove(thing1, thing2));
+				step = Step.WAIT_DONE;
+			}
 			break;
 		case WAIT_DONE:
-			getGoalEvent();
+			if (isSubgoalAchieved()) {
+				step = Step.DONE;
+			}
+			break;
+		default:
 			break;
 		}
 	}
 
+	private boolean isSubgoalAchieved() {
+		GoalEvent goalEvent = getGoalEvent();
+		if (goalEvent == null) {
+			return false;
+		} else if (!GoalStatus.ACHIEVED.equals(goalEvent.getStatus())) {
+			setEndState(EndState.FAILED);
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	@Override
-	@SuppressWarnings("unchecked")
 	public void onStart() {
-		super.onStart();
-		BeliefSetValueGoal<On> achieveOn = (BeliefSetValueGoal<On>) getGoal();
-		this.thing1 = achieveOn.getValue().getThing1();
-		this.thing2 = achieveOn.getValue().getThing2();
 		this.step = Step.CLEAR_1;
+	}
+
+	@Parameter(direction = Direction.IN, mandatory = true)
+	public void setValue(On on) {
+		this.thing1 = on.getThing1();
+		this.thing2 = on.getThing2();
 	}
 
 }

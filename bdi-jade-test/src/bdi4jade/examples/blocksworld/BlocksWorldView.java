@@ -25,8 +25,7 @@ import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class BlocksWorldView extends JPanel implements BeliefListener {
 
@@ -73,9 +72,9 @@ public class BlocksWorldView extends JPanel implements BeliefListener {
 		State state = new State();
 
 		BeliefSet<On> onBelief = (BeliefSet<On>) beliefBase
-				.getBelief(BlocksWorldAgent.BELIEF_ON);
+				.getBelief(BlocksWorldCapability.BELIEF_ON);
 		BeliefSet<Clear> clearBelief = (BeliefSet<Clear>) beliefBase
-				.getBelief(BlocksWorldAgent.BELIEF_CLEAR);
+				.getBelief(BlocksWorldCapability.BELIEF_CLEAR);
 
 		List<Thing> tops = new ArrayList<>(2);
 		for (On on : onBelief.getValue()) {
@@ -113,7 +112,7 @@ public class BlocksWorldView extends JPanel implements BeliefListener {
 
 	private Thing getNext(Thing thing) {
 		BeliefSet<On> onBelief = (BeliefSet<On>) beliefBase
-				.getBelief(BlocksWorldAgent.BELIEF_ON);
+				.getBelief(BlocksWorldCapability.BELIEF_ON);
 		for (On on : onBelief.getValue()) {
 			if (on.getThing1().equals(thing))
 				return on.getThing2();

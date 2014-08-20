@@ -22,6 +22,8 @@
 
 package bdi4jade.goal;
 
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.BeliefBase;
 
 /**
@@ -51,6 +53,7 @@ public class BeliefGoal implements Goal {
 	 * 
 	 * @return the belief name.
 	 */
+	@Parameter(direction = Direction.IN)
 	public String getBeliefName() {
 		return beliefName;
 	}
