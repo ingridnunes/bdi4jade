@@ -47,7 +47,14 @@ import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.message.BDIAgentMsgReceiver;
-import bdi4jade.plan.Plan;
+import bdi4jade.reasoning.AgentBeliefRevisionStrategy;
+import bdi4jade.reasoning.AgentDeliberationFunction;
+import bdi4jade.reasoning.AgentOptionGenerationFunction;
+import bdi4jade.reasoning.AgentPlanSelectionStrategy;
+import bdi4jade.reasoning.DefaultAgentBeliefRevisionStrategy;
+import bdi4jade.reasoning.DefaultAgentDeliberationFunction;
+import bdi4jade.reasoning.DefaultAgentOptionGenerationFunction;
+import bdi4jade.reasoning.DefaultAgentPlanSelectionStrategy;
 import bdi4jade.util.ReflectionUtils;
 
 /**
@@ -77,7 +84,7 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 		/**
 		 * This method is a variation of the BDI-interpreter cycle of the BDI
 		 * architecture. It first reviews the beliefs of this agent, by invoking
-		 * the {@link BDIAgent#reviewBeliefs()} method.
+		 * the {@link AgentBeliefRevisionStrategy#reviewBeliefs()} method.
 		 * 
 		 * After it removes from the intention set the ones that are finished,
 		 * i.e. associated with goals with status achieved, no longer desired or
@@ -87,13 +94,15 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 		 * Then, it generate a an updated set of goals, dropping existing ones
 		 * that are no longer desired and also creating new ones. This updated
 		 * set of goals is given by the
-		 * {@link BDIAgent#generateGoals(GoalUpdateSet, Map)} method.
+		 * {@link AgentOptionGenerationFunction#generateGoals(GoalUpdateSet, Map)}
+		 * method.
 		 * 
 		 * Finally, from the set of current goals, they are now filtered, by
-		 * invoking the {@link BDIAgent#filter(Set, Map)} method, to select the
-		 * current agent intentions. The non-selected goals will be set to wait
-		 * ({@link Intention#doWait()}) and the selected ones will be tried to
-		 * be achieved ({@link Intention#tryToAchive()}).
+		 * invoking the {@link AgentDeliberationFunction#filter(Set, Map)}
+		 * method, to select the current agent intentions. The non-selected
+		 * goals will be set to wait ({@link Intention#doWait()}) and the
+		 * selected ones will be tried to be achieved (
+		 * {@link Intention#tryToAchive()}).
 		 * 
 		 * @see jade.core.behaviours.Behaviour#action()
 		 */
@@ -102,7 +111,7 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 			log.trace("Beginning BDI-interpreter cycle.");
 
 			log.trace("Reviewing beliefs.");
-			reviewBeliefs();
+			beliefRevisionStrategy.reviewBeliefs();
 
 			synchronized (allIntentions) {
 				// Removing finished goals and generate appropriate goal events
@@ -116,7 +125,8 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 				}
 
 				// Generating new goals and choosing goals to drop
-				generateGoals(agentGoalUpdateSet, capabilityGoalUpdateSets);
+				optionGenerationFunction.generateGoals(agentGoalUpdateSet,
+						capabilityGoalUpdateSets);
 
 				// Adding generated goals
 				for (GoalDescription goal : agentGoalUpdateSet
@@ -164,7 +174,7 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 					capabilityGoals.put(capability, capabilityGoalUpdateSets
 							.get(capability).getCurrentGoals());
 				}
-				Set<Goal> selectedGoals = filter(
+				Set<Goal> selectedGoals = deliberationFunction.filter(
 						agentGoalUpdateSet.getCurrentGoals(), capabilityGoals);
 
 				log.trace("Selected goals to be intentions: "
@@ -226,9 +236,13 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	private final Set<Capability> aggregatedCapabilities;
 	private final Map<Goal, Intention> allIntentions;
 	private final BDIInterpreter bdiInterpreter;
+	private AgentBeliefRevisionStrategy beliefRevisionStrategy;
 	private Set<Capability> capabilities;
+	private AgentDeliberationFunction deliberationFunction;
 	protected final List<GoalListener> goalListeners;
 	protected final Log log;
+	private AgentOptionGenerationFunction optionGenerationFunction;
+	private AgentPlanSelectionStrategy planSelectionStrategy;
 	private Map<Class<? extends Capability>, Set<Capability>> restrictedAccessOwnersMap;
 	private final Set<Softgoal> softgoals;
 
@@ -245,6 +259,12 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 		this.agentIntentions = new LinkedList<>();
 		this.softgoals = new HashSet<>();
 		this.goalListeners = new LinkedList<>();
+
+		// Initializing reasoning strategies
+		setBeliefRevisionStrategy(null);
+		setOptionGenerationFunction(null);
+		setDeliberationFunction(null);
+		setPlanSelectionStrategy(null);
 	}
 
 	/**
@@ -406,35 +426,6 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
-	 * This method is responsible for selecting a set of goals that must be
-	 * tried to be achieved (intentions) from the set of goals. Its default
-	 * implementation selects all agent goals (those not dispatched within the
-	 * scope of a capability) to be achieved, and requests each of its
-	 * capabilities to filter their goals. Subclasses may override this method
-	 * to customize this deliberation function.
-	 * 
-	 * @param agentGoals
-	 *            the set of agent goals, which are goals not dispatched within
-	 *            the scope of a capability.
-	 * @param capabilityGoals
-	 *            the map from capabilities to their set of goals.
-	 * 
-	 * @return the list of selected goals, which will become intentions.
-	 */
-	protected Set<Goal> filter(Set<GoalDescription> agentGoals,
-			Map<Capability, Set<GoalDescription>> capabilityGoals) {
-		Set<Goal> selectedGoals = new HashSet<>();
-		for (GoalDescription goalDescription : agentGoals) {
-			selectedGoals.add(goalDescription.getGoal());
-		}
-		for (Capability capability : capabilityGoals.keySet()) {
-			selectedGoals.addAll(capability.filter(capabilityGoals
-					.get(capability)));
-		}
-		return selectedGoals;
-	}
-
-	/**
 	 * Notifies all listeners, if any, about a goal event.
 	 * 
 	 * @param goalEvent
@@ -473,51 +464,6 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
-	 * This method is responsible for generating new goals or dropping existing
-	 * ones. Its default implementation requests each of its capabilities to
-	 * generate or drop goals. Subclasses may override this method to customize
-	 * this options generation function.
-	 * 
-	 * @param agentGoalUpdateSet
-	 *            the {@link GoalUpdateSet} that contains the set of agent
-	 *            current goals. It has also a set of dropped goals and
-	 *            generated goals, which are used as outputs of this method.
-	 * @param capabilityGoalUpdateSets
-	 *            the map from capabilities to their goal update set.
-	 */
-	protected void generateGoals(GoalUpdateSet agentGoalUpdateSet,
-			Map<Capability, GoalUpdateSet> capabilityGoalUpdateSets) {
-		for (Capability capability : capabilityGoalUpdateSets.keySet()) {
-			capability.generateGoals(capabilityGoalUpdateSets.get(capability));
-		}
-	}
-
-	/**
-	 * Returns the root capability of this agent.
-	 * 
-	 * @return the rootCapability
-	 */
-	protected Set<Capability> getAggregatedCapabilities() {
-		synchronized (aggregatedCapabilities) {
-			return aggregatedCapabilities;
-		}
-	}
-
-	/**
-	 * @see bdi4jade.core.BDIAgent#getAllBeliefs()
-	 */
-	@Override
-	public final Collection<Belief<?>> getAllBeliefs() {
-		synchronized (aggregatedCapabilities) {
-			Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
-			for (Capability capability : capabilities) {
-				beliefs.addAll(capability.getBeliefBase().getBeliefs());
-			}
-			return beliefs;
-		}
-	}
-
-	/**
 	 * Returns all capabilities that are part of this agent. This included all
 	 * capabilities composed or associated with other capabilities.
 	 * 
@@ -530,23 +476,47 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
-	 * @see bdi4jade.core.BDIAgent#getAllGoals()
+	 * Returns the belief revision strategy of this agent.
+	 * 
+	 * @return the beliefRevisionStrategy.
+	 */
+	public final AgentBeliefRevisionStrategy getBeliefRevisionStrategy() {
+		return beliefRevisionStrategy;
+	}
+
+	/**
+	 * @see bdi4jade.core.BDIAgent#getBeliefs()
 	 */
 	@Override
-	public final Set<Goal> getAllGoals() {
-		synchronized (allIntentions) {
-			return allIntentions.keySet();
+	public final Collection<Belief<?>> getBeliefs() {
+		synchronized (aggregatedCapabilities) {
+			Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
+			for (Capability capability : capabilities) {
+				beliefs.addAll(capability.getBeliefBase().getBeliefs());
+			}
+			return beliefs;
 		}
 	}
 
 	/**
-	 * @see bdi4jade.core.BDIAgent#getAllSoftgoals()
+	 * Returns the capabilities of this agent. It may be a single root
+	 * capability or a set of capabilities.
+	 * 
+	 * @return the set of capabilities of this agent.
 	 */
-	@Override
-	public final Set<Softgoal> getAllSoftgoals() {
-		synchronized (softgoals) {
-			return this.softgoals;
+	public Set<Capability> getCapabilities() {
+		synchronized (aggregatedCapabilities) {
+			return aggregatedCapabilities;
 		}
+	}
+
+	/**
+	 * Returns the deliberation function of this agent.
+	 * 
+	 * @return the deliberationFunction
+	 */
+	public final AgentDeliberationFunction getDeliberationFunction() {
+		return deliberationFunction;
 	}
 
 	/**
@@ -582,6 +552,16 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
+	 * @see bdi4jade.core.BDIAgent#getGoals()
+	 */
+	@Override
+	public final Set<Goal> getGoals() {
+		synchronized (allIntentions) {
+			return allIntentions.keySet();
+		}
+	}
+
+	/**
 	 * @see bdi4jade.core.BDIAgent#getIntentions()
 	 */
 	@Override
@@ -593,6 +573,34 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 					activeIntentions.add(intention);
 			}
 			return activeIntentions;
+		}
+	}
+
+	/**
+	 * Returns the option generation function of this agent.
+	 * 
+	 * @return the optionGenerationFunction
+	 */
+	public final AgentOptionGenerationFunction getOptionGenerationFunction() {
+		return optionGenerationFunction;
+	}
+
+	/**
+	 * Returns the plan selection strategy of this agent.
+	 * 
+	 * @return the planSelectionStrategy
+	 */
+	public final AgentPlanSelectionStrategy getPlanSelectionStrategy() {
+		return planSelectionStrategy;
+	}
+
+	/**
+	 * @see bdi4jade.core.BDIAgent#getSoftgoals()
+	 */
+	@Override
+	public final Set<Softgoal> getSoftgoals() {
+		synchronized (softgoals) {
+			return this.softgoals;
 		}
 	}
 
@@ -665,44 +673,71 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
-	 * This method is responsible for reviewing beliefs from this agent. Its
-	 * default implementation requests each of its capabilities to review their
-	 * individual set of beliefs. Subclasses may override this method to
-	 * customize belief revision.
+	 * Sets the belief revision strategy of this agent.
+	 * 
+	 * @param beliefRevisionStrategy
+	 *            the beliefRevisionStrategy to set.
 	 */
-	protected void reviewBeliefs() {
-		for (Capability capability : capabilities) {
-			capability.reviewBeliefs();
+	public final void setBeliefRevisionStrategy(
+			AgentBeliefRevisionStrategy beliefRevisionStrategy) {
+		if (beliefRevisionStrategy == null) {
+			this.beliefRevisionStrategy = new DefaultAgentBeliefRevisionStrategy();
+		} else {
+			this.beliefRevisionStrategy.setAgent(null);
+			this.beliefRevisionStrategy = beliefRevisionStrategy;
 		}
+		this.beliefRevisionStrategy.setAgent(this);
 	}
 
 	/**
-	 * This method is responsible for selecting plans to achieve a goals of this
-	 * agent. Its default implementation requests each of its capabilities to
-	 * select one of its plans, and this method selects one of them, randomly.
-	 * Subclasses may override this method to customize plan selection.
+	 * Sets the deliberation function of this agent.
 	 * 
-	 * @param goal
-	 *            the goal to be achieved.
-	 * @param capabilityPlans
-	 *            the set of candidate plans of each capability, as a map.
+	 * @param deliberationFunction
+	 *            the deliberationFunction to set.
 	 */
-	protected Plan selectPlan(Goal goal,
-			Map<Capability, Set<Plan>> capabilityPlans) {
-		Set<Plan> preselectedPlans = new HashSet<>();
-		for (Capability capability : capabilityPlans.keySet()) {
-			Plan preselectedPlan = capability.selectPlan(goal,
-					capabilityPlans.get(capability));
-			if (preselectedPlan != null) {
-				preselectedPlans.add(preselectedPlan);
-			}
-		}
-
-		if (preselectedPlans.isEmpty()) {
-			return null;
+	public final void setDeliberationFunction(
+			AgentDeliberationFunction deliberationFunction) {
+		if (deliberationFunction == null) {
+			this.deliberationFunction = new DefaultAgentDeliberationFunction();
 		} else {
-			return preselectedPlans.iterator().next();
+			this.deliberationFunction.setAgent(null);
+			this.deliberationFunction = deliberationFunction;
 		}
+		this.deliberationFunction.setAgent(this);
+	}
+
+	/**
+	 * Sets the option generation function of this agent.
+	 * 
+	 * @param optionGenerationFunction
+	 *            the optionGenerationFunction to set.
+	 */
+	public final void setOptionGenerationFunction(
+			AgentOptionGenerationFunction optionGenerationFunction) {
+		if (optionGenerationFunction == null) {
+			this.optionGenerationFunction = new DefaultAgentOptionGenerationFunction();
+		} else {
+			this.optionGenerationFunction.setAgent(null);
+			this.optionGenerationFunction = optionGenerationFunction;
+		}
+		this.optionGenerationFunction.setAgent(this);
+	}
+
+	/**
+	 * Sets the plan selection strategy of this agent.
+	 * 
+	 * @param planSelectionStrategy
+	 *            the planSelectionStrategy to set.
+	 */
+	public final void setPlanSelectionStrategy(
+			AgentPlanSelectionStrategy planSelectionStrategy) {
+		if (planSelectionStrategy == null) {
+			this.planSelectionStrategy = new DefaultAgentPlanSelectionStrategy();
+		} else {
+			this.planSelectionStrategy.setAgent(null);
+			this.planSelectionStrategy = planSelectionStrategy;
+		}
+		this.planSelectionStrategy.setAgent(this);
 	}
 
 	/**

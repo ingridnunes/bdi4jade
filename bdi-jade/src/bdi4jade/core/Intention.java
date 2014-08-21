@@ -163,7 +163,7 @@ public class Intention {
 		Map<Capability, Set<Plan>> options = new HashMap<>();
 
 		if (owners.isEmpty()) {
-			for (Capability capability : myAgent.getAggregatedCapabilities()) {
+			for (Capability capability : myAgent.getCapabilities()) {
 				capability.addCandidatePlans(goal, options);
 			}
 		} else {
@@ -181,7 +181,8 @@ public class Intention {
 		}
 
 		while (this.currentPlan == null && !options.isEmpty()) {
-			Plan selectedPlan = myAgent.selectPlan(goal, options);
+			Plan selectedPlan = myAgent.getPlanSelectionStrategy().selectPlan(
+					goal, options);
 			try {
 				this.currentPlan = selectedPlan.createPlanBody();
 				currentPlan.init(selectedPlan, this);

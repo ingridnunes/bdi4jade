@@ -82,7 +82,7 @@ public class UtilityBasedPlanSelectionStrategy extends
 					.getPlanLibrary().getCapability().getBeliefBase()
 					.getBelief(SoftgoalPreferences.NAME);
 
-			for (Softgoal softgoal : capability.getMyAgent().getAllSoftgoals()) {
+			for (Softgoal softgoal : capability.getMyAgent().getSoftgoals()) {
 				Double preference = preferences
 						.getPreferenceForSoftgoal(softgoal);
 				if (preference != null) {

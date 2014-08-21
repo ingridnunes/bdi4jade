@@ -153,22 +153,7 @@ public interface BDIAgent {
 	 * 
 	 * @return the collection of all beliefs of this agent.
 	 */
-	public Collection<Belief<?>> getAllBeliefs();
-
-	/**
-	 * Gets all goals of this agent. This goals are the ones in the goal set and
-	 * the ones that are trying to be achieve in intentions.
-	 * 
-	 * @return the set of goals.
-	 */
-	public Set<Goal> getAllGoals();
-
-	/**
-	 * Gets all softgoals of this agent.
-	 * 
-	 * @return the set of softgoals.
-	 */
-	public Set<Softgoal> getAllSoftgoals();
+	public Collection<Belief<?>> getBeliefs();
 
 	/**
 	 * Returns all goal listeners.
@@ -178,12 +163,27 @@ public interface BDIAgent {
 	public List<GoalListener> getGoalListeners();
 
 	/**
+	 * Gets all goals of this agent. This goals are the ones in the goal set and
+	 * the ones that are trying to be achieve in intentions.
+	 * 
+	 * @return the set of goals.
+	 */
+	public Set<Goal> getGoals();
+
+	/**
 	 * Returns all agent intentions, which are goals that this agent is
 	 * committed to achieve.
 	 * 
 	 * @return the intentions.
 	 */
 	public Set<Intention> getIntentions();
+
+	/**
+	 * Gets all softgoals of this agent.
+	 * 
+	 * @return the set of softgoals.
+	 */
+	public Set<Softgoal> getSoftgoals();
 
 	/**
 	 * Removes a goal listener, so it will not be notified about the goal events

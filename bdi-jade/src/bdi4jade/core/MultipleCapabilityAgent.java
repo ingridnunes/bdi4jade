@@ -23,7 +23,6 @@
 package bdi4jade.core;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * This class is a BDIAgent that has multiple aggregated capabilities.
@@ -84,14 +83,6 @@ public class MultipleCapabilityAgent extends AbstractBDIAgent {
 	@Override
 	public final void addCapability(Capability capability) {
 		super.addCapability(capability);
-	}
-
-	/**
-	 * @see bdi4jade.core.AbstractBDIAgent#getAggregatedCapabilities()
-	 */
-	@Override
-	public final Set<Capability> getAggregatedCapabilities() {
-		return super.getAggregatedCapabilities();
 	}
 
 	/**

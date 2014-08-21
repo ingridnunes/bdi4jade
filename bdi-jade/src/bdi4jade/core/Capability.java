@@ -42,7 +42,6 @@ import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.belief.TransientBelief;
 import bdi4jade.belief.TransientBeliefSet;
-import bdi4jade.core.GoalUpdateSet.GoalDescription;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.Plan;
 import bdi4jade.plan.PlanLibrary;
@@ -176,10 +175,10 @@ public class Capability implements Serializable {
 		this.associationTargets = new HashSet<>();
 
 		// Initializing reasoning strategies
-		this.beliefRevisionStrategy = new DefaultBeliefRevisionStrategy();
-		this.optionGenerationFunction = new DefaultOptionGenerationFunction();
-		this.deliberationFunction = new DefaultDeliberationFunction();
-		this.planSelectionStrategy = new DefaultPlanSelectionStrategy();
+		setBeliefRevisionStrategy(null);
+		setOptionGenerationFunction(null);
+		setDeliberationFunction(null);
+		setPlanSelectionStrategy(null);
 
 		computeGoalOwnersMap();
 	}
@@ -412,40 +411,6 @@ public class Capability implements Serializable {
 		if (!(obj instanceof Capability))
 			return false;
 		return getFullId().equals(((Capability) obj).getFullId());
-	}
-
-	/**
-	 * This method is responsible for selecting a set of goals that must be
-	 * tried to be achieved (intentions) from the set of goals. It delegates its
-	 * responsibility to the {@link DeliberationFunction} set in this
-	 * capability.
-	 * 
-	 * @param goals
-	 *            the list of current goals dispatched by the capability
-	 *            associated with this strategy.
-	 * 
-	 * @return the list of selected goals (which are in the for of
-	 *         {@link GoalDescription}), which will become intentions.
-	 * 
-	 * @see DeliberationFunction
-	 */
-	public final Set<Goal> filter(Set<GoalDescription> goals) {
-		return this.deliberationFunction.filter(goals);
-	}
-
-	/**
-	 * This method is responsible for generating new goals or dropping existing
-	 * ones. It delegates its responsibility to the
-	 * {@link OptionGenerationFunction} set in this capability.
-	 * 
-	 * @param goalUpdateSet
-	 *            a three-set object containing current goals with their status,
-	 *            and dropped and generated goals.
-	 * 
-	 * @see OptionGenerationFunction
-	 */
-	public final void generateGoals(GoalUpdateSet goalUpdateSet) {
-		this.optionGenerationFunction.generateGoals(goalUpdateSet);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -687,38 +652,10 @@ public class Capability implements Serializable {
 	}
 
 	/**
-	 * This method is responsible for reviewing beliefs of this capability. It
-	 * delegates its responsibility to the {@link BeliefRevisionStrategy} set in
-	 * this capability.
-	 * 
-	 * @see BeliefRevisionStrategy
-	 */
-	public final void reviewBeliefs() {
-		this.beliefRevisionStrategy.reviewBeliefs();
-	}
-
-	/**
-	 * This method is responsible for selecting a plan to achieve a goals. It
-	 * delegates its responsibility to the {@link PlanSelectionStrategy} set in
-	 * this capability.
-	 * 
-	 * @param goal
-	 *            the goal that must be achieved.
-	 * @param candidatePlans
-	 *            the plans that can achieve the goal.
-	 * @return the selected plan.
-	 * 
-	 * @see PlanSelectionStrategy
-	 */
-	public final Plan selectPlan(Goal goal, Set<Plan> candidatePlans) {
-		return this.planSelectionStrategy.selectPlan(goal, candidatePlans);
-	}
-
-	/**
 	 * Sets the belief revision strategy of this capability.
 	 * 
 	 * @param beliefRevisionStrategy
-	 *            the beliefRevisionStrategy to set
+	 *            the beliefRevisionStrategy to set.
 	 */
 	public final void setBeliefRevisionStrategy(
 			BeliefRevisionStrategy beliefRevisionStrategy) {
@@ -735,7 +672,7 @@ public class Capability implements Serializable {
 	 * Sets the deliberation function of this capability.
 	 * 
 	 * @param deliberationFunction
-	 *            the deliberationFunction to set
+	 *            the deliberationFunction to set.
 	 */
 	public final void setDeliberationFunction(
 			DeliberationFunction deliberationFunction) {
@@ -776,7 +713,7 @@ public class Capability implements Serializable {
 	 * Sets the option generation function of this capability.
 	 * 
 	 * @param optionGenerationFunction
-	 *            the optionGenerationFunction to set
+	 *            the optionGenerationFunction to set.
 	 */
 	public final void setOptionGenerationFunction(
 			OptionGenerationFunction optionGenerationFunction) {
@@ -793,7 +730,7 @@ public class Capability implements Serializable {
 	 * Sets the plan selection strategy of this capability.
 	 * 
 	 * @param planSelectionStrategy
-	 *            the planSelectionStrategy to set
+	 *            the planSelectionStrategy to set.
 	 */
 	public final void setPlanSelectionStrategy(
 			PlanSelectionStrategy planSelectionStrategy) {
