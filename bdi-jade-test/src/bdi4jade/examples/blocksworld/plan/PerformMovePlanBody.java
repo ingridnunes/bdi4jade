@@ -26,6 +26,7 @@ import bdi4jade.annotation.Belief;
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.BeliefSet;
+import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
@@ -39,10 +40,10 @@ public class PerformMovePlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
-	@Belief
-	private BeliefSet<Clear> clear;
-	@Belief
-	private BeliefSet<On> on;
+	@Belief(name = BlocksWorldCapability.BELIEF_CLEAR)
+	private BeliefSet<Clear> clearSet;
+	@Belief(name = BlocksWorldCapability.BELIEF_ON)
+	private BeliefSet<On> onSet;
 	private Thing thing1;
 	private Thing thing2;
 
@@ -50,19 +51,19 @@ public class PerformMovePlanBody extends AbstractPlanBody {
 	public void action() {
 		// If thing1 was over something, this something will now be clear
 		for (Thing thing : Thing.THINGS) {
-			On onVal = new On(thing1, thing);
-			if (on.hasValue(onVal)) {
-				on.removeValue(onVal);
+			On on = new On(thing1, thing);
+			if (onSet.hasValue(on)) {
+				onSet.removeValue(on);
 				if (!Thing.TABLE.equals(thing)) {
-					clear.addValue(new Clear(thing));
+					clearSet.addValue(new Clear(thing));
 				}
 			}
 		}
 
 		if (!thing2.equals(Thing.TABLE)) {
-			clear.removeValue(new Clear(thing2));
+			clearSet.removeValue(new Clear(thing2));
 		}
-		on.addValue(new On(thing1, thing2));
+		onSet.addValue(new On(thing1, thing2));
 
 		setEndState(EndState.SUCCESSFULL);
 	}

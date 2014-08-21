@@ -35,8 +35,9 @@ import bdi4jade.plan.planbody.PlanBody;
  * This annotation allows to specify that an attribute of a {@link Capability}
  * is a belief that should be added to the capability belief base. It can also
  * be used in plan bodies ({@link PlanBody}) so that beliefs are injected in
- * plan body attributes. The annotated field should be of the type
- * {@link bdi4jade.belief.Belief}.
+ * plan body attributes and, in this case, a name may be provided to retrieve
+ * the belief. If no name is provided, the attribute name is used. The annotated
+ * field should be of the type {@link bdi4jade.belief.Belief}.
  * 
  * @author Ingrid Nunes
  */
@@ -44,5 +45,14 @@ import bdi4jade.plan.planbody.PlanBody;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Belief {
+
+	/**
+	 * Returns the name of the belief to be retrieved from the belief base, in
+	 * case this annotation is used in a {@link PlanBody}. If no name is
+	 * provided, the attribute name is used.
+	 * 
+	 * @return the belief name.
+	 */
+	String name() default "";
 
 }

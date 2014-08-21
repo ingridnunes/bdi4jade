@@ -22,20 +22,23 @@
 
 package bdi4jade.examples.blocksworld.plan;
 
+import java.util.Set;
+
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.On;
+import bdi4jade.examples.blocksworld.domain.Thing;
 import bdi4jade.goal.BeliefSetValueGoal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
-import bdi4jade.plan.planbody.AbstractPlanBody;
+import bdi4jade.plan.planbody.BeliefGoalPlanBody;
 
 /**
  * @author Ingrid Nunes
  */
-public class TopLevelPlanBody extends AbstractPlanBody {
+public class TopLevelPlanBody extends BeliefGoalPlanBody {
 
 	private static final long serialVersionUID = -5919677537834351951L;
 
@@ -43,7 +46,7 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 	private On[] target;
 
 	@Override
-	public void action() {
+	public void execute() {
 		// If a subgoal has been dispatched, wait for its completion
 		if (counter != 0) {
 			GoalEvent goalEvent = getGoalEvent();
@@ -60,10 +63,14 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 					BlocksWorldCapability.BELIEF_ON, target[counter]));
 		}
 		counter++;
+	}
 
-		if (counter > target.length) {
-			setEndState(EndState.SUCCESSFULL);
+	private On getOnOverThing(Set<On> target, Thing thing) {
+		for (On on : target) {
+			if (on.getThing2().equals(thing))
+				return on;
 		}
+		return null;
 	}
 
 	@Override
@@ -76,14 +83,30 @@ public class TopLevelPlanBody extends AbstractPlanBody {
 	@Override
 	public void onStart() {
 		this.counter = 0;
-
 		log.info("World Model at start is:");
 		log.info(getBeliefBase());
 	}
 
+	/**
+	 * This method sets the target block configuration to be achieved. It is
+	 * given in the form of a set of {@link On} values, and the method organize
+	 * these values in the order in which they should be stacked, from table to
+	 * top. This organized configuration is set in the target array of this plan
+	 * body.
+	 * 
+	 * @param target
+	 *            the target to set.
+	 */
 	@Parameter(direction = Direction.IN, mandatory = true)
-	public void setTarget(On[] target) {
-		this.target = target;
+	public void setValue(Set<On> target) {
+		this.target = new On[target.size()];
+		Thing thing = Thing.TABLE;
+		for (int i = 0; i < target.size(); i++) {
+			On on = getOnOverThing(target, thing);
+			this.target[i] = on;
+			thing = on.getThing1();
+		}
+		log.info(target);
 	}
 
 }

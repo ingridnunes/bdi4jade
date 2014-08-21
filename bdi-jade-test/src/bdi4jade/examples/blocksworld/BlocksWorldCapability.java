@@ -22,6 +22,8 @@
 
 package bdi4jade.examples.blocksworld;
 
+import java.util.Set;
+
 import bdi4jade.annotation.Belief;
 import bdi4jade.annotation.GoalOwner;
 import bdi4jade.annotation.Parameter;
@@ -45,32 +47,6 @@ import bdi4jade.plan.DefaultPlan;
  * @author Ingrid Nunes
  */
 public class BlocksWorldCapability extends Capability {
-
-	@GoalOwner(capability = BlocksWorldCapability.class, internal = false)
-	public static class AchieveBlocksStacked implements Goal {
-		private static final long serialVersionUID = -8126833927953226126L;
-
-		private On[] target;
-
-		public AchieveBlocksStacked(On[] target) {
-			this.target = target;
-		}
-
-		@Parameter(direction = Direction.IN)
-		public On[] getTarget() {
-			return target;
-		}
-
-		@Override
-		public String toString() {
-			StringBuffer sb = new StringBuffer("AchieveBlocksStacked: ");
-			for (On on : target) {
-				sb.append(on).append(" ");
-			}
-			return sb.toString();
-		}
-
-	}
 
 	@GoalOwner(capability = BlocksWorldCapability.class, internal = true)
 	public static class PerformMove implements Goal {
@@ -107,7 +83,8 @@ public class BlocksWorldCapability extends Capability {
 
 	@Plan
 	private bdi4jade.plan.Plan achieveBlocksStackedPlan = new DefaultPlan(
-			AchieveBlocksStacked.class, TopLevelPlanBody.class);
+			GoalTemplateFactory.beliefTypeGoal(BELIEF_ON, Set.class),
+			TopLevelPlanBody.class);
 
 	@Plan
 	private bdi4jade.plan.Plan achieveOnPlan = new DefaultPlan(
@@ -115,7 +92,7 @@ public class BlocksWorldCapability extends Capability {
 			AchieveOnPlanBody.class);
 
 	@Belief
-	private BeliefSet<Clear> clear = new TransientBeliefSet<Clear>(BELIEF_CLEAR);
+	private BeliefSet<Clear> clear = new TransientBeliefSet<>(BELIEF_CLEAR);
 
 	@Plan
 	private bdi4jade.plan.Plan clearPlan = new DefaultPlan(
@@ -123,7 +100,7 @@ public class BlocksWorldCapability extends Capability {
 			ClearPlanBody.class);
 
 	@Belief
-	private BeliefSet<On> on = new TransientBeliefSet<On>(BELIEF_ON);
+	private BeliefSet<On> on = new TransientBeliefSet<>(BELIEF_ON);
 
 	@Plan
 	private bdi4jade.plan.Plan performMovePlan;

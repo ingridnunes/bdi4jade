@@ -35,6 +35,7 @@ import bdi4jade.examples.capabilities.TopCapability;
 import bdi4jade.examples.helloworld.HelloWorldAgent;
 import bdi4jade.examples.helloworld.HelloWorldAnnotatedCapability;
 import bdi4jade.examples.ping.PingPongCapability;
+import bdi4jade.goal.BeliefValueGoal;
 import bdi4jade.goal.CompositeGoal;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.ParallelGoal;
@@ -77,9 +78,16 @@ public class BDI4JADEExamplesPanel extends JPanel {
 					frame.setVisible(true);
 				}
 			});
-			blocksWorldAgent.addGoal(
-					new BlocksWorldCapability.AchieveBlocksStacked(target),
-					this);
+
+			Set<On> target = new HashSet<>();
+			target.add(new On(Thing.BLOCK_5, Thing.TABLE));
+			target.add(new On(Thing.BLOCK_4, Thing.BLOCK_5));
+			target.add(new On(Thing.BLOCK_3, Thing.BLOCK_4));
+			target.add(new On(Thing.BLOCK_2, Thing.BLOCK_3));
+			target.add(new On(Thing.BLOCK_1, Thing.BLOCK_2));
+
+			blocksWorldAgent.addGoal(new BeliefValueGoal<Set<On>>(
+					BlocksWorldCapability.BELIEF_ON, target), this);
 		}
 
 		@Override
@@ -342,12 +350,6 @@ public class BDI4JADEExamplesPanel extends JPanel {
 	}
 
 	private static final long serialVersionUID = -1080267169700651610L;
-
-	private static final On[] target = { new On(Thing.BLOCK_5, Thing.TABLE),
-			new On(Thing.BLOCK_4, Thing.BLOCK_5),
-			new On(Thing.BLOCK_3, Thing.BLOCK_4),
-			new On(Thing.BLOCK_2, Thing.BLOCK_3),
-			new On(Thing.BLOCK_1, Thing.BLOCK_2) };
 
 	private final BDI4JADEExamplesAction[] actions;
 

@@ -189,8 +189,14 @@ public abstract class ReflectionUtils {
 					if (field
 							.isAnnotationPresent(bdi4jade.annotation.Belief.class)) {
 						if (Belief.class.isAssignableFrom(field.getType())) {
+							bdi4jade.annotation.Belief beliefAnnotation = field
+									.getAnnotation(bdi4jade.annotation.Belief.class);
+							String beliefName = beliefAnnotation.name();
+							if (beliefName == null || "".equals(beliefName)) {
+								beliefName = field.getName();
+							}
 							Belief<?> belief = capability.getBeliefBase()
-									.getBelief(field.getName());
+									.getBelief(beliefName);
 							field.set(planBody, belief);
 						} else {
 							throw new ClassCastException("Field "
