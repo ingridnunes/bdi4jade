@@ -69,7 +69,7 @@ public class HelloWorldAnnotatedCapability extends Capability {
 		}
 	}
 
-	public static class HelloWorldPlan extends AbstractPlanBody {
+	public static class HelloWorldPlanBody extends AbstractPlanBody {
 		private static final long serialVersionUID = -9039447524062487795L;
 
 		private String name;
@@ -96,6 +96,6 @@ public class HelloWorldAnnotatedCapability extends Capability {
 
 	@bdi4jade.annotation.Plan
 	private Plan plan = new DefaultPlan(HelloWorldGoal.class,
-			HelloWorldPlan.class);
+			HelloWorldPlanBody.class);
 
 }
