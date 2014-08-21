@@ -107,22 +107,35 @@ public class Intention {
 		this.goalListeners = new LinkedList<>();
 		this.dispatcher = dispatcher;
 
-		GoalOwner owner = null;
+		Class<? extends Capability> owner = null;
+		boolean internal = false;
+
 		if (goal.getClass().isAnnotationPresent(GoalOwner.class)) {
-			owner = goal.getClass().getAnnotation(GoalOwner.class);
+			GoalOwner ownerAnnotation = goal.getClass().getAnnotation(
+					GoalOwner.class);
+			owner = ownerAnnotation.capability();
+			internal = ownerAnnotation.internal();
+		} else {
+			Class<?> enclosingClass = goal.getClass().getEnclosingClass();
+			if (enclosingClass != null
+					&& Capability.class.isAssignableFrom(goal.getClass()
+							.getEnclosingClass())) {
+				owner = (Class<Capability>) enclosingClass;
+			}
 		}
+
 		if (owner == null) {
 			this.owners = new HashSet<>();
 		} else {
 			if (dispatcher == null) {
-				this.owners = myAgent.getGoalOwner(owner);
+				this.owners = myAgent.getGoalOwner(owner, internal);
 			} else {
-				this.owners = dispatcher.getGoalOwner(owner);
+				this.owners = dispatcher.getGoalOwner(owner, internal);
 				if (owners.isEmpty()) {
 					throw new IllegalAccessException("Capability " + dispatcher
 							+ " has no access to goal "
 							+ goal.getClass().getName() + " of capability "
-							+ owner.capability().getName());
+							+ owner.getName());
 				}
 			}
 		}

@@ -39,7 +39,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.annotation.GoalOwner;
 import bdi4jade.belief.Belief;
 import bdi4jade.core.GoalUpdateSet.GoalDescription;
 import bdi4jade.event.GoalEvent;
@@ -566,15 +565,20 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 * a goal without the scope of a dispatcher that has access to it.
 	 * 
 	 * @param owner
-	 *            the annotation with the goal owner.
+	 *            the capability class that is the goal owner.
 	 * @return the capability instances related to this capability that owns the
 	 *         goal, or an empty set if the agent cannot add this goal.
 	 */
-	protected final Set<Capability> getGoalOwner(GoalOwner owner) {
-		Set<Capability> restrictedAccessOwners = restrictedAccessOwnersMap
-				.get(owner.capability());
-		return restrictedAccessOwners == null ? new HashSet<Capability>()
-				: restrictedAccessOwners;
+	protected final Set<Capability> getGoalOwner(
+			Class<? extends Capability> owner, boolean internal) {
+		if (internal) {
+			return new HashSet<Capability>();
+		} else {
+			Set<Capability> restrictedAccessOwners = restrictedAccessOwnersMap
+					.get(owner);
+			return restrictedAccessOwners == null ? new HashSet<Capability>()
+					: restrictedAccessOwners;
+		}
 	}
 
 	/**

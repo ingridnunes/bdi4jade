@@ -38,7 +38,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.annotation.GoalOwner;
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
 import bdi4jade.belief.TransientBelief;
@@ -534,23 +533,26 @@ public class Capability implements Serializable {
 	 * access to the goal owned by capabilities of the given class.
 	 * 
 	 * @param owner
-	 *            the annotation with the goal owner.
+	 *            the capability class that is the goal owner.
+	 * @param internal
+	 *            the boolean that indicates whether the goal is internal or
+	 *            external.
 	 * @return the capability instances related to this capability (or the
 	 *         capability itself) that owns the goal, or an empty set if the
 	 *         capability has no access to goals owned by capability of the
 	 *         given class.
 	 */
-	public final Set<Capability> getGoalOwner(GoalOwner owner) {
+	public final Set<Capability> getGoalOwner(
+			Class<? extends Capability> owner, boolean internal) {
 		Set<Capability> owners = new HashSet<>();
 
-		Set<Capability> fullAccessOwners = fullAccessOwnersMap.get(owner
-				.capability());
+		Set<Capability> fullAccessOwners = fullAccessOwnersMap.get(owner);
 		if (fullAccessOwners != null)
 			owners.addAll(fullAccessOwners);
 
-		if (!owner.internal()) {
+		if (!internal) {
 			Set<Capability> restrictedAccessOwners = restrictedAccessOwnersMap
-					.get(owner.capability());
+					.get(owner);
 			if (restrictedAccessOwners != null)
 				owners.addAll(restrictedAccessOwners);
 		}
