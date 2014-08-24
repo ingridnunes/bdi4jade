@@ -30,11 +30,11 @@ package bdi4jade.belief;
  * @author Ingrid Nunes
  * 
  */
-public class PersistentBelief<T> extends AbstractBelief<T> {
+public class PersistentBelief<K, V> extends AbstractBelief<K, V> {
 
 	private static final long serialVersionUID = 2893517209462636003L;
 
-	protected T value;
+	protected V value;
 
 	/**
 	 * Initializes a belief with its name.
@@ -42,7 +42,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	 * @param name
 	 *            the belief name.
 	 */
-	public PersistentBelief(String name) {
+	public PersistentBelief(K name) {
 		super(name);
 	}
 
@@ -52,7 +52,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	 * @see bdi4jade.belief.Belief#getValue()
 	 */
 	@Override
-	public T getValue() {
+	public V getValue() {
 		// TODO Future: PersistentBelief.getValue()
 		throw new RuntimeException("Not implemented yet!");
 	}
@@ -62,7 +62,7 @@ public class PersistentBelief<T> extends AbstractBelief<T> {
 	 * 
 	 * @see bdi4jade.belief.Belief#setValue(java.lang.Object)
 	 */
-	protected void updateValue(T value) {
+	protected void updateValue(V value) {
 		// TODO Future: PersistentBelief.setValue(T value)
 		throw new RuntimeException("Not implemented yet!");
 	}

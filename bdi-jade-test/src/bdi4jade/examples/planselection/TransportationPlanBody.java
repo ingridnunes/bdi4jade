@@ -134,7 +134,7 @@ public class TransportationPlanBody extends AbstractPlanBody {
 	public void onStart() {
 		this.log = LogFactory.getLog(this.getClass());
 		this.plan = (TransportationPlan) getPlan();
-		this.satisfaction = ((TransientBelief<GenericValueFunction<Integer>>) getBeliefBase()
+		this.satisfaction = ((TransientBelief<String, GenericValueFunction<Integer>>) getBeliefBase()
 				.getBelief(TransportationAgent.SATISFACTION)).getValue();
 		this.preferences = (SoftgoalPreferences) getBeliefBase().getBelief(
 				SoftgoalPreferences.NAME);

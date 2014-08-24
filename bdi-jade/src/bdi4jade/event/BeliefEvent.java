@@ -46,7 +46,7 @@ public class BeliefEvent implements AgentAction {
 
 	private Action action;
 	private Object args;
-	private Belief<?> belief;
+	private Belief<?, ?> belief;
 
 	/**
 	 * Default constructor.
@@ -61,7 +61,7 @@ public class BeliefEvent implements AgentAction {
 	 * @param belief
 	 *            the belief over which the event has occurred.
 	 */
-	public BeliefEvent(Belief<?> belief) {
+	public BeliefEvent(Belief<?, ?> belief) {
 		this(belief, Action.BELIEF_UPDATED);
 	}
 
@@ -73,7 +73,7 @@ public class BeliefEvent implements AgentAction {
 	 * @param action
 	 *            the action performed.
 	 */
-	public BeliefEvent(Belief<?> belief, Action action) {
+	public BeliefEvent(Belief<?, ?> belief, Action action) {
 		this(belief, action, null);
 	}
 
@@ -87,7 +87,7 @@ public class BeliefEvent implements AgentAction {
 	 * @param args
 	 *            an argument passed for this action.
 	 */
-	public BeliefEvent(Belief<?> belief, Action action, Object args) {
+	public BeliefEvent(Belief<?, ?> belief, Action action, Object args) {
 		this.belief = belief;
 		this.action = action;
 		this.args = args;
@@ -116,7 +116,7 @@ public class BeliefEvent implements AgentAction {
 	 * 
 	 * @return the belief
 	 */
-	public Belief<?> getBelief() {
+	public Belief<?, ?> getBelief() {
 		return belief;
 	}
 
@@ -146,7 +146,7 @@ public class BeliefEvent implements AgentAction {
 	 * @param belief
 	 *            the belief to set.
 	 */
-	public void setBelief(Belief<?> belief) {
+	public void setBelief(Belief<?, ?> belief) {
 		this.belief = belief;
 	}
 

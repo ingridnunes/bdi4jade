@@ -20,34 +20,17 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.annotation;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import bdi4jade.core.Capability;
+package bdi4jade.belief;
 
 /**
- * This annotation allows to specify that an attribute of a {@link Capability}
- * is a belief value that should be added to the capability belief base, whose
- * key is a string. A name for the belief may be given, if it is a string. If it
- * is not provided, the field name is used.
+ * This class extends the {@link TransientBelief} class and represents a
+ * transient propositional belief, which is not persisted in a permanent memory.
  * 
  * @author Ingrid Nunes
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface TransientBelief {
+public class TransientPropositionalBelief<K> extends
+		TransientBelief<K, Boolean> implements PropositionalBelief<K> {
 
-	/**
-	 * Returns the belief name.
-	 * 
-	 * @return the belief name.
-	 */
-	String name() default "";
+	private static final long serialVersionUID = -2315938302480821432L;
 
 }

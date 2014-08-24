@@ -41,9 +41,9 @@ public class PerformMovePlanBody extends AbstractPlanBody {
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	@Belief(name = BlocksWorldCapability.BELIEF_CLEAR)
-	private BeliefSet<Clear> clearSet;
+	private BeliefSet<String, Clear> clearSet;
 	@Belief(name = BlocksWorldCapability.BELIEF_ON)
-	private BeliefSet<On> onSet;
+	private BeliefSet<String, On> onSet;
 	private Thing thing1;
 	private Thing thing2;
 

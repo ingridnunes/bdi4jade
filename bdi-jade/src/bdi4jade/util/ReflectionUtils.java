@@ -195,7 +195,7 @@ public abstract class ReflectionUtils {
 							if (beliefName == null || "".equals(beliefName)) {
 								beliefName = field.getName();
 							}
-							Belief<?> belief = capability.getBeliefBase()
+							Belief<?, ?> belief = capability.getBeliefBase()
 									.getBelief(beliefName);
 							field.set(planBody, belief);
 						} else {

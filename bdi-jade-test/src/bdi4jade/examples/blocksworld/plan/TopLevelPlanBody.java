@@ -59,7 +59,7 @@ public class TopLevelPlanBody extends BeliefGoalPlanBody {
 		}
 		// Dispatch the next subgoal, if there are subgoals left
 		if (counter < target.length) {
-			dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
+			dispatchSubgoalAndListen(new BeliefSetValueGoal<String, On>(
 					BlocksWorldCapability.BELIEF_ON, target[counter]));
 		}
 		counter++;

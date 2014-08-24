@@ -40,9 +40,9 @@ public class PingPlanBody extends AbstractPlanBody {
 	private int counter;
 	private MessageTemplate mt;
 	@bdi4jade.annotation.Belief
-	private Belief<String> neighbour;
+	private Belief<String, String> neighbour;
 	@bdi4jade.annotation.Belief
-	private Belief<Integer> pingTimes;
+	private Belief<String, Integer> pingTimes;
 	private boolean sent;
 
 	@Override

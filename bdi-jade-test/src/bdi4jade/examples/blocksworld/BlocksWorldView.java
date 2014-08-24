@@ -68,12 +68,23 @@ public class BlocksWorldView extends JPanel implements BeliefListener {
 		this.add(onTableTextArea);
 	}
 
+	@Override
+	public void eventOccurred(BeliefEvent beliefEvent) {
+		log.debug(beliefEvent);
+		if (Action.BELIEF_SET_VALUE_REMOVED.equals(beliefEvent.getAction()))
+			return;
+
+		// Ignore inconsistent states
+		updateText(generateStateText());
+		repaint();
+	}
+
 	private State generateStateText() {
 		State state = new State();
 
-		BeliefSet<On> onBelief = (BeliefSet<On>) beliefBase
+		BeliefSet<String, On> onBelief = (BeliefSet<String, On>) beliefBase
 				.getBelief(BlocksWorldCapability.BELIEF_ON);
-		BeliefSet<Clear> clearBelief = (BeliefSet<Clear>) beliefBase
+		BeliefSet<String, Clear> clearBelief = (BeliefSet<String, Clear>) beliefBase
 				.getBelief(BlocksWorldCapability.BELIEF_CLEAR);
 
 		List<Thing> tops = new ArrayList<>(2);
@@ -111,7 +122,7 @@ public class BlocksWorldView extends JPanel implements BeliefListener {
 	}
 
 	private Thing getNext(Thing thing) {
-		BeliefSet<On> onBelief = (BeliefSet<On>) beliefBase
+		BeliefSet<String, On> onBelief = (BeliefSet<String, On>) beliefBase
 				.getBelief(BlocksWorldCapability.BELIEF_ON);
 		for (On on : onBelief.getValue()) {
 			if (on.getThing1().equals(thing))
@@ -127,17 +138,6 @@ public class BlocksWorldView extends JPanel implements BeliefListener {
 			thing = getNext(thing);
 		}
 		return s.toString();
-	}
-
-	@Override
-	public void eventOccurred(BeliefEvent beliefEvent) {
-		log.debug(beliefEvent);
-		if (Action.BELIEF_SET_VALUE_REMOVED.equals(beliefEvent.getAction()))
-			return;
-
-		// Ignore inconsistent states
-		updateText(generateStateText());
-		repaint();
 	}
 
 	private void updateText(final State state) {

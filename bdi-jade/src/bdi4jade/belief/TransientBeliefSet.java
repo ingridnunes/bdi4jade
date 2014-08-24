@@ -36,12 +36,11 @@ import java.util.Set;
  * @param <T>
  *            the type of the belief set values.
  */
-public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
-		BeliefSet<T> {
+public class TransientBeliefSet<K, V> extends AbstractBeliefSet<K, V> {
 
 	private static final long serialVersionUID = 8345025506647930L;
 
-	private Set<T> value;
+	private Set<V> value;
 
 	/**
 	 * The default constructor. It should be only used if persistence frameworks
@@ -57,8 +56,8 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @param name
 	 *            the name of this belief set.
 	 */
-	public TransientBeliefSet(String name) {
-		super(name, new HashSet<T>());
+	public TransientBeliefSet(K name) {
+		super(name, new HashSet<V>());
 	}
 
 	/**
@@ -69,7 +68,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @param values
 	 *            the initial values of this belief set.
 	 */
-	public TransientBeliefSet(String name, Set<T> values) {
+	public TransientBeliefSet(K name, Set<V> values) {
 		super(name, values);
 	}
 
@@ -77,7 +76,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @see bdi4jade.belief.AbstractBeliefSet#addSetValue(Object)
 	 */
 	@Override
-	protected void addSetValue(T value) {
+	protected void addSetValue(V value) {
 		this.value.add(value);
 	}
 
@@ -85,7 +84,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @see bdi4jade.belief.Belief#getValue()
 	 */
 	@Override
-	public Set<T> getValue() {
+	public Set<V> getValue() {
 		return value;
 	}
 
@@ -93,7 +92,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @see bdi4jade.belief.BeliefSet#hasValue(java.lang.Object)
 	 */
 	@Override
-	public boolean hasValue(T value) {
+	public boolean hasValue(V value) {
 		return this.value.contains(value);
 	}
 
@@ -101,7 +100,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @see bdi4jade.belief.BeliefSet#iterator()
 	 */
 	@Override
-	public Iterator<T> iterator() {
+	public Iterator<V> iterator() {
 		return this.value.iterator();
 	}
 
@@ -109,7 +108,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @see bdi4jade.belief.AbstractBeliefSet#removeSetValue(Object)
 	 */
 	@Override
-	protected boolean removeSetValue(T value) {
+	protected boolean removeSetValue(V value) {
 		return this.value.remove(value);
 	}
 
@@ -117,7 +116,7 @@ public class TransientBeliefSet<T> extends AbstractBeliefSet<T> implements
 	 * @see bdi4jade.belief.AbstractBelief#updateValue(java.lang.Object)
 	 */
 	@Override
-	protected void updateValue(Set<T> value) {
+	protected void updateValue(Set<V> value) {
 		this.value = value;
 	}
 

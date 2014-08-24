@@ -20,34 +20,19 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.annotation;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import bdi4jade.core.Capability;
+package bdi4jade.belief;
 
 /**
- * This annotation allows to specify that an attribute of a {@link Capability}
- * is a belief value that should be added to the capability belief base, whose
- * key is a string. A name for the belief may be given, if it is a string. If it
- * is not provided, the field name is used.
+ * This interface represents a belief that is a propositional logic statement.
+ * The information is represented as an object of type K, which has a boolean
+ * value to indicate if the formula is true or false. Null may represents the
+ * absence of knowledge if the formula is true or false.
+ * 
+ * @param <T>
+ *            the type of the propositional statement.
  * 
  * @author Ingrid Nunes
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface TransientBelief {
-
-	/**
-	 * Returns the belief name.
-	 * 
-	 * @return the belief name.
-	 */
-	String name() default "";
+public interface PropositionalBelief<K> extends Belief<K, Boolean> {
 
 }

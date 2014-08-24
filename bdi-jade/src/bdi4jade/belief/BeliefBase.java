@@ -49,7 +49,8 @@ public class BeliefBase implements Serializable {
 	private static final long serialVersionUID = -6411530721625492882L;
 
 	private final Set<BeliefListener> beliefListeners;
-	private final Map<String, Belief<?>> beliefs;
+	private final Map<Object, Belief<?, ?>> beliefs;
+	private final Map<Class<?>, Set<Belief<?, ?>>> beliefsByType;
 	private Capability capability;
 
 	/**
@@ -57,8 +58,9 @@ public class BeliefBase implements Serializable {
 	 * are used.
 	 */
 	protected BeliefBase() {
-		this.beliefListeners = new HashSet<BeliefListener>();
-		this.beliefs = new HashMap<String, Belief<?>>();
+		this.beliefListeners = new HashSet<>();
+		this.beliefs = new HashMap<>();
+		this.beliefsByType = new HashMap<>();
 	}
 
 	/**
@@ -80,16 +82,17 @@ public class BeliefBase implements Serializable {
 	 * @param beliefs
 	 *            the initial beliefs.
 	 */
-	public BeliefBase(final Capability capability, Set<Belief<?>> beliefs) {
+	public BeliefBase(final Capability capability, Set<Belief<?, ?>> beliefs) {
 		if (capability == null)
 			throw new NullPointerException("Capability must be not null.");
 
 		this.capability = capability;
-		this.beliefListeners = new HashSet<BeliefListener>();
-		this.beliefs = new HashMap<String, Belief<?>>();
+		this.beliefListeners = new HashSet<>();
+		this.beliefs = new HashMap<>();
+		this.beliefsByType = new HashMap<>();
 		if (beliefs != null) {
-			for (Belief<?> belief : beliefs) {
-				this.beliefs.put(belief.getName(), belief);
+			for (Belief<?, ?> belief : beliefs) {
+				putBelief(belief);
 			}
 		}
 	}
@@ -100,10 +103,10 @@ public class BeliefBase implements Serializable {
 	 * @param belief
 	 *            the belief to be added.
 	 */
-	public void addBelief(Belief<?> belief) {
+	public void addBelief(Belief<?, ?> belief) {
 		if (!hasBelief(belief.getName())) {
 			belief.addBeliefBase(this);
-			this.beliefs.put(belief.getName(), belief);
+			putBelief(belief);
 			notifyBeliefChanged(new BeliefEvent(belief, Action.BELIEF_ADDED));
 		} else {
 			throw new BeliefAlreadyExistsException(belief);
@@ -127,7 +130,7 @@ public class BeliefBase implements Serializable {
 	 * @param belief
 	 *            the belief to be added or updated.
 	 */
-	public void addOrUpdateBelief(Belief<?> belief) {
+	public void addOrUpdateBelief(Belief<?, ?> belief) {
 		if (hasBelief(belief.getName())) {
 			updateBelief(belief.getName(), belief.getValue());
 		} else {
@@ -141,8 +144,8 @@ public class BeliefBase implements Serializable {
 	 * 
 	 * @return the beliefs of this capability and all of its whole-capabilities.
 	 */
-	public Collection<Belief<?>> getAllBeliefs() {
-		Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
+	public Collection<Belief<?, ?>> getAllBeliefs() {
+		Collection<Belief<?, ?>> beliefs = new LinkedList<>();
 		getAllBeliefs(beliefs);
 		return beliefs;
 	}
@@ -154,11 +157,69 @@ public class BeliefBase implements Serializable {
 	 * @param beliefs
 	 *            the set to which beliefs are added.
 	 */
-	private void getAllBeliefs(final Collection<Belief<?>> beliefs) {
+	private void getAllBeliefs(final Collection<Belief<?, ?>> beliefs) {
 		beliefs.addAll(this.beliefs.values());
 		if (capability.getWholeCapability() != null) {
 			capability.getWholeCapability().getBeliefBase()
 					.getAllBeliefs(beliefs);
+		}
+	}
+
+	/**
+	 * Returns all beliefs whose name is of the given class or any other class
+	 * that is assignable to this class. It also searches beliefs in belief
+	 * bases of whole capabilities.
+	 * 
+	 * @param beliefNameType
+	 *            the class of the name of beliefs.
+	 * @return the set of beliefs assignable from the given class.
+	 */
+	public Set<Belief<?, ?>> getAllBeliefsAssignableFrom(Class<?> beliefNameType) {
+		Set<Belief<?, ?>> beliefs = new HashSet<>();
+		getAllBeliefsAssignableFrom(beliefNameType, beliefs);
+		return beliefs;
+	}
+
+	private void getAllBeliefsAssignableFrom(Class<?> beliefNameType,
+			Collection<Belief<?, ?>> beliefs) {
+		for (Class<?> beliefSupertype : beliefsByType.keySet()) {
+			if (beliefSupertype.isAssignableFrom(beliefNameType)) {
+				Set<Belief<?, ?>> beliefsOfType = beliefsByType
+						.get(beliefSupertype);
+				beliefs.addAll(beliefsOfType);
+			}
+		}
+
+		if (capability.getWholeCapability() != null) {
+			capability.getWholeCapability().getBeliefBase()
+					.getAllBeliefsAssignableFrom(beliefNameType, beliefs);
+		}
+	}
+
+	/**
+	 * Returns all beliefs whose name is of the given class. It also searches
+	 * beliefs in belief bases of whole capabilities.
+	 * 
+	 * @param beliefNameType
+	 *            the class of the name of beliefs.
+	 * @return the set of beliefs of the given class.
+	 */
+	public Set<Belief<?, ?>> getAllBeliefsByType(Class<?> beliefNameType) {
+		Set<Belief<?, ?>> beliefs = new HashSet<>();
+		getAllBeliefsByType(beliefNameType, beliefs);
+		return beliefs;
+	}
+
+	private void getAllBeliefsByType(Class<?> beliefNameType,
+			Collection<Belief<?, ?>> beliefs) {
+		Set<Belief<?, ?>> beliefsOfType = beliefsByType.get(beliefNameType);
+		if (beliefsOfType != null) {
+			beliefs.addAll(beliefsOfType);
+		}
+
+		if (capability.getWholeCapability() != null) {
+			capability.getWholeCapability().getBeliefBase()
+					.getAllBeliefsByType(beliefNameType, beliefs);
 		}
 	}
 
@@ -171,8 +232,8 @@ public class BeliefBase implements Serializable {
 	 *            the name of the belief to be retrieved.
 	 * @return the belief, or null if no belief is found.
 	 */
-	public Belief<?> getBelief(String name) {
-		Belief<?> belief = this.beliefs.get(name);
+	public Belief<?, ?> getBelief(Object name) {
+		Belief<?, ?> belief = this.beliefs.get(name);
 		if (belief == null && capability.getWholeCapability() != null) {
 			belief = capability.getWholeCapability().getBeliefBase()
 					.getBelief(name);
@@ -186,7 +247,7 @@ public class BeliefBase implements Serializable {
 	 * @return the belief listeners.
 	 */
 	public Set<BeliefListener> getBeliefListeners() {
-		return new HashSet<BeliefListener>(beliefListeners);
+		return new HashSet<>(beliefListeners);
 	}
 
 	/**
@@ -194,8 +255,44 @@ public class BeliefBase implements Serializable {
 	 * 
 	 * @return the beliefs
 	 */
-	public Set<Belief<?>> getBeliefs() {
-		return new HashSet<Belief<?>>(beliefs.values());
+	public Set<Belief<?, ?>> getBeliefs() {
+		return new HashSet<>(beliefs.values());
+	}
+
+	/**
+	 * Returns all beliefs whose name is of the given class or any other class
+	 * that is assignable to this class.
+	 * 
+	 * @param beliefNameType
+	 *            the class of the name of beliefs.
+	 * @return the set of beliefs assignable from the given class.
+	 */
+	public Set<Belief<?, ?>> getBeliefsAssignableFrom(Class<?> beliefNameType) {
+		Set<Belief<?, ?>> beliefs = new HashSet<>();
+		for (Class<?> beliefsubtype : beliefsByType.keySet()) {
+			if (beliefNameType.isAssignableFrom(beliefsubtype)) {
+				Set<Belief<?, ?>> beliefsOfType = beliefsByType
+						.get(beliefsubtype);
+				beliefs.addAll(beliefsOfType);
+			}
+		}
+		return beliefs;
+	}
+
+	/**
+	 * Returns all beliefs whose name is of the given class.
+	 * 
+	 * @param beliefNameType
+	 *            the class of the name of beliefs.
+	 * @return the set of beliefs of the given class.
+	 */
+	public Set<Belief<?, ?>> getBeliefsByType(Class<?> beliefNameType) {
+		Set<Belief<?, ?>> beliefs = new HashSet<>();
+		Set<Belief<?, ?>> beliefsOfType = beliefsByType.get(beliefNameType);
+		if (beliefsOfType != null) {
+			beliefs.addAll(beliefsOfType);
+		}
+		return beliefs;
 	}
 
 	/**
@@ -204,8 +301,8 @@ public class BeliefBase implements Serializable {
 	 * @return the beliefValues
 	 */
 	public List<Object> getBeliefValues() {
-		List<Object> beliefValues = new ArrayList<Object>(beliefs.size());
-		for (Belief<?> belief : beliefs.values())
+		List<Object> beliefValues = new ArrayList<>(beliefs.size());
+		for (Belief<?, ?> belief : beliefs.values())
 			beliefValues.add(belief.getValue());
 		return beliefValues;
 	}
@@ -228,7 +325,7 @@ public class BeliefBase implements Serializable {
 	 *            the belief to be checked
 	 * @return true if the belief base contains the belief.
 	 */
-	public boolean hasBelief(String name) {
+	public boolean hasBelief(Object name) {
 		boolean hasBelief = this.beliefs.containsKey(name);
 		if (!hasBelief && capability.getWholeCapability() != null) {
 			hasBelief = capability.getWholeCapability().getBeliefBase()
@@ -254,6 +351,17 @@ public class BeliefBase implements Serializable {
 		}
 	}
 
+	private void putBelief(Belief<?, ?> belief) {
+		Class<?> beliefNameType = belief.getName().getClass();
+		Set<Belief<?, ?>> beliefTypeSet = beliefsByType.get(beliefNameType);
+		if (beliefTypeSet == null) {
+			beliefTypeSet = new HashSet<>();
+			beliefsByType.put(beliefNameType, beliefTypeSet);
+		}
+		beliefTypeSet.add(belief);
+		this.beliefs.put(belief.getName(), belief);
+	}
+
 	/**
 	 * Removes a belief from the belief base. If this belief base does not
 	 * contain it, the method checks whole-capabilities' belief base recursively
@@ -264,9 +372,15 @@ public class BeliefBase implements Serializable {
 	 * @return the belief was removed, null if it is not part of the belief
 	 *         base.
 	 */
-	public Belief<?> removeBelief(String name) {
-		Belief<?> belief = this.beliefs.remove(name);
+	public Belief<?, ?> removeBelief(Object name) {
+		Belief<?, ?> belief = this.beliefs.remove(name);
 		if (belief != null) {
+			Class<?> beliefNameType = belief.getName().getClass();
+			Set<Belief<?, ?>> beliefTypeSet = beliefsByType.get(beliefNameType);
+			assert beliefTypeSet.remove(belief);
+			if (beliefTypeSet.isEmpty()) {
+				beliefsByType.remove(beliefNameType);
+			}
 			belief.removeBeliefBase(this);
 			notifyBeliefChanged(new BeliefEvent(belief, Action.BELIEF_REMOVED));
 		} else {
@@ -342,7 +456,7 @@ public class BeliefBase implements Serializable {
 	 * @return true if the belief was updated.
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean updateBelief(String name, Object value) {
+	public boolean updateBelief(Object name, Object value) {
 		Belief belief = this.beliefs.get(name);
 		if (belief != null) {
 			belief.setValue(value);

@@ -488,9 +488,9 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 * @see bdi4jade.core.BDIAgent#getBeliefs()
 	 */
 	@Override
-	public final Collection<Belief<?>> getBeliefs() {
+	public final Collection<Belief<?, ?>> getBeliefs() {
 		synchronized (aggregatedCapabilities) {
-			Collection<Belief<?>> beliefs = new LinkedList<Belief<?>>();
+			Collection<Belief<?, ?>> beliefs = new LinkedList<>();
 			for (Capability capability : capabilities) {
 				beliefs.addAll(capability.getBeliefBase().getBeliefs());
 			}

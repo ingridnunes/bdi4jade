@@ -92,7 +92,8 @@ public class BlocksWorldCapability extends Capability {
 			AchieveOnPlanBody.class);
 
 	@Belief
-	private BeliefSet<Clear> clear = new TransientBeliefSet<>(BELIEF_CLEAR);
+	private BeliefSet<String, Clear> clear = new TransientBeliefSet<>(
+			BELIEF_CLEAR);
 
 	@Plan
 	private bdi4jade.plan.Plan clearPlan = new DefaultPlan(
@@ -100,7 +101,7 @@ public class BlocksWorldCapability extends Capability {
 			ClearPlanBody.class);
 
 	@Belief
-	private BeliefSet<On> on = new TransientBeliefSet<>(BELIEF_ON);
+	private BeliefSet<String, On> on = new TransientBeliefSet<>(BELIEF_ON);
 
 	@Plan
 	private bdi4jade.plan.Plan performMovePlan;

@@ -54,12 +54,12 @@ public class AchieveOnPlanBody extends BeliefGoalPlanBody {
 	public void execute() {
 		switch (step) {
 		case CLEAR_1:
-			dispatchSubgoalAndListen(new BeliefSetValueGoal<Clear>(
+			dispatchSubgoalAndListen(new BeliefSetValueGoal<String, Clear>(
 					BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing1)));
 			step = Step.CLEAR_2;
 		case CLEAR_2:
 			if (isSubgoalAchieved()) {
-				dispatchSubgoalAndListen(new BeliefSetValueGoal<Clear>(
+				dispatchSubgoalAndListen(new BeliefSetValueGoal<String, Clear>(
 						BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing2)));
 				step = Step.PERFORM_MOVE;
 			}

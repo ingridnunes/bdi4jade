@@ -32,11 +32,11 @@ import bdi4jade.belief.BeliefBase;
  * 
  * @author Ingrid Nunes
  */
-public class BeliefGoal implements Goal {
+public class BeliefGoal<K> implements Goal {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
-	private String beliefName;
+	private K beliefName;
 
 	/**
 	 * Creates a new BeliefGoal with the provided belief name.
@@ -44,7 +44,7 @@ public class BeliefGoal implements Goal {
 	 * @param beliefName
 	 *            the belief name.
 	 */
-	public BeliefGoal(String beliefName) {
+	public BeliefGoal(K beliefName) {
 		this.beliefName = beliefName;
 	}
 
@@ -54,7 +54,7 @@ public class BeliefGoal implements Goal {
 	 * @return the belief name.
 	 */
 	@Parameter(direction = Direction.IN)
-	public String getBeliefName() {
+	public K getBeliefName() {
 		return beliefName;
 	}
 

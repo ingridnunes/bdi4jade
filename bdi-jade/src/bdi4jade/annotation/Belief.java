@@ -47,9 +47,9 @@ import bdi4jade.plan.planbody.PlanBody;
 public @interface Belief {
 
 	/**
-	 * Returns the name of the belief to be retrieved from the belief base, in
-	 * case this annotation is used in a {@link PlanBody}. If no name is
-	 * provided, the attribute name is used.
+	 * Returns the name of the belief, if it is a string, to be retrieved from
+	 * the belief base, in case this annotation is used in a {@link PlanBody}.
+	 * If no name is provided, the attribute name is used.
 	 * 
 	 * @return the belief name.
 	 */

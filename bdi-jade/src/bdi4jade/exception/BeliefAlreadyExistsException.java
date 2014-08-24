@@ -34,7 +34,7 @@ public class BeliefAlreadyExistsException extends RuntimeException {
 
 	private static final long serialVersionUID = -6082968354395705561L;
 
-	private Belief<?> belief;
+	private Belief<?, ?> belief;
 
 	/**
 	 * Creates a new instance of BeliefAlreadyExistsException.
@@ -42,14 +42,14 @@ public class BeliefAlreadyExistsException extends RuntimeException {
 	 * @param belief
 	 *            the belief that already exists.
 	 */
-	public BeliefAlreadyExistsException(Belief<?> belief) {
+	public BeliefAlreadyExistsException(Belief<?, ?> belief) {
 		this.belief = belief;
 	}
 
 	/**
 	 * @return the belief
 	 */
-	public Belief<?> getBelief() {
+	public Belief<?, ?> getBelief() {
 		return belief;
 	}
 

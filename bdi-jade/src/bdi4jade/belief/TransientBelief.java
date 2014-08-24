@@ -31,11 +31,11 @@ package bdi4jade.belief;
  * @param <T>
  *            the type of the belief value.
  */
-public class TransientBelief<T> extends AbstractBelief<T> {
+public class TransientBelief<K, V> extends AbstractBelief<K, V> {
 
 	private static final long serialVersionUID = 2893517209462636003L;
 
-	protected T value;
+	protected V value;
 
 	/**
 	 * The default constructor. It should be only used if persistence frameworks
@@ -51,7 +51,7 @@ public class TransientBelief<T> extends AbstractBelief<T> {
 	 * @param name
 	 *            the belief name.
 	 */
-	public TransientBelief(String name) {
+	public TransientBelief(K name) {
 		super(name);
 	}
 
@@ -63,7 +63,7 @@ public class TransientBelief<T> extends AbstractBelief<T> {
 	 * @param value
 	 *            the initial belief value.
 	 */
-	public TransientBelief(String name, T value) {
+	public TransientBelief(K name, V value) {
 		super(name);
 		this.value = value;
 	}
@@ -72,7 +72,7 @@ public class TransientBelief<T> extends AbstractBelief<T> {
 	 * @see bdi4jade.belief.Belief#getValue()
 	 */
 	@Override
-	public T getValue() {
+	public V getValue() {
 		return this.value;
 	}
 
@@ -80,7 +80,7 @@ public class TransientBelief<T> extends AbstractBelief<T> {
 	 * @see bdi4jade.belief.AbstractBelief#updateValue(java.lang.Object)
 	 */
 	@Override
-	protected void updateValue(T value) {
+	protected void updateValue(V value) {
 		this.value = value;
 	}
 

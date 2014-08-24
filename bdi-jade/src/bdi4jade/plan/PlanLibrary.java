@@ -42,7 +42,6 @@ import bdi4jade.plan.planbody.SequentialGoalPlanBody;
  * 
  * @author Ingrid Nunes
  */
-// TODO Future: PlanLibrary - create indexes to optimize plan matches
 public class PlanLibrary implements Serializable {
 
 	private static final long serialVersionUID = 3038533629659859857L;

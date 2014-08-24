@@ -40,11 +40,11 @@ public abstract class GoalTemplateFactory {
 	 * @return the goal template that checks if the goal is a {@link BeliefGoal}
 	 *         with the given name.
 	 */
-	public static GoalTemplate beliefGoal(final String beliefName) {
+	public static GoalTemplate beliefGoal(final Object beliefName) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefGoal) {
-					BeliefGoal bg = (BeliefGoal) goal;
+					BeliefGoal<?> bg = (BeliefGoal<?>) goal;
 					return bg.getBeliefName().equals(beliefName);
 				}
 				return false;
@@ -69,12 +69,12 @@ public abstract class GoalTemplateFactory {
 	 *         {@link BeliefSetValueGoal} with the given name and value of the
 	 *         given type.
 	 */
-	public static GoalTemplate beliefSetTypeGoal(final String beliefName,
+	public static GoalTemplate beliefSetTypeGoal(final Object beliefName,
 			final Class<?> beliefValueClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefSetValueGoal) {
-					BeliefSetValueGoal<?> bg = (BeliefSetValueGoal<?>) goal;
+					BeliefSetValueGoal<?, ?> bg = (BeliefSetValueGoal<?, ?>) goal;
 					return bg.getBeliefName().equals(beliefName)
 							&& beliefValueClass.isInstance(bg.getValue());
 				}
@@ -100,12 +100,12 @@ public abstract class GoalTemplateFactory {
 	 * @return the goal template that checks if the goal is a
 	 *         {@link BeliefSetValueGoal} with the given name and value.
 	 */
-	public static GoalTemplate beliefSetValueGoal(final String beliefName,
+	public static GoalTemplate beliefSetValueGoal(final Object beliefName,
 			final Object beliefValue) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefSetValueGoal) {
-					BeliefSetValueGoal<?> bg = (BeliefSetValueGoal<?>) goal;
+					BeliefSetValueGoal<?, ?> bg = (BeliefSetValueGoal<?, ?>) goal;
 					return bg.getBeliefName().equals(beliefName)
 							&& beliefValue.equals(bg.getValue());
 				}
@@ -131,12 +131,12 @@ public abstract class GoalTemplateFactory {
 	 *         {@link BeliefValueGoal} with the given name and value of the
 	 *         given type.
 	 */
-	public static GoalTemplate beliefTypeGoal(final String beliefName,
+	public static GoalTemplate beliefTypeGoal(final Object beliefName,
 			final Class<?> beliefValueClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
-					BeliefValueGoal<?> bg = (BeliefValueGoal<?>) goal;
+					BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) goal;
 					return bg.getBeliefName().equals(beliefName)
 							&& beliefValueClass.isInstance(bg.getValue());
 				}
@@ -167,7 +167,7 @@ public abstract class GoalTemplateFactory {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
-					BeliefValueGoal<?> bg = (BeliefValueGoal<?>) goal;
+					BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) goal;
 					return bg.getBeliefName().equals(beliefName)
 							&& beliefValue.equals(bg.getValue());
 				}
@@ -210,11 +210,11 @@ public abstract class GoalTemplateFactory {
 	 * @return the goal template that checks if the goal is a
 	 *         {@link BeliefValueGoal} with the given name and null value.
 	 */
-	public static GoalTemplate nullBeliefValueGoal(final String beliefName) {
+	public static GoalTemplate nullBeliefValueGoal(final Object beliefName) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
-					BeliefValueGoal<?> bg = (BeliefValueGoal<?>) goal;
+					BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) goal;
 					return bg.getBeliefName().equals(beliefName)
 							&& bg.getValue() == null;
 				}

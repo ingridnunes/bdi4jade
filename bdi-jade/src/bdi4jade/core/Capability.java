@@ -105,7 +105,7 @@ public class Capability implements Serializable {
 	 *            the initial set of plans to be added to the plan library of
 	 *            this capability.
 	 */
-	public Capability(Set<Belief<?>> initialBeliefs, Set<Plan> initialPlans) {
+	public Capability(Set<Belief<?, ?>> initialBeliefs, Set<Plan> initialPlans) {
 		this(null, null, initialBeliefs, null, initialPlans);
 	}
 
@@ -141,7 +141,7 @@ public class Capability implements Serializable {
 	 *            this capability.
 	 */
 	protected Capability(String id, BeliefBase beliefBase,
-			Set<Belief<?>> initialBeliefs, PlanLibrary planLibrary,
+			Set<Belief<?, ?>> initialBeliefs, PlanLibrary planLibrary,
 			Set<Plan> initialPlans) {
 		this.log = LogFactory.getLog(getClass());
 		this.intentions = new LinkedList<>();
@@ -198,7 +198,7 @@ public class Capability implements Serializable {
 	 *            the initial set of plans to be added to the plan library of
 	 *            this capability.
 	 */
-	public Capability(String id, Set<Belief<?>> initialBeliefs,
+	public Capability(String id, Set<Belief<?, ?>> initialBeliefs,
 			Set<Plan> initialPlans) {
 		this(id, null, initialBeliefs, null, initialPlans);
 	}
@@ -220,7 +220,7 @@ public class Capability implements Serializable {
 			try {
 				if (field.isAnnotationPresent(bdi4jade.annotation.Belief.class)) {
 					if (Belief.class.isAssignableFrom(field.getType())) {
-						Belief<?> belief = (Belief<?>) field.get(this);
+						Belief<?, ?> belief = (Belief<?, ?>) field.get(this);
 						this.getBeliefBase().addBelief(belief);
 					} else {
 						throw new ClassCastException("Field " + field.getName()

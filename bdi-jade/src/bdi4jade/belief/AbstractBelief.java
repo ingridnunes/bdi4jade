@@ -37,25 +37,28 @@ import bdi4jade.event.BeliefEvent.Action;
  * It is class observable by belief bases ({@link BeliefBase}), allowing the
  * observation on changes in the value of this belief.
  * 
- * @author Ingrid Nunes
+ * @param <K>
+ *            the type of the belief name or key.
  * 
- * @param <T>
+ * @param <V>
  *            the type of the belief value.
+ * 
+ * @author Ingrid Nunes
  */
-public abstract class AbstractBelief<T> extends MetadataElementImpl implements
-		Belief<T> {
+public abstract class AbstractBelief<K, V> extends MetadataElementImpl
+		implements Belief<K, V> {
 
 	private static final long serialVersionUID = 5098122115249071355L;
 
 	private final Set<BeliefBase> beliefBases;
-	private String name;
+	private K name;
 
 	/**
 	 * The default constructor. It should be only used if persistence frameworks
 	 * are used.
 	 */
 	protected AbstractBelief() {
-		this.beliefBases = new HashSet<BeliefBase>();
+		this.beliefBases = new HashSet<>();
 	}
 
 	/**
@@ -64,7 +67,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 * @param name
 	 *            the belief name.
 	 */
-	public AbstractBelief(String name) {
+	public AbstractBelief(K name) {
 		if (name == null)
 			throw new NullPointerException("Belief name must be not null.");
 		this.name = name;
@@ -79,7 +82,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 * @param value
 	 *            the belief initial value.
 	 */
-	public AbstractBelief(String name, T value) {
+	public AbstractBelief(K name, V value) {
 		this(name);
 		updateValue(value);
 	}
@@ -102,8 +105,8 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 */
 	@Override
 	public final boolean equals(Object obj) {
-		if (obj instanceof Belief<?>) {
-			Belief<?> b = (Belief<?>) obj;
+		if (obj instanceof Belief<?, ?>) {
+			Belief<?, ?> b = (Belief<?, ?>) obj;
 			return this.name.equals(b.getName());
 		}
 		return false;
@@ -119,7 +122,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	/**
 	 * @see Belief#getName()
 	 */
-	public final String getName() {
+	public final K getName() {
 		return name;
 	}
 
@@ -164,7 +167,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 * @param name
 	 *            the name to set.
 	 */
-	protected void setName(String name) {
+	protected void setName(K name) {
 		this.name = name;
 	}
 
@@ -177,7 +180,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 * 
 	 * @see Belief#setValue(Object)
 	 */
-	public final void setValue(T value) {
+	public final void setValue(V value) {
 		Object oldValue = getValue();
 		updateValue(value);
 		notifyBeliefBases(new BeliefEvent(this, Action.BELIEF_UPDATED, oldValue));
@@ -193,7 +196,7 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 */
 	@Override
 	public String toString() {
-		return new StringBuffer(name).append(" = ").append(getValue())
+		return new StringBuffer().append(name).append(" = ").append(getValue())
 				.toString();
 	}
 
@@ -204,6 +207,6 @@ public abstract class AbstractBelief<T> extends MetadataElementImpl implements
 	 * @param value
 	 *            the value to set.
 	 */
-	protected abstract void updateValue(T value);
+	protected abstract void updateValue(V value);
 
 }

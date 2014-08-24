@@ -33,9 +33,10 @@ import bdi4jade.core.Capability;
 
 /**
  * This annotation allows to specify that an attribute of a {@link Capability}
- * is a belief set value that should be added to the capability belief base. A
- * name for the belief may be given. If it is not provided, the field name is
- * used. The annotated field should be of the type {@link Set}.
+ * is a belief set value that should be added to the capability belief base,
+ * whose key is a string. A name for the belief may be given, if it is a string.
+ * If it is not provided, the field name is used. The annotated field should be
+ * of the type {@link Set} .
  * 
  * @author Ingrid Nunes
  */

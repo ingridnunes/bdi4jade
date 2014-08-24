@@ -41,18 +41,18 @@ public class TestPlanBody extends AbstractPlanBody {
 	private static final long serialVersionUID = -9039447524062487795L;
 
 	@bdi4jade.annotation.Belief
-	private Belief<String> bottomBelief;
+	private Belief<String, String> bottomBelief;
 	@bdi4jade.annotation.Belief
-	private Belief<String> middle1Belief;
+	private Belief<String, String> middle1Belief;
 	@bdi4jade.annotation.Belief
-	private Belief<String> middle1ParentBelief;
+	private Belief<String, String> middle1ParentBelief;
 	@bdi4jade.annotation.Belief
-	private Belief<String> middle2Belief;
+	private Belief<String, String> middle2Belief;
 	private TestStep step;
 	@bdi4jade.annotation.Belief
-	private Belief<String> topBelief;
+	private Belief<String, String> topBelief;
 	@bdi4jade.annotation.Belief
-	private Belief<String> topParentBelief;
+	private Belief<String, String> topParentBelief;
 
 	public void action() {
 		switch (step) {

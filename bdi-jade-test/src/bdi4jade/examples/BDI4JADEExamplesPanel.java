@@ -86,7 +86,7 @@ public class BDI4JADEExamplesPanel extends JPanel {
 			target.add(new On(Thing.BLOCK_2, Thing.BLOCK_3));
 			target.add(new On(Thing.BLOCK_1, Thing.BLOCK_2));
 
-			blocksWorldAgent.addGoal(new BeliefValueGoal<Set<On>>(
+			blocksWorldAgent.addGoal(new BeliefValueGoal<String, Set<On>>(
 					BlocksWorldCapability.BELIEF_ON, target), this);
 		}
 

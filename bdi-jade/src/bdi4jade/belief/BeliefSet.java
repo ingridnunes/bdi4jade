@@ -29,12 +29,15 @@ import java.util.Set;
  * This interface represents a belief that has a set of values associated with
  * it.
  * 
- * @author Ingrid Nunes
+ * @param <K>
+ *            the type of the belief name or key.
  * 
- * @param <T>
+ * @param <V>
  *            the type of the belief set values.
+ * 
+ * @author Ingrid Nunes
  */
-public interface BeliefSet<T> extends Belief<Set<T>> {
+public interface BeliefSet<K, V> extends Belief<K, Set<V>> {
 
 	/**
 	 * Adds a new value to this belief set.
@@ -42,7 +45,7 @@ public interface BeliefSet<T> extends Belief<Set<T>> {
 	 * @param value
 	 *            the value to be added.
 	 */
-	public void addValue(T value);
+	public void addValue(V value);
 
 	/**
 	 * Checks whether this belief set has the provided value.
@@ -51,14 +54,14 @@ public interface BeliefSet<T> extends Belief<Set<T>> {
 	 *            the value to be checked.
 	 * @return true if the belief set contains this value, false otherwise.
 	 */
-	public boolean hasValue(T value);
+	public boolean hasValue(V value);
 
 	/**
 	 * Returns an iterator for this belief set.
 	 * 
 	 * @return the iterator to iterate the values of the belief set.
 	 */
-	public Iterator<T> iterator();
+	public Iterator<V> iterator();
 
 	/**
 	 * Removes a value from this belief set.
@@ -67,6 +70,6 @@ public interface BeliefSet<T> extends Belief<Set<T>> {
 	 *            the value to be removed.
 	 * @return true if the value was removed, false otherwise.
 	 */
-	public boolean removeValue(T value);
+	public boolean removeValue(V value);
 
 }

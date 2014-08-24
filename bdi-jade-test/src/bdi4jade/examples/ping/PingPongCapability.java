@@ -36,21 +36,21 @@ import bdi4jade.plan.Plan;
  */
 public class PingPongCapability extends Capability {
 
-	private static final long serialVersionUID = -4800805796961540570L;
-
 	@GoalOwner(capability = PingPongCapability.class)
 	public static class PingGoal implements Goal {
 		private static final long serialVersionUID = -7733145369836002329L;
 	}
 
-	@bdi4jade.annotation.Belief
-	Belief<String> neighbour;
+	private static final long serialVersionUID = -4800805796961540570L;
 
 	@bdi4jade.annotation.Belief
-	Belief<Integer> pingTimes;
+	Belief<String, String> neighbour;
 
 	@bdi4jade.annotation.Plan
 	private Plan pingPlan = new DefaultPlan(PingGoal.class, PingPlanBody.class);
+
+	@bdi4jade.annotation.Belief
+	Belief<String, Integer> pingTimes;
 
 	@bdi4jade.annotation.Plan
 	private Plan pongPlan = new DefaultPlan(
@@ -58,8 +58,10 @@ public class PingPongCapability extends Capability {
 			PongPlanBody.class);
 
 	public PingPongCapability(String neighbour, int pingTimes) {
-		this.neighbour = new TransientBelief<String>("neighbour", neighbour);
-		this.pingTimes = new TransientBelief<Integer>("pingTimes", pingTimes);
+		this.neighbour = new TransientBelief<String, String>("neighbour",
+				neighbour);
+		this.pingTimes = new TransientBelief<String, Integer>("pingTimes",
+				pingTimes);
 	}
 
 }

@@ -45,7 +45,7 @@ public class ClearPlanBody extends BeliefGoalPlanBody {
 
 	private boolean goalDispatched;
 	@Belief
-	private BeliefSet<On> on;
+	private BeliefSet<String, On> on;
 	private Thing thing;
 
 	@Override
@@ -54,7 +54,7 @@ public class ClearPlanBody extends BeliefGoalPlanBody {
 			for (int i = 0; i < Thing.THINGS.length; i++) {
 				Thing t = Thing.THINGS[i];
 				if (on.hasValue(new On(t, thing))) {
-					dispatchSubgoalAndListen(new BeliefSetValueGoal<On>(
+					dispatchSubgoalAndListen(new BeliefSetValueGoal<String, On>(
 							BlocksWorldCapability.BELIEF_ON, new On(t,
 									Thing.TABLE)));
 					this.goalDispatched = true;

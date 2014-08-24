@@ -30,18 +30,24 @@ import java.util.Set;
 import bdi4jade.core.MetadataElement;
 
 /**
- * This interface represents a belief of the belief base. It has a name and a
- * value associate with it. It is parameterized by the type of the belief value.
+ * This interface represents a belief of the belief base. It has a name (or a
+ * key) and a value associate with it. It is parameterized by the types of the
+ * name/key and value. For example, a name may be an object representing a
+ * propositional formula, and the value is a boolean indicating whether the
+ * formula is true or false.
  * 
  * It extends the {@link MetadataElement} interface, allowing to associate
  * metadata with beliefs.
  * 
- * @param <T>
+ * @param <K>
+ *            the type of the belief name or key.
+ * 
+ * @param <V>
  *            the type of the belief value.
  * 
  * @author Ingrid Nunes
  */
-public interface Belief<T> extends MetadataElement, Serializable, Concept {
+public interface Belief<K, V> extends MetadataElement, Serializable, Concept {
 
 	/**
 	 * Adds a belief base that contains this belief. The agent whose capability
@@ -64,14 +70,14 @@ public interface Belief<T> extends MetadataElement, Serializable, Concept {
 	 * 
 	 * @return the string that is the belief name.
 	 */
-	public String getName();
+	public K getName();
 
 	/**
 	 * Gets the current value of the belief.
 	 * 
 	 * @return the belief value.
 	 */
-	public T getValue();
+	public V getValue();
 
 	/**
 	 * Removes a belief base that does not contain this belief anymore. The
@@ -89,6 +95,6 @@ public interface Belief<T> extends MetadataElement, Serializable, Concept {
 	 * @param value
 	 *            the new value.
 	 */
-	public void setValue(T value);
+	public void setValue(V value);
 
 }

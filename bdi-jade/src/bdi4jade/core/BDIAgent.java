@@ -153,7 +153,7 @@ public interface BDIAgent {
 	 * 
 	 * @return the collection of all beliefs of this agent.
 	 */
-	public Collection<Belief<?>> getBeliefs();
+	public Collection<Belief<?, ?>> getBeliefs();
 
 	/**
 	 * Returns all goal listeners.

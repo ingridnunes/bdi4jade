@@ -61,7 +61,7 @@ public class TransportationAgent extends SingleCapabilityAgent {
 			getCapability().getPlanLibrary().addPlan(plan);
 		}
 		getCapability().getBeliefBase().addBelief(
-				new TransientBelief<GenericValueFunction<Integer>>(
+				new TransientBelief<String, GenericValueFunction<Integer>>(
 						SATISFACTION, new GenericValueFunction<Integer>()));
 	}
 

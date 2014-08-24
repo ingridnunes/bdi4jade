@@ -35,7 +35,7 @@ import bdi4jade.belief.BeliefSet;
  * 
  * @author Ingrid Nunes
  */
-public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
+public class BeliefSetValueGoal<K, V> extends BeliefValueGoal<K, V> {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
@@ -49,7 +49,7 @@ public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
 	 * @param value
 	 *            the value that is target of this goal.
 	 */
-	public BeliefSetValueGoal(String beliefSetName, T value) {
+	public BeliefSetValueGoal(K beliefSetName, V value) {
 		super(beliefSetName, value);
 	}
 
@@ -64,7 +64,7 @@ public class BeliefSetValueGoal<T> extends BeliefValueGoal<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isAchieved(BeliefBase beliefBase) {
-		BeliefSet<T> beliefSet = (BeliefSet<T>) beliefBase
+		BeliefSet<K, V> beliefSet = (BeliefSet<K, V>) beliefBase
 				.getBelief(getBeliefName());
 		if (beliefSet == null) {
 			return false;

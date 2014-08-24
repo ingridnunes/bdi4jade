@@ -35,13 +35,16 @@ import bdi4jade.event.BeliefEvent.Action;
  * leaving some implementations to the subclasses, mainly the choice of how the
  * belief set values are stored.
  * 
- * @author Ingrid Nunes
+ * @param <K>
+ *            the type of the belief name or key.
  * 
- * @param <T>
+ * @param <V>
  *            the type of the belief set values.
+ * 
+ * @author Ingrid Nunes
  */
-public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
-		implements BeliefSet<T> {
+public abstract class AbstractBeliefSet<K, V> extends AbstractBelief<K, Set<V>>
+		implements BeliefSet<K, V> {
 
 	private static final long serialVersionUID = 8345025506647930L;
 
@@ -59,8 +62,8 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	 * @param name
 	 *            the name of this belief set.
 	 */
-	public AbstractBeliefSet(String name) {
-		super(name, new HashSet<T>());
+	public AbstractBeliefSet(K name) {
+		super(name, new HashSet<V>());
 	}
 
 	/**
@@ -71,9 +74,9 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	 * @param values
 	 *            the initial values of this belief set.
 	 */
-	public AbstractBeliefSet(String name, Set<T> values) {
+	public AbstractBeliefSet(K name, Set<V> values) {
 		super(name);
-		updateValue(new HashSet<T>(values));
+		updateValue(new HashSet<>(values));
 	}
 
 	/**
@@ -83,7 +86,7 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	 * @param value
 	 *            the value to be added.
 	 */
-	protected abstract void addSetValue(T value);
+	protected abstract void addSetValue(V value);
 
 	/**
 	 * Adds a value to the belief set and notifies belief bases of the addition
@@ -95,7 +98,7 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	 * @see BeliefSet#addValue(Object)
 	 */
 	@Override
-	public final void addValue(T value) {
+	public final void addValue(V value) {
 		if (!hasValue(value)) {
 			addSetValue(value);
 			notifyBeliefBases(new BeliefEvent(this,
@@ -111,7 +114,7 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	 *            the value to be added.
 	 * @return true if the value was removed, false otherwise.
 	 */
-	protected abstract boolean removeSetValue(T value);
+	protected abstract boolean removeSetValue(V value);
 
 	/**
 	 * Removes a value of the belief set and notifies belief bases of the
@@ -123,7 +126,7 @@ public abstract class AbstractBeliefSet<T> extends AbstractBelief<Set<T>>
 	 * @see BeliefSet#removeValue(Object)
 	 */
 	@Override
-	public final boolean removeValue(T value) {
+	public final boolean removeValue(V value) {
 		boolean removed = removeSetValue(value);
 		if (removed) {
 			notifyBeliefBases(new BeliefEvent(this,
