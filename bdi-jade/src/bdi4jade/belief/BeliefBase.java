@@ -335,6 +335,27 @@ public class BeliefBase implements Serializable {
 	}
 
 	/**
+	 * Checks whether a belief is part of the belief base with an specific
+	 * value. If this belief base does not contain it, the method checks
+	 * whole-capabilities' belief base recursively.
+	 * 
+	 * @param name
+	 *            the belief to be checked
+	 * @return true if the belief base contains the belief.
+	 */
+	public boolean hasBelief(Object name, Object value) {
+		Belief<?, ?> belief = getBelief(name);
+		if (belief == null) {
+			return false;
+		}
+		if (belief.getValue() == null) {
+			return value == null;
+		} else {
+			return belief.getValue() == value;
+		}
+	}
+
+	/**
 	 * Notifies the capability associated with this belief base that a belief
 	 * was modified. It also recursively notifies belief listeners of part
 	 * capabilities.

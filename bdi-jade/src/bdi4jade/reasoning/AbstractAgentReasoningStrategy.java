@@ -42,7 +42,7 @@ public abstract class AbstractAgentReasoningStrategy implements
 	 */
 	@Override
 	public void setAgent(AbstractBDIAgent agent) {
-		if (this.agent != null) {
+		if (agent != null && this.agent != null && !this.agent.equals(agent)) {
 			throw new IllegalArgumentException(
 					"This reasoning strategy is already associated with another agent.");
 		}

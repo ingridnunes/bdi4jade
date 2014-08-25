@@ -32,7 +32,9 @@ import bdi4jade.belief.BeliefBase;
  * with an specific value, that is, the agent has a belief whose name and value
  * are specified in this goal.
  * 
- * @param <T>
+ * @param <K>
+ *            the type of the belief name.
+ * @param <V>
  *            the type of the belief value.
  * 
  * @author Ingrid Nunes

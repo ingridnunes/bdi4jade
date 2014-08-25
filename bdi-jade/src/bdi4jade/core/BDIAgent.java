@@ -148,6 +148,14 @@ public interface BDIAgent {
 	public AID getAID();
 
 	/**
+	 * Returns all capabilities that are part of this agent. This included all
+	 * capabilities composed or associated with other capabilities.
+	 * 
+	 * @return the capabilities.
+	 */
+	public Collection<Capability> getAllCapabilities();
+
+	/**
 	 * Returns a collection of all beliefs from all capabilities of this agent.
 	 * It may have two equivalent beliefs, i.e. beliefs with the same name.
 	 * 
@@ -193,5 +201,10 @@ public interface BDIAgent {
 	 *            the goal listener to be removed.
 	 */
 	public void removeGoalListener(GoalListener goalListener);
+
+	/**
+	 * Restarts the agent in case its reasoning cycle is in the blocked state.
+	 */
+	public void restart();
 
 }

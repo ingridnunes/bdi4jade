@@ -33,4 +33,35 @@ public class TransientPropositionalBelief<K> extends
 
 	private static final long serialVersionUID = -2315938302480821432L;
 
+	/**
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	protected TransientPropositionalBelief() {
+
+	}
+
+	/**
+	 * Creates a new transient propositional belief, whose value is true.
+	 * 
+	 * @param name
+	 *            the belief name.
+	 */
+	public TransientPropositionalBelief(K name) {
+		super(name, Boolean.TRUE);
+	}
+
+	/**
+	 * Initializes a transient propositional belief with its name and a initial
+	 * value.
+	 * 
+	 * @param name
+	 *            the belief name.
+	 * @param value
+	 *            the initial belief value.
+	 */
+	public TransientPropositionalBelief(K name, Boolean value) {
+		super(name, value);
+	}
+
 }

@@ -41,7 +41,8 @@ public abstract class AbstractReasoningStrategy implements ReasoningStrategy {
 	 */
 	@Override
 	public void setCapability(Capability capability) {
-		if (this.capability != null) {
+		if (capability != null && this.capability != null
+				&& !this.capability.equals(capability)) {
 			throw new IllegalArgumentException(
 					"This reasoning strategy is already associated with another capability.");
 		}

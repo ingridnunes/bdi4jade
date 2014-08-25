@@ -361,11 +361,13 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 			} else {
 				dispatcher.addIntention(intention);
 			}
-			this.bdiInterpreter.restart();
 			if (goalListener != null) {
 				intention.addGoalListener(goalListener);
 			}
 			fireGoalEvent(new GoalEvent(goal));
+
+			restart();
+
 			return intention;
 		}
 	}
@@ -464,12 +466,10 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
-	 * Returns all capabilities that are part of this agent. This included all
-	 * capabilities composed or associated with other capabilities.
-	 * 
-	 * @return the capabilities.
+	 * @see BDIAgent#getAllCapabilities()
 	 */
-	protected Collection<Capability> getAllCapabilities() {
+	@Override
+	public Collection<Capability> getAllCapabilities() {
 		synchronized (aggregatedCapabilities) {
 			return capabilities;
 		}
@@ -670,6 +670,14 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 				capability.setMyAgent(this);
 			}
 		}
+	}
+
+	/**
+	 * @see BDIAgent#restart()
+	 */
+	@Override
+	public void restart() {
+		this.bdiInterpreter.restart();
 	}
 
 	/**

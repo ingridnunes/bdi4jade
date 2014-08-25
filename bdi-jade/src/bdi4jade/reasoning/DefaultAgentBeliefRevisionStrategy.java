@@ -35,14 +35,15 @@ public class DefaultAgentBeliefRevisionStrategy extends
 		AbstractAgentReasoningStrategy implements AgentBeliefRevisionStrategy {
 
 	/**
-	 * This default implementation requests each of its capabilities to review
-	 * their individual set of beliefs.
+	 * This default implementation requests each of its capabilities (including
+	 * associated and composed capabilities) to review their individual set of
+	 * beliefs.
 	 * 
 	 * @see AgentBeliefRevisionStrategy#reviewBeliefs()
 	 */
 	@Override
 	public void reviewBeliefs() {
-		for (Capability capability : agent.getCapabilities()) {
+		for (Capability capability : agent.getAllCapabilities()) {
 			capability.getBeliefRevisionStrategy().reviewBeliefs();
 		}
 	}
