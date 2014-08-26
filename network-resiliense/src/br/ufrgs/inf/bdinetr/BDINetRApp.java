@@ -31,12 +31,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
 
 import bdi4jade.core.AbstractBDIAgent;
+import bdi4jade.examples.BDI4JADEExamplesPanel;
 import br.ufrgs.inf.bdinetr.capability.LinkMonitorCapability;
 import br.ufrgs.inf.bdinetr.capability.RateLimiterCapability;
 import br.ufrgs.inf.bdinetr.domain.Device;
@@ -48,7 +52,23 @@ import br.ufrgs.inf.bdinetr.domain.Network;
  */
 public class BDINetRApp {
 
+	class LinkUsageUpdater extends TimerTask {
+		@Override
+		public void run() {
+			Random random = new Random(System.currentTimeMillis());
+			log.info("Updating link usage");
+			for (Link link : NETWORK.getLinks()) {
+				link.setUsedBandwidth(random.nextDouble() * link.getBandwidth());
+			}
+			log.info("Restarting agents");
+			for (AbstractBDIAgent agent : AGENTS.values()) {
+				agent.restart();
+			}
+		}
+	}
+
 	private static final Map<String, AbstractBDIAgent> AGENTS;
+
 	private static final Network NETWORK;
 
 	static {
@@ -96,8 +116,11 @@ public class BDINetRApp {
 	private final Log log;
 	private jade.core.Runtime runtime;
 
+	private Timer timer;
+
 	public BDINetRApp() {
 		this.log = LogFactory.getLog(this.getClass());
+		this.timer = new Timer();
 
 		List<String> params = new ArrayList<String>();
 		params.add("-gui");
@@ -127,7 +150,8 @@ public class BDINetRApp {
 	 * {@link BDI4JADEExamplesPanel}.
 	 */
 	public void run() {
-
+		int interval = 10 * 1000;
+		this.timer.schedule(new LinkUsageUpdater(), interval, interval);
 	}
 
 }

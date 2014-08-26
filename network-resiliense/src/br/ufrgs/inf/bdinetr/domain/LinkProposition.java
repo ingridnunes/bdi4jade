@@ -32,6 +32,12 @@ public class LinkProposition {
 		}
 	}
 
+	public static class FullyOperational extends LinkProposition {
+		public FullyOperational(Link link) {
+			super(link);
+		}
+	}
+
 	public static class OverUsage extends LinkProposition {
 		public OverUsage(Link link) {
 			super(link);

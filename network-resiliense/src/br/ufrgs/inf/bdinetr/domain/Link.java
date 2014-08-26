@@ -26,18 +26,20 @@ package br.ufrgs.inf.bdinetr.domain;
  */
 public class Link {
 
-	private Double capacity;
+	private Double bandwidth;
 	private final String id;
 	private Device source;
 	private Device target;
+	private Double usedBandwidth;
 
 	public Link(String id) {
 		this.id = id;
 	}
 
-	public Link(String id, Double capacity, Device source, Device target) {
+	public Link(String id, Double bandwidth, Device source, Device target) {
 		this(id);
-		this.capacity = capacity;
+		this.bandwidth = bandwidth;
+		this.usedBandwidth = 0.0;
 		setSource(source);
 		setTarget(target);
 	}
@@ -51,8 +53,8 @@ public class Link {
 		return false;
 	}
 
-	public Double getCapacity() {
-		return capacity;
+	public Double getBandwidth() {
+		return bandwidth;
 	}
 
 	public Device getSource() {
@@ -63,13 +65,21 @@ public class Link {
 		return target;
 	}
 
+	public Double getUsedBandwidth() {
+		return usedBandwidth;
+	}
+
+	public Double getUsedBandwidthPercentage() {
+		return usedBandwidth / bandwidth;
+	}
+
 	@Override
 	public int hashCode() {
 		return id == null ? 0 : id.hashCode();
 	}
 
-	public void setCapacity(Double capacity) {
-		this.capacity = capacity;
+	public void setBandwidth(Double bandwidth) {
+		this.bandwidth = bandwidth;
 	}
 
 	public void setSource(Device source) {
@@ -86,6 +96,10 @@ public class Link {
 		}
 		this.target = source;
 		this.target.connectLink(this);
+	}
+
+	public void setUsedBandwidth(Double usedBandwidth) {
+		this.usedBandwidth = usedBandwidth;
 	}
 
 	@Override

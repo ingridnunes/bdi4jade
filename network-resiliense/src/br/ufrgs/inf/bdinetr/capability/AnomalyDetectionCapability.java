@@ -21,13 +21,79 @@
 //----------------------------------------------------------------------------
 package br.ufrgs.inf.bdinetr.capability;
 
+import java.util.Set;
+
+import bdi4jade.belief.Belief;
+import bdi4jade.belief.PropositionalBelief;
 import bdi4jade.core.Capability;
+import bdi4jade.core.GoalUpdateSet;
+import bdi4jade.goal.BeliefGoal;
+import bdi4jade.goal.PropositionalBeliefValueGoal;
+import bdi4jade.reasoning.AbstractReasoningStrategy;
+import bdi4jade.reasoning.OptionGenerationFunction;
+import br.ufrgs.inf.bdinetr.domain.IpPreposition.Anomalous;
+import br.ufrgs.inf.bdinetr.domain.IpPreposition.Benign;
+import br.ufrgs.inf.bdinetr.domain.IpPreposition.Restricted;
 
 /**
  * @author Ingrid Nunes
  */
 public class AnomalyDetectionCapability extends Capability {
 
+	private class ReasoningStrategy extends AbstractReasoningStrategy implements
+			OptionGenerationFunction {
+		@Override
+		public void generateGoals(GoalUpdateSet goalUpdateSet) {
+			Set<Belief<?, ?>> anomalousIpBeliefs = getBeliefBase()
+					.getBeliefsByType(Anomalous.class);
+			for (Belief<?, ?> belief : anomalousIpBeliefs) {
+				PropositionalBelief<Anomalous> anomalous = (PropositionalBelief<Anomalous>) belief;
+				if (anomalous.getValue()) {
+					getMyAgent()
+							.addGoal(
+									AnomalyDetectionCapability.this,
+									new PropositionalBeliefValueGoal<Restricted>(
+											new Restricted(anomalous.getName()
+													.getIp()), Boolean.TRUE));
+					log.debug("goal(restricted(" + anomalous.getName().getIp()
+							+ "))");
+					getMyAgent().addGoal(
+							AnomalyDetectionCapability.this,
+							new BeliefGoal<Benign>(new Benign(anomalous
+									.getName().getIp())));
+					log.debug("goal(?benign(" + anomalous.getName().getIp()
+							+ "))");
+				}
+			}
+
+			Set<Belief<?, ?>> restrictedBeliefs = getBeliefBase()
+					.getBeliefsByType(Restricted.class);
+			for (Belief<?, ?> belief : restrictedBeliefs) {
+				PropositionalBelief<Restricted> restricted = (PropositionalBelief<Restricted>) belief;
+				if (restricted.getValue()) {
+					PropositionalBelief<Anomalous> anomalous = (PropositionalBelief<Anomalous>) getBeliefBase()
+							.getBelief(
+									new Anomalous(restricted.getName().getIp()));
+					if (anomalous != null && !anomalous.getValue()) {
+						getMyAgent().addGoal(
+								AnomalyDetectionCapability.this,
+								new PropositionalBeliefValueGoal<Restricted>(
+										new Restricted(restricted.getName()
+												.getIp()), Boolean.FALSE));
+						log.debug("goal(not restricted("
+								+ restricted.getName().getIp() + "))");
+					}
+
+				}
+			}
+		}
+	}
+
 	private static final long serialVersionUID = -1705728861020677126L;
+
+	public AnomalyDetectionCapability() {
+		ReasoningStrategy strategy = new ReasoningStrategy();
+		setOptionGenerationFunction(strategy);
+	}
 
 }

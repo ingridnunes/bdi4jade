@@ -38,6 +38,7 @@ import br.ufrgs.inf.bdinetr.BDINetRAgent.RootCapability;
 import br.ufrgs.inf.bdinetr.domain.Device;
 import br.ufrgs.inf.bdinetr.domain.Link;
 import br.ufrgs.inf.bdinetr.domain.LinkProposition.AttackPrevented;
+import br.ufrgs.inf.bdinetr.domain.LinkProposition.FullyOperational;
 import br.ufrgs.inf.bdinetr.domain.LinkProposition.OverUsage;
 import br.ufrgs.inf.bdinetr.domain.LinkProposition.RegularUsage;
 import br.ufrgs.inf.bdinetr.domain.LinkProposition.Usage;
@@ -67,8 +68,34 @@ public class LinkMonitorCapability extends Capability {
 							LinkMonitorCapability.this,
 							new BeliefGoal<RegularUsage>(new RegularUsage(
 									overUsage.getName().getLink())));
-					log.debug("goal(regularUsage("
+					log.debug("goal(?regularUsage("
 							+ overUsage.getName().getLink() + "))");
+				}
+			}
+
+			Set<Belief<?, ?>> fullyOperationalBeliefs = getBeliefBase()
+					.getBeliefsByType(FullyOperational.class);
+			for (Belief<?, ?> belief : fullyOperationalBeliefs) {
+				PropositionalBelief<FullyOperational> fullyOperational = (PropositionalBelief<FullyOperational>) belief;
+				if (!fullyOperational.getValue()) {
+					PropositionalBelief<RegularUsage> regularUsage = (PropositionalBelief<RegularUsage>) getBeliefBase()
+							.getBelief(
+									new RegularUsage(fullyOperational.getName()
+											.getLink()));
+					if (regularUsage != null && regularUsage.getValue()) {
+						getMyAgent()
+								.addGoal(
+										LinkMonitorCapability.this,
+										new PropositionalBeliefValueGoal<FullyOperational>(
+												new FullyOperational(
+														fullyOperational
+																.getName()
+																.getLink()),
+												Boolean.TRUE));
+						log.debug("goal(fullyOperational("
+								+ fullyOperational.getName().getLink() + "))");
+					}
+
 				}
 			}
 		}
@@ -79,8 +106,9 @@ public class LinkMonitorCapability extends Capability {
 					.getBeliefsByType(Usage.class);
 			for (Belief<?, ?> belief : linkUsageBeliefs) {
 				Belief<Usage, Double> linkUsage = (Belief<Usage, Double>) belief;
-				double percentageUsed = linkUsage.getValue()
-						/ linkUsage.getName().getLink().getCapacity();
+				double percentageUsed = linkUsage.getName().getLink()
+						.getUsedBandwidthPercentage();
+				linkUsage.setValue(percentageUsed);
 				if (percentageUsed > overUsageThreshold.getValue()) {
 					getBeliefBase()
 							.addOrUpdateBelief(
@@ -126,7 +154,8 @@ public class LinkMonitorCapability extends Capability {
 				.getBelief(RootCapability.DEVICE_BELIEF);
 		for (Link link : device.getValue().getConnectedLinks()) {
 			getBeliefBase().addBelief(
-					new TransientBelief<Usage, Double>(new Usage(link), 0.0));
+					new TransientBelief<Usage, Double>(new Usage(link), link
+							.getUsedBandwidthPercentage()));
 		}
 	}
 
