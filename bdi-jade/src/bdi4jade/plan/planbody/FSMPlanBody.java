@@ -24,6 +24,7 @@ package bdi4jade.plan.planbody;
 
 import jade.core.behaviours.FSMBehaviour;
 import bdi4jade.belief.BeliefBase;
+import bdi4jade.core.Capability;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.exception.PlanInstantiationException;
@@ -68,6 +69,10 @@ public class FSMPlanBody extends FSMBehaviour implements PlanBody {
 
 	public BeliefBase getBeliefBase() {
 		return abstractPlanBody.getBeliefBase();
+	}
+
+	public Capability getCapability() {
+		return abstractPlanBody.getCapability();
 	}
 
 	public EndState getEndState() {

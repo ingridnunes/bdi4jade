@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import bdi4jade.belief.BeliefBase;
+import bdi4jade.core.Capability;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
@@ -141,6 +142,13 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 */
 	public BeliefBase getBeliefBase() {
 		return this.plan.getPlanLibrary().getCapability().getBeliefBase();
+	}
+
+	/**
+	 * @see PlanBody#getCapability()
+	 */
+	public Capability getCapability() {
+		return this.plan.getPlanLibrary().getCapability();
 	}
 
 	/**

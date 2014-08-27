@@ -24,6 +24,7 @@ package bdi4jade.plan.planbody;
 
 import jade.core.behaviours.Behaviour;
 import bdi4jade.belief.BeliefBase;
+import bdi4jade.core.Capability;
 import bdi4jade.core.Intention;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
@@ -87,6 +88,13 @@ public interface PlanBody extends GoalListener {
 	 * @return the belief base containing the capability beliefs.
 	 */
 	public BeliefBase getBeliefBase();
+
+	/**
+	 * Returns the capability associated with the plan of this plan body.
+	 * 
+	 * @return the capability.
+	 */
+	public Capability getCapability();
 
 	/**
 	 * Returns the end state of the execution of this plan.
