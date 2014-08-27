@@ -152,6 +152,37 @@ public abstract class GoalTemplateFactory {
 
 	/**
 	 * This method creates a goal template that positively matches a goal if it
+	 * is of the type {@link BeliefValueGoal}, is of the class of given belief
+	 * name class, and has the given value.
+	 * 
+	 * @param beliefNameClass
+	 *            the belief name class to be matched.
+	 * @param beliefValue
+	 *            the value to be matched.
+	 * @return the goal template that checks if the goal is a
+	 *         {@link BeliefValueGoal} with the given name and value.
+	 */
+	public static GoalTemplate beliefValueGoal(final Class<?> beliefNameClass,
+			final Object beliefValue) {
+		return new GoalTemplate() {
+			public boolean match(Goal goal) {
+				if (goal instanceof BeliefValueGoal) {
+					BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) goal;
+					return beliefNameClass.isInstance(bg.getBeliefName())
+							&& beliefValue.equals(bg.getValue());
+				}
+				return false;
+			}
+
+			public String toString() {
+				return "belief(<" + beliefNameClass.getName() + ">("
+						+ beliefValue + "))";
+			}
+		};
+	}
+
+	/**
+	 * This method creates a goal template that positively matches a goal if it
 	 * is of the type {@link BeliefValueGoal}, has the given belief name, and
 	 * has the given value.
 	 * 
@@ -162,7 +193,7 @@ public abstract class GoalTemplateFactory {
 	 * @return the goal template that checks if the goal is a
 	 *         {@link BeliefValueGoal} with the given name and value.
 	 */
-	public static GoalTemplate beliefValueGoal(final String beliefName,
+	public static GoalTemplate beliefValueGoal(final Object beliefName,
 			final Object beliefValue) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {

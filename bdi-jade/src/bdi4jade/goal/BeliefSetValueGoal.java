@@ -89,5 +89,7 @@ public class BeliefSetValueGoal<K, V> extends BeliefValueGoal<K, V> {
 				.append(getBeliefName()).append(" should have ")
 				.append(getValue()).toString();
 	}
+	
+	
 
 }

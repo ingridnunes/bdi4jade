@@ -61,6 +61,29 @@ public class BeliefValueGoal<K, V> extends BeliefGoal<K> {
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		BeliefValueGoal<?, ?> other = (BeliefValueGoal<?, ?>) obj;
+		if (beliefName == null) {
+			if (other.beliefName != null)
+				return false;
+		} else if (!beliefName.equals(other.beliefName))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+
+	/**
 	 * The belief value associated with this goal.
 	 * 
 	 * @return the belief value.
@@ -68,6 +91,22 @@ public class BeliefValueGoal<K, V> extends BeliefGoal<K> {
 	@Parameter(direction = Direction.IN)
 	public V getValue() {
 		return value;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + getClass().hashCode();
+		result = prime * result
+				+ ((beliefName == null) ? 0 : beliefName.hashCode());
+		result = prime * result
+				+ ((beliefName == null) ? 0 : beliefName.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
 	}
 
 	/**

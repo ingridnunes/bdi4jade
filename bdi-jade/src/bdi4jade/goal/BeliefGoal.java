@@ -36,7 +36,7 @@ public class BeliefGoal<K> implements Goal {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
-	private K beliefName;
+	protected K beliefName;
 
 	/**
 	 * Creates a new BeliefGoal with the provided belief name.
@@ -49,6 +49,26 @@ public class BeliefGoal<K> implements Goal {
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BeliefGoal<?> other = (BeliefGoal<?>) obj;
+		if (beliefName == null) {
+			if (other.beliefName != null)
+				return false;
+		} else if (!beliefName.equals(other.beliefName))
+			return false;
+		return true;
+	}
+
+	/**
 	 * Returns the name of the belief associated with this goal.
 	 * 
 	 * @return the belief name.
@@ -56,6 +76,20 @@ public class BeliefGoal<K> implements Goal {
 	@Parameter(direction = Direction.IN)
 	public K getBeliefName() {
 		return beliefName;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ getClass().hashCode();
+		result = prime * result
+				+ ((beliefName == null) ? 0 : beliefName.hashCode());
+		return result;
 	}
 
 	/**
