@@ -97,10 +97,10 @@ public class PlanLibrary implements Serializable {
 	 */
 	protected void addDefaultPlans() {
 		addPlan(new DefaultPlan(
-				GoalTemplateFactory.goalType(SequentialGoal.class),
+				GoalTemplateFactory.goalOfType(SequentialGoal.class),
 				SequentialGoalPlanBody.class));
 		addPlan(new DefaultPlan(
-				GoalTemplateFactory.goalType(ParallelGoal.class),
+				GoalTemplateFactory.goalOfType(ParallelGoal.class),
 				ParallelGoalPlanBody.class));
 	}
 

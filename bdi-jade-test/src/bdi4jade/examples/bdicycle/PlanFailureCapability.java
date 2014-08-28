@@ -79,14 +79,14 @@ public class PlanFailureCapability extends Capability {
 
 	@bdi4jade.annotation.Plan
 	private Plan plan1 = new DefaultPlan("Plan1",
-			GoalTemplateFactory.goalType(MyGoal.class), MyPlan.class);
+			GoalTemplateFactory.goalOfType(MyGoal.class), MyPlan.class);
 
 	@bdi4jade.annotation.Plan
 	private Plan plan2 = new DefaultPlan("Plan2",
-			GoalTemplateFactory.goalType(MyGoal.class), MyPlan.class);
+			GoalTemplateFactory.goalOfType(MyGoal.class), MyPlan.class);
 
 	@bdi4jade.annotation.Plan
 	private Plan plan3 = new DefaultPlan("Plan3",
-			GoalTemplateFactory.goalType(MyGoal.class), MyPlan.class);
+			GoalTemplateFactory.goalOfType(MyGoal.class), MyPlan.class);
 
 }

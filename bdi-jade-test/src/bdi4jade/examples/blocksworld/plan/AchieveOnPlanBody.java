@@ -30,7 +30,7 @@ import bdi4jade.examples.blocksworld.BlocksWorldCapability.PerformMove;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
-import bdi4jade.goal.BeliefSetValueGoal;
+import bdi4jade.goal.BeliefSetHasValueGoal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.BeliefGoalPlanBody;
@@ -54,12 +54,12 @@ public class AchieveOnPlanBody extends BeliefGoalPlanBody {
 	public void execute() {
 		switch (step) {
 		case CLEAR_1:
-			dispatchSubgoalAndListen(new BeliefSetValueGoal<String, Clear>(
+			dispatchSubgoalAndListen(new BeliefSetHasValueGoal<String, Clear>(
 					BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing1)));
 			step = Step.CLEAR_2;
 		case CLEAR_2:
 			if (isSubgoalAchieved()) {
-				dispatchSubgoalAndListen(new BeliefSetValueGoal<String, Clear>(
+				dispatchSubgoalAndListen(new BeliefSetHasValueGoal<String, Clear>(
 						BlocksWorldCapability.BELIEF_CLEAR, new Clear(thing2)));
 				step = Step.PERFORM_MOVE;
 			}

@@ -128,15 +128,15 @@ public class CompositeGoalCapability extends Capability {
 	public CompositeGoalCapability() {
 		this.multigoalPlan1 = new DefaultPlan("multigoalPlan1", MyPlan.class);
 		multigoalPlan1.addGoalTemplate(GoalTemplateFactory
-				.goalType(MyGoal1.class));
+				.goalOfType(MyGoal1.class));
 		multigoalPlan1.addGoalTemplate(GoalTemplateFactory
-				.goalType(MyGoal2.class));
+				.goalOfType(MyGoal2.class));
 
 		this.multigoalPlan2 = new DefaultPlan("multigoalPlan2", MyPlan.class);
 		multigoalPlan2.addGoalTemplate(GoalTemplateFactory
-				.goalType(MyGoal2.class));
+				.goalOfType(MyGoal2.class));
 		multigoalPlan2.addGoalTemplate(GoalTemplateFactory
-				.goalType(MyGoal3.class));
+				.goalOfType(MyGoal3.class));
 	}
 
 }

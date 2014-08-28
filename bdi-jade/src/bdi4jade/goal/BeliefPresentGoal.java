@@ -22,74 +22,90 @@
 
 package bdi4jade.goal;
 
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.BeliefBase;
-import bdi4jade.belief.BeliefSet;
 
 /**
- * This class represents the goal of an agent believe in a belief that contains
- * a certain value, that is, the agent has a belief set whose name is specified
- * in this goal and it contains the specified value.
- * 
- * @param <K>
- *            the type of the belief name.
- * @param <V>
- *            the type of the values in the belief set.
+ * This class represents the goal of an agent to believe in a certain belief,
+ * that is, the agent has a belief whose name is specified in this goal.
  * 
  * @author Ingrid Nunes
  */
-public class BeliefSetValueGoal<K, V> extends BeliefValueGoal<K, V> {
+public class BeliefPresentGoal<K> implements BeliefGoal<K> {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
+	private K beliefName;
+
 	/**
-	 * Creates a new BeliefSetValueGoal with the provided belief name and a
-	 * value. This value represents the one that should be part of the belief
-	 * set.
+	 * Creates a new BeliefGoal with the provided belief name.
 	 * 
-	 * @param beliefSetName
+	 * @param beliefName
 	 *            the belief name.
-	 * @param value
-	 *            the value that is target of this goal.
 	 */
-	public BeliefSetValueGoal(K beliefSetName, V value) {
-		super(beliefSetName, value);
+	public BeliefPresentGoal(K beliefName) {
+		this.beliefName = beliefName;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof BeliefPresentGoal) {
+			BeliefPresentGoal<?> bg = (BeliefPresentGoal<?>) obj;
+			return beliefName.equals(bg.beliefName);
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the name of the belief associated with this goal.
+	 * 
+	 * @return the belief name.
+	 */
+	@Parameter(direction = Direction.IN)
+	public K getBeliefName() {
+		return beliefName;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = BeliefPresentGoal.class.hashCode();
+		result = prime * result
+				+ ((beliefName == null) ? 0 : beliefName.hashCode());
+		return result;
 	}
 
 	/**
 	 * Checks whether this goal is achieved by verifying if the provided belief
-	 * set contains the value specified in this goal.
+	 * base contains the belief of this goal.
 	 * 
 	 * @param beliefBase
 	 *            the belief base to be checked.
-	 * @return true if the belief set contains the value specified in this goal.
+	 * @return true if the belief base contains the belief of this goal.
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
 	public boolean isAchieved(BeliefBase beliefBase) {
-		BeliefSet<K, V> beliefSet = (BeliefSet<K, V>) beliefBase
-				.getBelief(getBeliefName());
-		if (beliefSet == null) {
-			return false;
-		} else {
-			return beliefSet.hasValue(getValue());
-		}
+		return beliefBase.hasBelief(beliefName);
 	}
 
 	/**
 	 * Returns a string representation of this goal, in the form
-	 * "BeliefSetValueGoal: BELIEF NAME should have BELIEF VALUE".
+	 * "BeliefGoal: belief name".
 	 * 
-	 * @return the string representation of this belief value goal.
+	 * @return the string representation of this belief goal.
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return new StringBuffer(getClass().getName()).append(": ")
-				.append(getBeliefName()).append(" should have ")
-				.append(getValue()).toString();
+				.append(beliefName).toString();
 	}
-	
-	
 
 }

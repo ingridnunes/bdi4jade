@@ -51,7 +51,7 @@ public class TransportationPlan extends DefaultPlan {
 	public TransportationPlan(String id, double crashProbability,
 			double beingRobbedProbability, boolean costConstant, double cost,
 			double comfort, int minTime, int maxTime) {
-		super(id, GoalTemplateFactory.goalType(TransportationGoal.class),
+		super(id, GoalTemplateFactory.goalOfType(TransportationGoal.class),
 				TransportationPlanBody.class);
 
 		this.beingRobbedProbability = beingRobbedProbability;

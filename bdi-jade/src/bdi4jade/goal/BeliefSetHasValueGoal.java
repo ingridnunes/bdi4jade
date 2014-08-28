@@ -24,22 +24,22 @@ package bdi4jade.goal;
 
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
-import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
+import bdi4jade.belief.BeliefSet;
 
 /**
- * This class represents the goal of an agent to believe in a certain belief
- * with an specific value, that is, the agent has a belief whose name and value
- * are specified in this goal.
+ * This class represents the goal of an agent believe in a belief that contains
+ * a certain value, that is, the agent has a belief set whose name is specified
+ * in this goal and it contains the specified value.
  * 
  * @param <K>
  *            the type of the belief name.
  * @param <V>
- *            the type of the belief value.
+ *            the type of the values in the belief set.
  * 
  * @author Ingrid Nunes
  */
-public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
+public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
@@ -47,16 +47,16 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	private V value;
 
 	/**
-	 * Creates a new BeliefValueGoal with the provided belief name and a value.
-	 * This value represents the value that is aimed to be associated with the
-	 * belief.
+	 * Creates a new BeliefSetValueGoal with the provided belief name and a
+	 * value. This value represents the one that should be part of the belief
+	 * set.
 	 * 
-	 * @param beliefName
+	 * @param beliefSetName
 	 *            the belief name.
 	 * @param value
 	 *            the value that is target of this goal.
 	 */
-	public BeliefValueGoal(K beliefName, V value) {
+	public BeliefSetHasValueGoal(K beliefName, V value) {
 		this.beliefName = beliefName;
 		this.value = value;
 	}
@@ -66,8 +66,8 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof BeliefValueGoal) {
-			BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) obj;
+		if (obj instanceof BeliefSetHasValueGoal) {
+			BeliefSetHasValueGoal<?, ?> bg = (BeliefSetHasValueGoal<?, ?>) obj;
 			if (!beliefName.equals(bg.beliefName))
 				return false;
 			if (value == null) {
@@ -107,7 +107,7 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = BeliefValueGoal.class.hashCode();
+		int result = BeliefSetHasValueGoal.class.hashCode();
 		result = prime * result
 				+ ((beliefName == null) ? 0 : beliefName.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
@@ -116,31 +116,27 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 
 	/**
 	 * Checks whether this goal is achieved by verifying if the provided belief
-	 * has the value specified in this goal.
+	 * set contains the value specified in this goal.
 	 * 
 	 * @param beliefBase
 	 *            the belief base to be checked.
-	 * @return true if the belief has the value specified in this goal, false
-	 *         otherwise.
+	 * @return true if the belief set contains the value specified in this goal.
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public boolean isAchieved(BeliefBase beliefBase) {
-		Belief<?, ?> belief = beliefBase.getBelief(beliefName);
-		if (belief == null) {
+		BeliefSet<K, V> beliefSet = (BeliefSet<K, V>) beliefBase
+				.getBelief(getBeliefName());
+		if (beliefSet == null) {
 			return false;
 		} else {
-			if (value == null) {
-				return belief.getValue() == null;
-			} else if (belief.getValue() == null) {
-				return false;
-			} else {
-				return belief.getValue().equals(value);
-			}
+			return beliefSet.hasValue(value);
 		}
 	}
 
 	/**
 	 * Returns a string representation of this goal, in the form
-	 * "BeliefValueGoal: BELIEF NAME should be BELIEF VALUE".
+	 * "BeliefSetValueGoal: BELIEF NAME should have BELIEF VALUE".
 	 * 
 	 * @return the string representation of this belief value goal.
 	 * 
@@ -149,7 +145,7 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	@Override
 	public String toString() {
 		return new StringBuffer(getClass().getName()).append(": ")
-				.append(getBeliefName()).append(" should be ").append(value)
+				.append(beliefName).append(" should have ").append(value)
 				.toString();
 	}
 

@@ -22,8 +22,6 @@
 
 package bdi4jade.goal;
 
-import bdi4jade.annotation.Parameter;
-import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.BeliefBase;
 
 /**
@@ -32,90 +30,23 @@ import bdi4jade.belief.BeliefBase;
  * 
  * @author Ingrid Nunes
  */
-public class BeliefGoal<K> implements Goal {
-
-	private static final long serialVersionUID = 2493877854717226283L;
-
-	protected K beliefName;
-
-	/**
-	 * Creates a new BeliefGoal with the provided belief name.
-	 * 
-	 * @param beliefName
-	 *            the belief name.
-	 */
-	public BeliefGoal(K beliefName) {
-		this.beliefName = beliefName;
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BeliefGoal<?> other = (BeliefGoal<?>) obj;
-		if (beliefName == null) {
-			if (other.beliefName != null)
-				return false;
-		} else if (!beliefName.equals(other.beliefName))
-			return false;
-		return true;
-	}
+public interface BeliefGoal<K> extends Goal {
 
 	/**
 	 * Returns the name of the belief associated with this goal.
 	 * 
 	 * @return the belief name.
 	 */
-	@Parameter(direction = Direction.IN)
-	public K getBeliefName() {
-		return beliefName;
-	}
+	public K getBeliefName();
 
 	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ getClass().hashCode();
-		result = prime * result
-				+ ((beliefName == null) ? 0 : beliefName.hashCode());
-		return result;
-	}
-
-	/**
-	 * Checks whether this goal is achieved by verifying if the provided belief
-	 * base contains the belief of this goal.
+	 * Checks whether this goal is achieved by checking the provided belief
+	 * base.
 	 * 
 	 * @param beliefBase
 	 *            the belief base to be checked.
-	 * @return true if the belief base contains the belief of this goal.
+	 * @return true if goal was achieved, false otherwise.
 	 */
-	public boolean isAchieved(BeliefBase beliefBase) {
-		return beliefBase.hasBelief(beliefName);
-	}
-
-	/**
-	 * Returns a string representation of this goal, in the form
-	 * "BeliefGoal: belief name".
-	 * 
-	 * @return the string representation of this belief goal.
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return new StringBuffer(getClass().getName()).append(": ")
-				.append(beliefName).toString();
-	}
+	public boolean isAchieved(BeliefBase beliefBase);
 
 }

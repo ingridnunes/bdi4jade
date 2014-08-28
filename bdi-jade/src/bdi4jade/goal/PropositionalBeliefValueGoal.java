@@ -40,4 +40,5 @@ public class PropositionalBeliefValueGoal<K> extends
 	public PropositionalBeliefValueGoal(K beliefName, Boolean value) {
 		super(beliefName, value);
 	}
+
 }

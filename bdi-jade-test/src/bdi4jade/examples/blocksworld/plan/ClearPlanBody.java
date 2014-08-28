@@ -31,7 +31,7 @@ import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.Clear;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
-import bdi4jade.goal.BeliefSetValueGoal;
+import bdi4jade.goal.BeliefSetHasValueGoal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.BeliefGoalPlanBody;
@@ -54,7 +54,7 @@ public class ClearPlanBody extends BeliefGoalPlanBody {
 			for (int i = 0; i < Thing.THINGS.length; i++) {
 				Thing t = Thing.THINGS[i];
 				if (on.hasValue(new On(t, thing))) {
-					dispatchSubgoalAndListen(new BeliefSetValueGoal<String, On>(
+					dispatchSubgoalAndListen(new BeliefSetHasValueGoal<String, On>(
 							BlocksWorldCapability.BELIEF_ON, new On(t,
 									Thing.TABLE)));
 					this.goalDispatched = true;

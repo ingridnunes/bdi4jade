@@ -30,7 +30,7 @@ import bdi4jade.event.GoalEvent;
 import bdi4jade.examples.blocksworld.BlocksWorldCapability;
 import bdi4jade.examples.blocksworld.domain.On;
 import bdi4jade.examples.blocksworld.domain.Thing;
-import bdi4jade.goal.BeliefSetValueGoal;
+import bdi4jade.goal.BeliefSetHasValueGoal;
 import bdi4jade.goal.GoalStatus;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.BeliefGoalPlanBody;
@@ -59,7 +59,7 @@ public class TopLevelPlanBody extends BeliefGoalPlanBody {
 		}
 		// Dispatch the next subgoal, if there are subgoals left
 		if (counter < target.length) {
-			dispatchSubgoalAndListen(new BeliefSetValueGoal<String, On>(
+			dispatchSubgoalAndListen(new BeliefSetHasValueGoal<String, On>(
 					BlocksWorldCapability.BELIEF_ON, target[counter]));
 		}
 		counter++;

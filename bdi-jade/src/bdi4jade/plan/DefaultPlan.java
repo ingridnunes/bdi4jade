@@ -73,7 +73,7 @@ public class DefaultPlan extends AbstractPlan {
 	public DefaultPlan(Class<? extends Goal> goalClass,
 			Class<? extends PlanBody> planBodyClass) {
 		super(generateId(goalClass, null, null, planBodyClass),
-				GoalTemplateFactory.goalType(goalClass));
+				GoalTemplateFactory.goalOfType(goalClass));
 		this.planBodyClass = planBodyClass;
 	}
 
