@@ -191,7 +191,9 @@ public class Intention {
 						+ " could not be instantiated.");
 				e.printStackTrace();
 				this.currentPlan = null;
-				options.remove(selectedPlan);
+				for (Set<Plan> plans : options.values()) {
+					plans.remove(selectedPlan);
+				}
 			}
 		}
 
