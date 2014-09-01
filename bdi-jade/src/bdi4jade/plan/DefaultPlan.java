@@ -24,6 +24,10 @@ package bdi4jade.plan;
 
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.MessageTemplate;
+
+import java.lang.reflect.Modifier;
+
+import bdi4jade.core.Capability;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalTemplate;
@@ -256,7 +260,15 @@ public class DefaultPlan extends AbstractPlan {
 	@Override
 	public PlanBody createPlanBody() throws PlanInstantiationException {
 		try {
-			return this.planBodyClass.newInstance();
+			Class<?> enclosingClass = planBodyClass.getEnclosingClass();
+			if (!Modifier.isStatic(planBodyClass.getModifiers())
+					&& enclosingClass != null
+					&& Capability.class.isAssignableFrom(enclosingClass)) {
+				return planBodyClass.getDeclaredConstructor(enclosingClass)
+						.newInstance(getPlanLibrary().getCapability());
+			} else {
+				return this.planBodyClass.newInstance();
+			}
 		} catch (Exception e) {
 			throw new PlanInstantiationException(e);
 		}
