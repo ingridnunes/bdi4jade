@@ -1,5 +1,7 @@
 package bdi4jade.examples;
 
+import jade.core.Agent;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -10,7 +12,6 @@ import javax.swing.Action;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.core.AbstractBDIAgent;
 import bdi4jade.core.SingleCapabilityAgent;
 
 /**
@@ -42,9 +43,9 @@ public abstract class BDI4JADEExamplesAction extends AbstractAction {
 		super.setEnabled(true);
 	}
 
-	public Map<String, AbstractBDIAgent> getAgentMap() {
-		Map<String, AbstractBDIAgent> agentMap = new HashMap<>();
-		for (AbstractBDIAgent agent : getAgents()) {
+	public Map<String, Agent> getAgentMap() {
+		Map<String, Agent> agentMap = new HashMap<>();
+		for (Agent agent : getAgents()) {
 			if (SingleCapabilityAgent.class.equals(agent.getClass())) {
 				SingleCapabilityAgent singleCapAgent = (SingleCapabilityAgent) agent;
 				agentMap.put(singleCapAgent.getCapability().getId() + "Agent",
@@ -56,6 +57,6 @@ public abstract class BDI4JADEExamplesAction extends AbstractAction {
 		return agentMap;
 	}
 
-	public abstract Set<AbstractBDIAgent> getAgents();
+	public abstract Set<Agent> getAgents();
 
 }

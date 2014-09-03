@@ -22,7 +22,7 @@
 
 package bdi4jade.reasoning;
 
-import bdi4jade.core.AbstractBDIAgent;
+import bdi4jade.core.BDIAgent;
 
 /**
  * This class provides an abstract implementation of the
@@ -35,13 +35,13 @@ import bdi4jade.core.AbstractBDIAgent;
 public abstract class AbstractAgentReasoningStrategy implements
 		AgentReasoningStrategy {
 
-	protected AbstractBDIAgent agent;
+	protected BDIAgent agent;
 
 	/**
-	 * @see bdi4jade.reasoning.AgentReasoningStrategy#setAgent(bdi4jade.core.AbstractBDIAgent)
+	 * @see bdi4jade.reasoning.AgentReasoningStrategy#setAgent(bdi4jade.core.BDIAgent)
 	 */
 	@Override
-	public void setAgent(AbstractBDIAgent agent) {
+	public void setAgent(BDIAgent agent) {
 		if (agent != null && this.agent != null && !this.agent.equals(agent)) {
 			throw new IllegalArgumentException(
 					"This reasoning strategy is already associated with another agent.");

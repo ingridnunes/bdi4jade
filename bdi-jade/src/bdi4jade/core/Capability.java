@@ -75,7 +75,7 @@ public class Capability implements Serializable {
 	protected final String id;
 	private final Collection<Intention> intentions;
 	protected final Log log;
-	private AbstractBDIAgent myAgent;
+	private BDIAgent myAgent;
 	private OptionGenerationFunction optionGenerationFunction;
 	private final List<Class<? extends Capability>> parentCapabilities;
 	private final Set<Capability> partCapabilities;
@@ -647,7 +647,9 @@ public class Capability implements Serializable {
 
 	private final void resetAgentCapabilities() {
 		if (myAgent != null) {
-			myAgent.resetAllCapabilities();
+			if (myAgent instanceof AbstractBDIAgent) {
+				((AbstractBDIAgent) myAgent).resetAllCapabilities();
+			}
 		}
 	}
 
@@ -694,7 +696,7 @@ public class Capability implements Serializable {
 	 * @param myAgent
 	 *            the myAgent to set
 	 */
-	final synchronized void setMyAgent(AbstractBDIAgent myAgent) {
+	final synchronized void setMyAgent(BDIAgent myAgent) {
 		if (this.myAgent != null && myAgent == null) {
 			takeDown();
 		}

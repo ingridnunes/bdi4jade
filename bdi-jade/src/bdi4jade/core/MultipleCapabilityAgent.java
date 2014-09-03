@@ -86,14 +86,6 @@ public class MultipleCapabilityAgent extends AbstractBDIAgent {
 	}
 
 	/**
-	 * @see bdi4jade.core.AbstractBDIAgent#getAllCapabilities()
-	 */
-	@Override
-	public final Collection<Capability> getAllCapabilities() {
-		return super.getAllCapabilities();
-	}
-
-	/**
 	 * @see bdi4jade.core.AbstractBDIAgent#removeCapability(bdi4jade.core.Capability)
 	 */
 	@Override

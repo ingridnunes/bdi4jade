@@ -33,6 +33,10 @@ import bdi4jade.belief.Belief;
 import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.Softgoal;
+import bdi4jade.reasoning.AgentBeliefRevisionStrategy;
+import bdi4jade.reasoning.AgentDeliberationFunction;
+import bdi4jade.reasoning.AgentOptionGenerationFunction;
+import bdi4jade.reasoning.AgentPlanSelectionStrategy;
 
 /**
  * This interfaces represents a BDIAgent that has a current set of goals, which
@@ -156,12 +160,34 @@ public interface BDIAgent {
 	public Collection<Capability> getAllCapabilities();
 
 	/**
+	 * Returns the belief revision strategy of this agent.
+	 * 
+	 * @return the beliefRevisionStrategy.
+	 */
+	public AgentBeliefRevisionStrategy getBeliefRevisionStrategy();
+
+	/**
 	 * Returns a collection of all beliefs from all capabilities of this agent.
 	 * It may have two equivalent beliefs, i.e. beliefs with the same name.
 	 * 
 	 * @return the collection of all beliefs of this agent.
 	 */
 	public Collection<Belief<?, ?>> getBeliefs();
+
+	/**
+	 * Returns the capabilities of this agent. It may be a single root
+	 * capability or a set of capabilities.
+	 * 
+	 * @return the set of capabilities of this agent.
+	 */
+	public Set<Capability> getCapabilities();
+
+	/**
+	 * Returns the deliberation function of this agent.
+	 * 
+	 * @return the deliberationFunction
+	 */
+	public AgentDeliberationFunction getDeliberationFunction();
 
 	/**
 	 * Returns all goal listeners.
@@ -185,6 +211,20 @@ public interface BDIAgent {
 	 * @return the intentions.
 	 */
 	public Set<Intention> getIntentions();
+
+	/**
+	 * Returns the option generation function of this agent.
+	 * 
+	 * @return the optionGenerationFunction
+	 */
+	public AgentOptionGenerationFunction getOptionGenerationFunction();
+
+	/**
+	 * Returns the plan selection strategy of this agent.
+	 * 
+	 * @return the planSelectionStrategy
+	 */
+	public AgentPlanSelectionStrategy getPlanSelectionStrategy();
 
 	/**
 	 * Gets all softgoals of this agent.

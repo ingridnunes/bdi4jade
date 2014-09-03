@@ -22,6 +22,7 @@
 
 package bdi4jade.message;
 
+import jade.core.Agent;
 import jade.core.behaviours.DataStore;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -31,7 +32,7 @@ import jade.proto.states.MsgReceiver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.core.AbstractBDIAgent;
+import bdi4jade.core.BDIAgent;
 
 /**
  * This class extends the {@link MsgReceiver} behavior from the JADE platform
@@ -84,9 +85,9 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 	 * @param agent
 	 *            the BDI agent that this behavior is associated with.
 	 */
-	public BDIAgentMsgReceiver(AbstractBDIAgent agent) {
-		super(agent, MessageTemplate.MatchAll(), INFINITE, new DataStore(),
-				MSG_KEY);
+	public BDIAgentMsgReceiver(BDIAgent agent) {
+		super((Agent) agent, MessageTemplate.MatchAll(), INFINITE,
+				new DataStore(), MSG_KEY);
 		this.template = new MessageTemplate(new BDIAgentMatchExpression());
 		this.log = LogFactory.getLog(this.getClass());
 	}
@@ -102,8 +103,8 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 		return false;
 	}
 
-	private AbstractBDIAgent getMyAgent() {
-		return (AbstractBDIAgent) this.myAgent;
+	private BDIAgent getMyAgent() {
+		return (BDIAgent) this.myAgent;
 	}
 
 	/**

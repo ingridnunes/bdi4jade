@@ -23,6 +23,7 @@
 package bdi4jade.examples;
 
 import jade.BootProfileImpl;
+import jade.core.Agent;
 import jade.core.ProfileImpl;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
@@ -38,8 +39,6 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.PropertyConfigurator;
-
-import bdi4jade.core.AbstractBDIAgent;
 
 /**
  * This class is responsible for initiating the BDI4JADE app. It bootstraps
@@ -78,7 +77,7 @@ public class BDI4JADEExamplesApp {
 		PlatformController controller = runtime
 				.createMainContainer(bootProfile);
 
-		Map<String, AbstractBDIAgent> agents = agentTestPanel.getAgents();
+		Map<String, Agent> agents = agentTestPanel.getAgents();
 		for (String agentName : agents.keySet()) {
 			try {
 				AgentController ac = ((AgentContainer) controller)

@@ -77,8 +77,8 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 
 		private static final long serialVersionUID = -6991759791322598475L;
 
-		private BDIInterpreter(AbstractBDIAgent bdiAgent) {
-			super(bdiAgent);
+		private BDIInterpreter(BDIAgent bdiAgent) {
+			super((Agent) bdiAgent);
 		}
 
 		/**
@@ -469,17 +469,16 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 * @see BDIAgent#getAllCapabilities()
 	 */
 	@Override
-	public Collection<Capability> getAllCapabilities() {
+	public final Collection<Capability> getAllCapabilities() {
 		synchronized (aggregatedCapabilities) {
 			return capabilities;
 		}
 	}
 
 	/**
-	 * Returns the belief revision strategy of this agent.
-	 * 
-	 * @return the beliefRevisionStrategy.
+	 * @see bdi4jade.core.BDIAgent#getBeliefRevisionStrategy()
 	 */
+	@Override
 	public final AgentBeliefRevisionStrategy getBeliefRevisionStrategy() {
 		return beliefRevisionStrategy;
 	}
@@ -499,22 +498,18 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
-	 * Returns the capabilities of this agent. It may be a single root
-	 * capability or a set of capabilities.
-	 * 
-	 * @return the set of capabilities of this agent.
+	 * @see bdi4jade.core.BDIAgent#getCapabilities()
 	 */
-	public Set<Capability> getCapabilities() {
+	public final Set<Capability> getCapabilities() {
 		synchronized (aggregatedCapabilities) {
 			return aggregatedCapabilities;
 		}
 	}
 
 	/**
-	 * Returns the deliberation function of this agent.
-	 * 
-	 * @return the deliberationFunction
+	 * @see bdi4jade.core.BDIAgent#getDeliberationFunction()
 	 */
+	@Override
 	public final AgentDeliberationFunction getDeliberationFunction() {
 		return deliberationFunction;
 	}
@@ -577,19 +572,17 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	}
 
 	/**
-	 * Returns the option generation function of this agent.
-	 * 
-	 * @return the optionGenerationFunction
+	 * @see bdi4jade.core.BDIAgent#getOptionGenerationFunction()
 	 */
+	@Override
 	public final AgentOptionGenerationFunction getOptionGenerationFunction() {
 		return optionGenerationFunction;
 	}
 
 	/**
-	 * Returns the plan selection strategy of this agent.
-	 * 
-	 * @return the planSelectionStrategy
+	 * @see bdi4jade.core.BDIAgent#getPlanSelectionStrategy()
 	 */
+	@Override
 	public final AgentPlanSelectionStrategy getPlanSelectionStrategy() {
 		return planSelectionStrategy;
 	}
@@ -676,7 +669,7 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 * @see BDIAgent#restart()
 	 */
 	@Override
-	public void restart() {
+	public final void restart() {
 		this.bdiInterpreter.restart();
 	}
 

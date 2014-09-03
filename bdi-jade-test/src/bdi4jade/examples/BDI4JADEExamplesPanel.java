@@ -1,5 +1,7 @@
 package bdi4jade.examples;
 
+import jade.core.Agent;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -14,7 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import bdi4jade.core.AbstractBDIAgent;
 import bdi4jade.core.MultipleCapabilityAgent;
 import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.event.GoalEvent;
@@ -91,8 +92,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
-			Set<AbstractBDIAgent> agents = new HashSet<>();
+		public Set<Agent> getAgents() {
+			Set<Agent> agents = new HashSet<>();
 			agents.add(blocksWorldAgent);
 			return agents;
 		}
@@ -107,7 +108,7 @@ public class BDI4JADEExamplesPanel extends JPanel {
 			GoalListener {
 		private static final long serialVersionUID = 2100583035268414082L;
 
-		private final AbstractBDIAgent compositeGoalAgent;
+		private final SingleCapabilityAgent compositeGoalAgent;
 
 		public CompositeGoalAction() {
 			super.putValue(Action.NAME, "Composite Goal Agent");
@@ -133,8 +134,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
-			Set<AbstractBDIAgent> agents = new HashSet<>();
+		public Set<Agent> getAgents() {
+			Set<Agent> agents = new HashSet<>();
 			agents.add(compositeGoalAgent);
 			return agents;
 		}
@@ -167,8 +168,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
-			Set<AbstractBDIAgent> agents = new HashSet<>();
+		public Set<Agent> getAgents() {
+			Set<Agent> agents = new HashSet<>();
 			agents.add(helloWorldAgent);
 			return agents;
 		}
@@ -197,8 +198,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
-			Set<AbstractBDIAgent> agents = new HashSet<>();
+		public Set<Agent> getAgents() {
+			Set<Agent> agents = new HashSet<>();
 			agents.add(helloWorldAnnotatedAgent);
 			return agents;
 		}
@@ -230,8 +231,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
-			Set<AbstractBDIAgent> agents = new HashSet<>();
+		public Set<Agent> getAgents() {
+			Set<Agent> agents = new HashSet<>();
 			agents.add(multiCapabilityAgent);
 			return agents;
 		}
@@ -243,8 +244,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		public static final String AGENT_2 = "Bob";
 		private static final long serialVersionUID = 2100583035268414082L;
 
-		private final AbstractBDIAgent agent1;
-		private final AbstractBDIAgent agent2;
+		private final SingleCapabilityAgent agent1;
+		private final SingleCapabilityAgent agent2;
 
 		public PingPongAction() {
 			super.putValue(Action.NAME, "Ping Pong Agents");
@@ -260,15 +261,15 @@ public class BDI4JADEExamplesPanel extends JPanel {
 			this.agent2.addGoal(new PingPongCapability.PingGoal());
 		}
 
-		public Map<String, AbstractBDIAgent> getAgentMap() {
-			Map<String, AbstractBDIAgent> agentMap = new HashMap<>();
+		public Map<String, Agent> getAgentMap() {
+			Map<String, Agent> agentMap = new HashMap<>();
 			agentMap.put(AGENT_1, agent1);
 			agentMap.put(AGENT_2, agent2);
 			return agentMap;
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
+		public Set<Agent> getAgents() {
 			return new HashSet<>(getAgentMap().values());
 		}
 	}
@@ -306,8 +307,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
-			Set<AbstractBDIAgent> agents = new HashSet<>();
+		public Set<Agent> getAgents() {
+			Set<Agent> agents = new HashSet<>();
 			agents.add(planFailureAgent);
 			return agents;
 		}
@@ -328,7 +329,7 @@ public class BDI4JADEExamplesPanel extends JPanel {
 	private class SubgoalCapabilityAction extends BDI4JADEExamplesAction {
 		private static final long serialVersionUID = 2100583035268414082L;
 
-		private final AbstractBDIAgent subgoalCapability;
+		private final SingleCapabilityAgent subgoalCapability;
 
 		public SubgoalCapabilityAction() {
 			super.putValue(Action.NAME, "Subgoal Goal Agent");
@@ -342,8 +343,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 
 		@Override
-		public Set<AbstractBDIAgent> getAgents() {
-			Set<AbstractBDIAgent> agents = new HashSet<>();
+		public Set<Agent> getAgents() {
+			Set<Agent> agents = new HashSet<>();
 			agents.add(subgoalCapability);
 			return agents;
 		}
@@ -365,8 +366,8 @@ public class BDI4JADEExamplesPanel extends JPanel {
 		}
 	}
 
-	public Map<String, AbstractBDIAgent> getAgents() {
-		Map<String, AbstractBDIAgent> agents = new HashMap<>();
+	public Map<String, Agent> getAgents() {
+		Map<String, Agent> agents = new HashMap<>();
 		for (BDI4JADEExamplesAction action : actions) {
 			agents.putAll(action.getAgentMap());
 		}

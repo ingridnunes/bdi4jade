@@ -22,7 +22,7 @@
 
 package bdi4jade.reasoning;
 
-import bdi4jade.core.AbstractBDIAgent;
+import bdi4jade.core.BDIAgent;
 
 /**
  * This interface defines methods that should be implemented by all agent
@@ -40,6 +40,6 @@ public interface AgentReasoningStrategy {
 	 * @param agent
 	 *            the agent to set.
 	 */
-	public void setAgent(AbstractBDIAgent agent);
+	public void setAgent(BDIAgent agent);
 
 }
