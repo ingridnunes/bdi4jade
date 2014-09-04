@@ -131,19 +131,27 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 				// Adding generated goals
 				for (GoalDescription goal : agentGoalUpdateSet
 						.getGeneratedGoals()) {
-					Intention intention = addIntention(goal.getDispatcher(),
-							goal.getGoal(), null);
-					if (intention != null)
-						agentGoalUpdateSet.addIntention(intention);
+					try {
+						Intention intention = addIntention(
+								goal.getDispatcher(), goal.getGoal(), null);
+						if (intention != null)
+							agentGoalUpdateSet.addIntention(intention);
+					} catch (IllegalAccessException exc) {
+						log.error(exc);
+					}
 				}
 				for (GoalUpdateSet goalUpdateSet : capabilityGoalUpdateSets
 						.values()) {
 					for (GoalDescription goal : goalUpdateSet
 							.getGeneratedGoals()) {
-						Intention intention = addIntention(
-								goal.getDispatcher(), goal.getGoal(), null);
-						if (intention != null)
-							goalUpdateSet.addIntention(intention);
+						try {
+							Intention intention = addIntention(
+									goal.getDispatcher(), goal.getGoal(), null);
+							if (intention != null)
+								goalUpdateSet.addIntention(intention);
+						} catch (IllegalAccessException exc) {
+							log.error(exc);
+						}
 					}
 				}
 
@@ -287,7 +295,13 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 */
 	@Override
 	public final boolean addGoal(Capability dispatcher, Goal goal) {
-		return addIntention(dispatcher, goal, null) == null ? false : true;
+		try {
+			addIntention(dispatcher, goal, null);
+			return true;
+		} catch (IllegalAccessException exc) {
+			log.error(exc);
+			return false;
+		}
 	}
 
 	/**
@@ -297,8 +311,13 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	@Override
 	public final boolean addGoal(Capability dispatcher, Goal goal,
 			GoalListener goalListener) {
-		return addIntention(dispatcher, goal, goalListener) == null ? false
-				: true;
+		try {
+			addIntention(dispatcher, goal, goalListener);
+			return true;
+		} catch (IllegalAccessException exc) {
+			log.error(exc);
+			return false;
+		}
 	}
 
 	/**
@@ -306,7 +325,13 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 */
 	@Override
 	public final boolean addGoal(Goal goal) {
-		return addIntention(null, goal, null) == null ? false : true;
+		try {
+			addIntention(null, goal, null);
+			return true;
+		} catch (IllegalAccessException exc) {
+			log.error(exc);
+			return false;
+		}
 	}
 
 	/**
@@ -315,7 +340,13 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 */
 	@Override
 	public final boolean addGoal(Goal goal, GoalListener goalListener) {
-		return addIntention(null, goal, goalListener) == null ? false : true;
+		try {
+			addIntention(null, goal, goalListener);
+			return true;
+		} catch (IllegalAccessException exc) {
+			log.error(exc);
+			return false;
+		}
 	}
 
 	/**
@@ -340,35 +371,30 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 *            the listener to be notified.
 	 */
 	private final Intention addIntention(Capability dispatcher, Goal goal,
-			GoalListener goalListener) {
+			GoalListener goalListener) throws IllegalAccessException {
 		synchronized (allIntentions) {
-			if (allIntentions.get(goal) != null) {
-				log.warn("This agent already has this goal.");
-				return null;
-			}
-
-			Intention intention = null;
-			try {
+			Intention intention = allIntentions.get(goal);
+			if (intention == null) {
 				intention = new Intention(goal, this, dispatcher);
-			} catch (IllegalAccessException exc) {
-				log.error(exc);
+				this.allIntentions.put(goal, intention);
+				if (dispatcher == null) {
+					agentIntentions.add(intention);
+				} else {
+					dispatcher.addIntention(intention);
+				}
+				if (goalListener != null) {
+					intention.addGoalListener(goalListener);
+				}
+				fireGoalEvent(new GoalEvent(goal));
+				restart();
+				return intention;
+			} else {
+				log.warn("This agent already has goal: " + goal);
+				if (goalListener != null) {
+					intention.addGoalListener(goalListener);
+				}
 				return null;
 			}
-
-			this.allIntentions.put(goal, intention);
-			if (dispatcher == null) {
-				agentIntentions.add(intention);
-			} else {
-				dispatcher.addIntention(intention);
-			}
-			if (goalListener != null) {
-				intention.addGoalListener(goalListener);
-			}
-			fireGoalEvent(new GoalEvent(goal));
-
-			restart();
-
-			return intention;
 		}
 	}
 
