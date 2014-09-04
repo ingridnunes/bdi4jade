@@ -119,6 +119,22 @@ public class PlanLibrary implements Serializable {
 	}
 
 	/**
+	 * Returns true if there is a plan that can achieve the given goal.
+	 * 
+	 * @param goal
+	 *            the goal to be checked.
+	 * @return true if a plan can achieve the goal, false otherwise.
+	 */
+	public boolean canAchieve(Goal goal) {
+		for (Plan plan : this.plans) {
+			if (plan.canAchieve(goal)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Returns true if there is a plan that can handle the given message.
 	 * 
 	 * @param message
