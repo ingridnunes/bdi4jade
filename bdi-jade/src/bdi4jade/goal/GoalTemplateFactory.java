@@ -78,6 +78,90 @@ public abstract class GoalTemplateFactory {
 
 	/**
 	 * This method creates a goal template that positively matches a goal if it
+	 * is of the type {@link BeliefPresentGoal} and has the given belief name.
+	 * 
+	 * @param beliefName
+	 *            the belief name to be matched.
+	 * @return the goal template that checks if the goal is a {@link BeliefGoal}
+	 *         with the given name.
+	 */
+	public static GoalTemplate hasBeliefOfType(final Class<?> beliefNameClass) {
+		return new GoalTemplate() {
+			public boolean match(Goal goal) {
+				if (goal instanceof BeliefPresentGoal) {
+					BeliefPresentGoal<?> bg = (BeliefPresentGoal<?>) goal;
+					return beliefNameClass.isInstance(bg.getBeliefName());
+				}
+				return false;
+			}
+
+			public String toString() {
+				return "belief<" + beliefNameClass + ">(?))";
+			}
+		};
+	}
+
+	/**
+	 * This method creates a goal template that positively matches a goal if it
+	 * is of the type {@link BeliefValueGoal}, has the given belief name, and is
+	 * associated with a null value.
+	 * 
+	 * @param beliefName
+	 *            the belief name to be matched.
+	 * @return the goal template that checks if the goal is a
+	 *         {@link BeliefValueGoal} with the given name and null value.
+	 */
+	public static GoalTemplate hasBeliefOfTypeWithNullValue(
+			final Class<?> beliefNameClass) {
+		return new GoalTemplate() {
+			public boolean match(Goal goal) {
+				if (goal instanceof BeliefValueGoal) {
+					BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) goal;
+					return beliefNameClass.isInstance(bg.getBeliefName())
+							&& bg.getValue() == null;
+				}
+				return false;
+			}
+
+			public String toString() {
+				return "belief<" + beliefNameClass + ">(null))";
+			}
+		};
+	}
+
+	/**
+	 * This method creates a goal template that positively matches a goal if it
+	 * is of the type {@link BeliefValueGoal}, is of the class of given belief
+	 * name class, and has the given value.
+	 * 
+	 * @param beliefNameClass
+	 *            the belief name class to be matched.
+	 * @param beliefValue
+	 *            the value to be matched.
+	 * @return the goal template that checks if the goal is a
+	 *         {@link BeliefValueGoal} with the given name and value.
+	 */
+	public static GoalTemplate hasBeliefOfTypeWithValue(
+			final Class<?> beliefNameClass, final Object beliefValue) {
+		return new GoalTemplate() {
+			public boolean match(Goal goal) {
+				if (goal instanceof BeliefValueGoal) {
+					BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) goal;
+					return beliefNameClass.isInstance(bg.getBeliefName())
+							&& beliefValue.equals(bg.getValue());
+				}
+				return false;
+			}
+
+			public String toString() {
+				return "belief(<" + beliefNameClass.getName() + ">("
+						+ beliefValue + "))";
+			}
+		};
+	}
+
+	/**
+	 * This method creates a goal template that positively matches a goal if it
 	 * is of the type {@link BeliefValueGoal}, has the given belief name, and
 	 * has the given value.
 	 * 
@@ -119,7 +203,7 @@ public abstract class GoalTemplateFactory {
 	 *         {@link BeliefValueGoal} with the given name and value of the
 	 *         given type.
 	 */
-	public static GoalTemplate hasBeliefValueofType(final Object beliefName,
+	public static GoalTemplate hasBeliefValueOfType(final Object beliefName,
 			final Class<?> beliefValueClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
@@ -148,7 +232,7 @@ public abstract class GoalTemplateFactory {
 	 * @return the goal template that checks if the goal is a
 	 *         {@link BeliefValueGoal} with the given name and null value.
 	 */
-	public static GoalTemplate hasNullBeliefValue(final Object beliefName) {
+	public static GoalTemplate hasBeliefWithNullValue(final Object beliefName) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefValueGoal) {
@@ -167,39 +251,8 @@ public abstract class GoalTemplateFactory {
 
 	/**
 	 * This method creates a goal template that positively matches a goal if it
-	 * is of the type {@link BeliefValueGoal}, is of the class of given belief
-	 * name class, and has the given value.
-	 * 
-	 * @param beliefNameClass
-	 *            the belief name class to be matched.
-	 * @param beliefValue
-	 *            the value to be matched.
-	 * @return the goal template that checks if the goal is a
-	 *         {@link BeliefValueGoal} with the given name and value.
-	 */
-	public static GoalTemplate hasValueForBeliefOfType(final Class<?> beliefNameClass,
-			final Object beliefValue) {
-		return new GoalTemplate() {
-			public boolean match(Goal goal) {
-				if (goal instanceof BeliefValueGoal) {
-					BeliefValueGoal<?, ?> bg = (BeliefValueGoal<?, ?>) goal;
-					return beliefNameClass.isInstance(bg.getBeliefName())
-							&& beliefValue.equals(bg.getValue());
-				}
-				return false;
-			}
-
-			public String toString() {
-				return "belief(<" + beliefNameClass.getName() + ">("
-						+ beliefValue + "))";
-			}
-		};
-	}
-
-	/**
-	 * This method creates a goal template that positively matches a goal if it
-	 * is of the type {@link BeliefSetHasValueGoal}, has the given belief name, and
-	 * has the given value.
+	 * is of the type {@link BeliefSetHasValueGoal}, has the given belief name,
+	 * and has the given value.
 	 * 
 	 * @param beliefName
 	 *            the belief name to be matched.
@@ -228,19 +281,19 @@ public abstract class GoalTemplateFactory {
 
 	/**
 	 * This method creates a goal template that positively matches a goal if it
-	 * is of the type {@link BeliefSetHasValueGoal}, has the given belief name, and
-	 * its value is of the given type.
+	 * is of the type {@link BeliefSetHasValueGoal}, has the given belief name,
+	 * and its value is of the given type.
 	 * 
 	 * @param beliefName
 	 *            the belief name to be matched.
 	 * @param beliefValueClass
 	 *            the value class name to be matched.
 	 * @return the goal template that checks if the goal is a
-	 *         {@link BeliefSetHasValueGoal} with the given name and value of the
-	 *         given type.
+	 *         {@link BeliefSetHasValueGoal} with the given name and value of
+	 *         the given type.
 	 */
-	public static GoalTemplate hasValueofTypeInBeliefSet(final Object beliefName,
-			final Class<?> beliefValueClass) {
+	public static GoalTemplate hasValueOfTypeInBeliefSet(
+			final Object beliefName, final Class<?> beliefValueClass) {
 		return new GoalTemplate() {
 			public boolean match(Goal goal) {
 				if (goal instanceof BeliefSetHasValueGoal) {
