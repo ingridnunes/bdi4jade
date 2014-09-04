@@ -157,17 +157,18 @@ public abstract class AbstractPlan extends MetadataElementImpl implements Plan {
 	 */
 	@Override
 	public boolean canAchieve(Goal goal) {
-		if (isContextApplicable(goal)) {
-			if (goal instanceof MessageGoal) {
-				return canProcess(((MessageGoal) goal).getMessage());
-			} else {
-				for (GoalTemplate template : goalTemplates) {
-					if (template.match(goal))
-						return true;
+		boolean canAchieve = false;
+		if (goal instanceof MessageGoal) {
+			canAchieve = canProcess(((MessageGoal) goal).getMessage());
+		} else {
+			for (GoalTemplate template : goalTemplates) {
+				if (template.match(goal)) {
+					canAchieve = true;
+					break;
 				}
 			}
 		}
-		return false;
+		return canAchieve ? isContextApplicable(goal) : false;
 	}
 
 	/**
