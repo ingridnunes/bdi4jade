@@ -83,12 +83,12 @@ public class BlocksWorldCapability extends Capability {
 
 	@Plan
 	private bdi4jade.plan.Plan achieveBlocksStackedPlan = new DefaultPlan(
-			GoalTemplateFactory.hasBeliefValueofType(BELIEF_ON, Set.class),
+			GoalTemplateFactory.hasBeliefValueOfType(BELIEF_ON, Set.class),
 			TopLevelPlanBody.class);
 
 	@Plan
 	private bdi4jade.plan.Plan achieveOnPlan = new DefaultPlan(
-			GoalTemplateFactory.hasValueofTypeInBeliefSet(BELIEF_ON, On.class),
+			GoalTemplateFactory.hasValueOfTypeInBeliefSet(BELIEF_ON, On.class),
 			AchieveOnPlanBody.class);
 
 	@Belief
@@ -97,7 +97,7 @@ public class BlocksWorldCapability extends Capability {
 
 	@Plan
 	private bdi4jade.plan.Plan clearPlan = new DefaultPlan(
-			GoalTemplateFactory.hasValueofTypeInBeliefSet(BELIEF_CLEAR,
+			GoalTemplateFactory.hasValueOfTypeInBeliefSet(BELIEF_CLEAR,
 					Clear.class), ClearPlanBody.class);
 
 	@Belief
