@@ -145,8 +145,7 @@ public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 	@Override
 	public String toString() {
 		return new StringBuffer(getClass().getName()).append(": ")
-				.append(beliefName).append(" should have ").append(value)
-				.toString();
+				.append(value).append(" in ").append(beliefName).toString();
 	}
 
 }

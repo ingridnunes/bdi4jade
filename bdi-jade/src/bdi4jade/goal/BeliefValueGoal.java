@@ -149,7 +149,7 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	@Override
 	public String toString() {
 		return new StringBuffer(getClass().getName()).append(": ")
-				.append(getBeliefName()).append(" should be ").append(value)
+				.append(getBeliefName()).append("=").append(value)
 				.toString();
 	}
 
