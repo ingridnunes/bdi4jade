@@ -139,91 +139,6 @@ public class BeliefBase implements Serializable {
 	}
 
 	/**
-	 * Gets all beliefs of this belief base and the belief bases of the
-	 * whole-capabilities of the capability that this belief base belongs to.
-	 * 
-	 * @return the beliefs of this capability and all of its whole-capabilities.
-	 */
-	public Collection<Belief<?, ?>> getAllBeliefs() {
-		Collection<Belief<?, ?>> beliefs = new LinkedList<>();
-		getAllBeliefs(beliefs);
-		return beliefs;
-	}
-
-	/**
-	 * This is a recursive method to implement the {@link #getAllBeliefs()}
-	 * method.
-	 * 
-	 * @param beliefs
-	 *            the set to which beliefs are added.
-	 */
-	private void getAllBeliefs(final Collection<Belief<?, ?>> beliefs) {
-		beliefs.addAll(this.beliefs.values());
-		if (capability.getWholeCapability() != null) {
-			capability.getWholeCapability().getBeliefBase()
-					.getAllBeliefs(beliefs);
-		}
-	}
-
-	/**
-	 * Returns all beliefs whose name is of the given class or any other class
-	 * that is assignable to this class. It also searches beliefs in belief
-	 * bases of whole capabilities.
-	 * 
-	 * @param beliefNameType
-	 *            the class of the name of beliefs.
-	 * @return the set of beliefs assignable from the given class.
-	 */
-	public Set<Belief<?, ?>> getAllBeliefsAssignableFrom(Class<?> beliefNameType) {
-		Set<Belief<?, ?>> beliefs = new HashSet<>();
-		getAllBeliefsAssignableFrom(beliefNameType, beliefs);
-		return beliefs;
-	}
-
-	private void getAllBeliefsAssignableFrom(Class<?> beliefNameType,
-			Collection<Belief<?, ?>> beliefs) {
-		for (Class<?> beliefSupertype : beliefsByType.keySet()) {
-			if (beliefSupertype.isAssignableFrom(beliefNameType)) {
-				Set<Belief<?, ?>> beliefsOfType = beliefsByType
-						.get(beliefSupertype);
-				beliefs.addAll(beliefsOfType);
-			}
-		}
-
-		if (capability.getWholeCapability() != null) {
-			capability.getWholeCapability().getBeliefBase()
-					.getAllBeliefsAssignableFrom(beliefNameType, beliefs);
-		}
-	}
-
-	/**
-	 * Returns all beliefs whose name is of the given class. It also searches
-	 * beliefs in belief bases of whole capabilities.
-	 * 
-	 * @param beliefNameType
-	 *            the class of the name of beliefs.
-	 * @return the set of beliefs of the given class.
-	 */
-	public Set<Belief<?, ?>> getAllBeliefsByType(Class<?> beliefNameType) {
-		Set<Belief<?, ?>> beliefs = new HashSet<>();
-		getAllBeliefsByType(beliefNameType, beliefs);
-		return beliefs;
-	}
-
-	private void getAllBeliefsByType(Class<?> beliefNameType,
-			Collection<Belief<?, ?>> beliefs) {
-		Set<Belief<?, ?>> beliefsOfType = beliefsByType.get(beliefNameType);
-		if (beliefsOfType != null) {
-			beliefs.addAll(beliefsOfType);
-		}
-
-		if (capability.getWholeCapability() != null) {
-			capability.getWholeCapability().getBeliefBase()
-					.getAllBeliefsByType(beliefNameType, beliefs);
-		}
-	}
-
-	/**
 	 * Retrieves a belief from the belief base. If this belief base does not
 	 * contain it, the method checks whole-capabilities' belief base
 	 * recursively.
@@ -251,11 +166,104 @@ public class BeliefBase implements Serializable {
 	}
 
 	/**
+	 * Gets all beliefs of this belief base and the belief bases of the
+	 * whole-capabilities of the capability that this belief base belongs to.
+	 * 
+	 * @return the beliefs of this capability and all of its whole-capabilities.
+	 */
+	public Collection<Belief<?, ?>> getBeliefs() {
+		Collection<Belief<?, ?>> beliefs = new LinkedList<>();
+		getBeliefs(beliefs);
+		return beliefs;
+	}
+
+	/**
+	 * This is a recursive method to implement the {@link #getAllBeliefs()}
+	 * method.
+	 * 
+	 * @param beliefs
+	 *            the set to which beliefs are added.
+	 */
+	private void getBeliefs(final Collection<Belief<?, ?>> beliefs) {
+		beliefs.addAll(this.beliefs.values());
+		if (capability.getWholeCapability() != null) {
+			capability.getWholeCapability().getBeliefBase().getBeliefs(beliefs);
+		}
+	}
+
+	/**
+	 * Returns all beliefs whose name is of the given class or any other class
+	 * that is assignable to this class. It also searches beliefs in belief
+	 * bases of whole capabilities.
+	 * 
+	 * @param beliefNameType
+	 *            the class of the name of beliefs.
+	 * @return the set of beliefs assignable from the given class.
+	 */
+	public Set<Belief<?, ?>> getBeliefsAssignableFrom(Class<?> beliefNameType) {
+		Set<Belief<?, ?>> beliefs = new HashSet<>();
+		getBeliefsAssignableFrom(beliefNameType, beliefs);
+		return beliefs;
+	}
+
+	private void getBeliefsAssignableFrom(Class<?> beliefNameType,
+			Collection<Belief<?, ?>> beliefs) {
+		for (Class<?> beliefSupertype : beliefsByType.keySet()) {
+			if (beliefSupertype.isAssignableFrom(beliefNameType)) {
+				Set<Belief<?, ?>> beliefsOfType = beliefsByType
+						.get(beliefSupertype);
+				beliefs.addAll(beliefsOfType);
+			}
+		}
+
+		if (capability.getWholeCapability() != null) {
+			capability.getWholeCapability().getBeliefBase()
+					.getBeliefsAssignableFrom(beliefNameType, beliefs);
+		}
+	}
+
+	/**
+	 * Returns all beliefs whose name is of the given class. It also searches
+	 * beliefs in belief bases of whole capabilities.
+	 * 
+	 * @param beliefNameType
+	 *            the class of the name of beliefs.
+	 * @return the set of beliefs of the given class.
+	 */
+	public Set<Belief<?, ?>> getBeliefsByType(Class<?> beliefNameType) {
+		Set<Belief<?, ?>> beliefs = new HashSet<>();
+		getBeliefsByType(beliefNameType, beliefs);
+		return beliefs;
+	}
+
+	private void getBeliefsByType(Class<?> beliefNameType,
+			Collection<Belief<?, ?>> beliefs) {
+		Set<Belief<?, ?>> beliefsOfType = beliefsByType.get(beliefNameType);
+		if (beliefsOfType != null) {
+			beliefs.addAll(beliefsOfType);
+		}
+
+		if (capability.getWholeCapability() != null) {
+			capability.getWholeCapability().getBeliefBase()
+					.getBeliefsByType(beliefNameType, beliefs);
+		}
+	}
+
+	/**
+	 * Returns the capability with which this belief base is associated.
+	 * 
+	 * @return the capability.
+	 */
+	public Capability getCapability() {
+		return capability;
+	}
+
+	/**
 	 * Gets all beliefs of this specific belief base.
 	 * 
 	 * @return the beliefs
 	 */
-	public Set<Belief<?, ?>> getBeliefs() {
+	public Set<Belief<?, ?>> getLocalBeliefs() {
 		return new HashSet<>(beliefs.values());
 	}
 
@@ -267,7 +275,8 @@ public class BeliefBase implements Serializable {
 	 *            the class of the name of beliefs.
 	 * @return the set of beliefs assignable from the given class.
 	 */
-	public Set<Belief<?, ?>> getBeliefsAssignableFrom(Class<?> beliefNameType) {
+	public Set<Belief<?, ?>> getLocalBeliefsAssignableFrom(
+			Class<?> beliefNameType) {
 		Set<Belief<?, ?>> beliefs = new HashSet<>();
 		for (Class<?> beliefsubtype : beliefsByType.keySet()) {
 			if (beliefNameType.isAssignableFrom(beliefsubtype)) {
@@ -280,13 +289,13 @@ public class BeliefBase implements Serializable {
 	}
 
 	/**
-	 * Returns all beliefs whose name is of the given class.
+	 * Returns beliefs whose name is of the given class.
 	 * 
 	 * @param beliefNameType
 	 *            the class of the name of beliefs.
 	 * @return the set of beliefs of the given class.
 	 */
-	public Set<Belief<?, ?>> getBeliefsByType(Class<?> beliefNameType) {
+	public Set<Belief<?, ?>> getLocalBeliefsByType(Class<?> beliefNameType) {
 		Set<Belief<?, ?>> beliefs = new HashSet<>();
 		Set<Belief<?, ?>> beliefsOfType = beliefsByType.get(beliefNameType);
 		if (beliefsOfType != null) {
@@ -296,24 +305,15 @@ public class BeliefBase implements Serializable {
 	}
 
 	/**
-	 * Returns a list of all belief values from this belief base.
+	 * Returns a list of belief values from this belief base.
 	 * 
 	 * @return the beliefValues
 	 */
-	public List<Object> getBeliefValues() {
+	public List<Object> getLocalBeliefValues() {
 		List<Object> beliefValues = new ArrayList<>(beliefs.size());
 		for (Belief<?, ?> belief : beliefs.values())
 			beliefValues.add(belief.getValue());
 		return beliefValues;
-	}
-
-	/**
-	 * Returns the capability with which this belief base is associated.
-	 * 
-	 * @return the capability.
-	 */
-	public Capability getCapability() {
-		return capability;
 	}
 
 	/**
@@ -398,7 +398,8 @@ public class BeliefBase implements Serializable {
 		if (belief != null) {
 			Class<?> beliefNameType = belief.getName().getClass();
 			Set<Belief<?, ?>> beliefTypeSet = beliefsByType.get(beliefNameType);
-			assert beliefTypeSet.remove(belief);
+			boolean removed = beliefTypeSet.remove(belief);
+			assert removed;
 			if (beliefTypeSet.isEmpty()) {
 				beliefsByType.remove(beliefNameType);
 			}
