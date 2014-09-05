@@ -22,8 +22,16 @@
 
 package bdi4jade.core;
 
+import jade.content.ContentManager;
 import jade.core.AID;
+import jade.core.Agent;
+import jade.core.AgentState;
+import jade.core.Location;
+import jade.core.ServiceException;
+import jade.core.ServiceHelper;
+import jade.core.Timer;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 import java.util.Collection;
 import java.util.List;
@@ -116,6 +124,26 @@ public interface BDIAgent {
 	public void addSoftgoal(Softgoal softgoal);
 
 	/**
+	 * @see Agent#blockingReceive()
+	 */
+	public ACLMessage blockingReceive();
+
+	/**
+	 * @see Agent#blockingReceive(long)
+	 */
+	public ACLMessage blockingReceive(long millis);
+
+	/**
+	 * @see Agent#blockingReceive(MessageTemplate)
+	 */
+	public ACLMessage blockingReceive(MessageTemplate pattern);
+
+	/**
+	 * @see Agent#blockingReceive(MessageTemplate, long)
+	 */
+	public ACLMessage blockingReceive(MessageTemplate pattern, long millis);
+
+	/**
 	 * Checks if this agent is able to process the given message.
 	 * 
 	 * @param msg
@@ -123,6 +151,51 @@ public interface BDIAgent {
 	 * @return true if this agent is able to handle the message.
 	 */
 	public boolean canHandle(ACLMessage msg);
+
+	/**
+	 * @see Agent#doActivate()
+	 */
+	public void doActivate();
+
+	/**
+	 * @see Agent#doClone(Location, String)
+	 */
+	public void doClone(Location destination, String newName);
+
+	/**
+	 * @see Agent#doDelete()
+	 */
+	public void doDelete();
+
+	/**
+	 * @see Agent#doMove(Location)
+	 */
+	public void doMove(Location destination);
+
+	/**
+	 * @see Agent#doSuspend()
+	 */
+	public void doSuspend();
+
+	/**
+	 * @see Agent#doTimeOut(Timer)
+	 */
+	public void doTimeOut(Timer t);
+
+	/**
+	 * @see Agent#doWait()
+	 */
+	public void doWait();
+
+	/**
+	 * @see Agent#doWait(long)
+	 */
+	public void doWait(long millis);
+
+	/**
+	 * @see Agent#doWake()
+	 */
+	public void doWake();
 
 	/**
 	 * Drops a given goal of this agent, which means setting it as no longer
@@ -145,9 +218,12 @@ public interface BDIAgent {
 	public void dropSoftoal(Softgoal softgoal);
 
 	/**
-	 * Returns the id of this agent.
-	 * 
-	 * @return the agent id.
+	 * @see Agent#getAgentState()
+	 */
+	public AgentState getAgentState();
+
+	/**
+	 * @see Agent#getAID()
 	 */
 	public AID getAID();
 
@@ -158,6 +234,11 @@ public interface BDIAgent {
 	 * @return the capabilities.
 	 */
 	public Collection<Capability> getAllCapabilities();
+
+	/**
+	 * @see Agent#getAMS()
+	 */
+	public AID getAMS();
 
 	/**
 	 * Returns the belief revision strategy of this agent.
@@ -183,6 +264,21 @@ public interface BDIAgent {
 	public Set<Capability> getCapabilities();
 
 	/**
+	 * @see Agent#getContainerController()
+	 */
+	public jade.wrapper.AgentContainer getContainerController();
+
+	/**
+	 * @see Agent#getContentManager()
+	 */
+	public ContentManager getContentManager();
+
+	/**
+	 * @see Agent#getCurQueueSize()
+	 */
+	public int getCurQueueSize();
+
+	/**
 	 * Returns the deliberation function of this agent.
 	 * 
 	 * @return the deliberationFunction
@@ -205,12 +301,32 @@ public interface BDIAgent {
 	public Set<Goal> getGoals();
 
 	/**
+	 * @see Agent#getHap()
+	 */
+	public String getHap();
+
+	/**
+	 * @see Agent#getHelper(String)
+	 */
+	public ServiceHelper getHelper(String serviceName) throws ServiceException;
+
+	/**
 	 * Returns all agent intentions, which are goals that this agent is
 	 * committed to achieve.
 	 * 
 	 * @return the intentions.
 	 */
 	public Set<Intention> getIntentions();
+
+	/**
+	 * @see Agent#getLocalName()
+	 */
+	public String getLocalName();
+
+	/**
+	 * @see Agent#getName()
+	 */
+	public String getName();
 
 	/**
 	 * Returns the option generation function of this agent.
@@ -227,11 +343,36 @@ public interface BDIAgent {
 	public AgentPlanSelectionStrategy getPlanSelectionStrategy();
 
 	/**
+	 * @see Agent#getQueueSize()
+	 */
+	public int getQueueSize();
+
+	/**
 	 * Gets all softgoals of this agent.
 	 * 
 	 * @return the set of softgoals.
 	 */
 	public Set<Softgoal> getSoftgoals();
+
+	/**
+	 * @see Agent#here()
+	 */
+	public Location here();
+
+	/**
+	 * @see Agent#putBack(ACLMessage)
+	 */
+	public void putBack(ACLMessage msg);
+
+	/**
+	 * @see Agent#receive()
+	 */
+	public ACLMessage receive();
+
+	/**
+	 * @see Agent#receive()
+	 */
+	public ACLMessage receive(MessageTemplate pattern);
 
 	/**
 	 * Removes a goal listener, so it will not be notified about the goal events
@@ -246,5 +387,15 @@ public interface BDIAgent {
 	 * Restarts the agent in case its reasoning cycle is in the blocked state.
 	 */
 	public void restart();
+
+	/**
+	 * @see Agent#send(ACLMessage)
+	 */
+	public void send(ACLMessage msg);
+
+	/**
+	 * @see Agent#setQueueSize(int)
+	 */
+	public void setQueueSize(int newSize) throws IllegalArgumentException;
 
 }
