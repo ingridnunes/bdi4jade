@@ -47,7 +47,8 @@ import bdi4jade.core.MetadataElement;
  * 
  * @author Ingrid Nunes
  */
-public interface Belief<K, V> extends MetadataElement, Serializable, Concept {
+public interface Belief<K, V> extends MetadataElement, Serializable, Concept,
+		Cloneable {
 
 	/**
 	 * Adds a belief base that contains this belief. The agent whose capability
@@ -57,6 +58,17 @@ public interface Belief<K, V> extends MetadataElement, Serializable, Concept {
 	 *            the belief base to be added.
 	 */
 	public void addBeliefBase(BeliefBase beliefBase);
+
+	/**
+	 * Clones a belief. This may be particularly useful to share this belief
+	 * with other agents, copying the information of this belief without sharing
+	 * other information, such as belief bases associated with a belief.
+	 * 
+	 * @return the clone of this belief.
+	 * @throws CloneNotSupportedException
+	 *             if an implementation of a belief does not support clone.
+	 */
+	public Object clone() throws CloneNotSupportedException;
 
 	/**
 	 * Returns the belief bases with which this belief is associated.

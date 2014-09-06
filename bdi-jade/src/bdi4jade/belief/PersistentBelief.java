@@ -23,9 +23,9 @@
 package bdi4jade.belief;
 
 /**
- * This class extends the {@link Belief} and represents a persistent belief,
- * which is persisted in a permanent memory. This class has not been implemented
- * yet.
+ * This class extends the {@link AbstractBelief} and represents a persistent
+ * belief, which is persisted in a permanent memory. This class has not been
+ * implemented yet.
  * 
  * @author Ingrid Nunes
  * 

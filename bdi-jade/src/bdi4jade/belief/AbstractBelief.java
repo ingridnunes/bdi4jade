@@ -95,6 +95,16 @@ public abstract class AbstractBelief<K, V> extends MetadataElementImpl
 	}
 
 	/**
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		AbstractBelief<?, ?> clone = (AbstractBelief<?, ?>) super.clone();
+		clone.beliefBases.clear();
+		return clone;
+	}
+
+	/**
 	 * Returns true of the object is a belief and has the same name of this
 	 * belief.
 	 * 
