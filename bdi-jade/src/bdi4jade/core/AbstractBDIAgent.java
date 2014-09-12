@@ -238,6 +238,7 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 
 	}
 
+	private static final Log log = LogFactory.getLog(AbstractBDIAgent.class);
 	private static final long serialVersionUID = -841774495336214256L;
 
 	private final Collection<Intention> agentIntentions;
@@ -248,7 +249,6 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	private Set<Capability> capabilities;
 	private AgentDeliberationFunction deliberationFunction;
 	protected final List<GoalListener> goalListeners;
-	protected final Log log;
 	private AgentOptionGenerationFunction optionGenerationFunction;
 	private AgentPlanSelectionStrategy planSelectionStrategy;
 	private Map<Class<? extends Capability>, Set<Capability>> restrictedAccessOwnersMap;
@@ -258,7 +258,6 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 * Default constructor.
 	 */
 	public AbstractBDIAgent() {
-		this.log = LogFactory.getLog(this.getClass());
 		this.bdiInterpreter = new BDIInterpreter(this);
 		this.capabilities = new HashSet<>();
 		this.restrictedAccessOwnersMap = new HashMap<>();
@@ -389,7 +388,7 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 				restart();
 				return intention;
 			} else {
-				log.warn("This agent already has goal: " + goal);
+				log.info("This agent already has goal: " + goal);
 				if (goalListener != null) {
 					intention.addGoalListener(goalListener);
 				}
@@ -621,6 +620,14 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 		synchronized (softgoals) {
 			return this.softgoals;
 		}
+	}
+
+	/**
+	 * @see bdi4jade.core.BDIAgent#hasGoal(bdi4jade.goal.Goal)
+	 */
+	@Override
+	public boolean hasGoal(Goal goal) {
+		return allIntentions.get(goal) != null;
 	}
 
 	/**

@@ -355,6 +355,15 @@ public interface BDIAgent {
 	public Set<Softgoal> getSoftgoals();
 
 	/**
+	 * Checks if this agent has a given goal.
+	 * 
+	 * @param goal
+	 *            the goal to be checked.
+	 * @return true if this agent has the goal, false otherwise.
+	 */
+	public boolean hasGoal(Goal goal);
+
+	/**
 	 * @see Agent#here()
 	 */
 	public Location here();
