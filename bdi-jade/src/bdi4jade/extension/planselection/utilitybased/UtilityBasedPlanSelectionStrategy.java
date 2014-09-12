@@ -45,10 +45,11 @@ import bdi4jade.reasoning.PlanSelectionStrategy;
 public class UtilityBasedPlanSelectionStrategy extends
 		AbstractReasoningStrategy implements PlanSelectionStrategy {
 
-	private final Log log;
+	private static final Log log = LogFactory
+			.getLog(UtilityBasedPlanSelectionStrategy.class);
 
 	public UtilityBasedPlanSelectionStrategy() {
-		this.log = LogFactory.getLog(getClass());
+
 	}
 
 	@SuppressWarnings("unchecked")

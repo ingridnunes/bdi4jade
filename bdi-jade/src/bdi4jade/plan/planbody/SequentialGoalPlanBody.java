@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.annotation.Parameter;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.exception.ParameterException;
@@ -44,6 +47,8 @@ import bdi4jade.util.ReflectionUtils;
 public class SequentialGoalPlanBody extends AbstractPlanBody implements
 		OutputPlanBody {
 
+	private static final Log log = LogFactory
+			.getLog(SequentialGoalPlanBody.class);
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	protected List<Goal> completedGoals;

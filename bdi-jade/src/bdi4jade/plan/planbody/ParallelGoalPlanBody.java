@@ -25,6 +25,9 @@ package bdi4jade.plan.planbody;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.event.GoalEvent;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
@@ -39,6 +42,8 @@ import bdi4jade.plan.Plan.EndState;
 public class ParallelGoalPlanBody extends AbstractPlanBody implements
 		OutputPlanBody {
 
+	private static final Log log = LogFactory
+			.getLog(ParallelGoalPlanBody.class);
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	protected List<Goal> completedGoals;

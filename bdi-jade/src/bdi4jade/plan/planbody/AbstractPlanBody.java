@@ -53,11 +53,11 @@ import bdi4jade.util.ReflectionUtils;
 public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 
 	private static final long serialVersionUID = -6488256636028800227L;
+	private static final Log log = LogFactory.getLog(AbstractPlanBody.class);
 
 	private EndState endState;
 	private final List<GoalEvent> goalEventQueue;
 	private Intention intention;
-	protected final Log log;
 	private Plan plan;
 	private final List<Goal> subgoals;
 
@@ -65,7 +65,6 @@ public abstract class AbstractPlanBody extends Behaviour implements PlanBody {
 	 * Creates a new plan body.
 	 */
 	public AbstractPlanBody() {
-		this.log = LogFactory.getLog(getClass());
 		this.plan = null;
 		this.intention = null;
 		this.endState = null;

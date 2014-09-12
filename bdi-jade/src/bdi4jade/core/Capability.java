@@ -65,6 +65,7 @@ import bdi4jade.util.ReflectionUtils;
 public class Capability implements Serializable {
 
 	private static final long serialVersionUID = -4922359927943108421L;
+	private static final Log log = LogFactory.getLog(Capability.class);
 
 	private final Set<Capability> associationSources;
 	private final Set<Capability> associationTargets;
@@ -74,7 +75,6 @@ public class Capability implements Serializable {
 	private Map<Class<? extends Capability>, Set<Capability>> fullAccessOwnersMap;
 	protected final String id;
 	private final Collection<Intention> intentions;
-	protected final Log log;
 	private BDIAgent myAgent;
 	private OptionGenerationFunction optionGenerationFunction;
 	private final List<Class<? extends Capability>> parentCapabilities;
@@ -143,7 +143,6 @@ public class Capability implements Serializable {
 	protected Capability(String id, BeliefBase beliefBase,
 			Set<Belief<?, ?>> initialBeliefs, PlanLibrary planLibrary,
 			Set<Plan> initialPlans) {
-		this.log = LogFactory.getLog(getClass());
 		this.intentions = new LinkedList<>();
 		this.parentCapabilities = generateParentCapabilities();
 		log.debug("Parent capabilities: " + parentCapabilities);

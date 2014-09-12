@@ -57,12 +57,13 @@ import bdi4jade.plan.planbody.PlanBody;
  */
 public class Intention {
 
+	private static final Log log = LogFactory.getLog(Intention.class);
+
 	private PlanBody currentPlan;
 	private final Capability dispatcher;
 	private final Set<Plan> executedPlans;
 	private final Goal goal;
 	private final List<GoalListener> goalListeners;
-	private final Log log;
 	private final AbstractBDIAgent myAgent;
 	private boolean noLongerDesired;
 	private final Set<Capability> owners;
@@ -97,7 +98,6 @@ public class Intention {
 	 */
 	public Intention(Goal goal, AbstractBDIAgent bdiAgent, Capability dispatcher)
 			throws IllegalAccessException {
-		this.log = LogFactory.getLog(this.getClass());
 		this.goal = goal;
 		this.myAgent = bdiAgent;
 		this.unachievable = false;

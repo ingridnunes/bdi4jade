@@ -74,10 +74,9 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 
 	}
 
+	private static final Log log = LogFactory.getLog(BDIAgentMsgReceiver.class);
 	public static final Object MSG_KEY = "msgs";
 	private static final long serialVersionUID = -4435254708782532901L;
-
-	private final Log log;
 
 	/**
 	 * Initializes this message receiver, which is associated with a BDI agent.
@@ -89,7 +88,6 @@ public class BDIAgentMsgReceiver extends MsgReceiver {
 		super((Agent) agent, MessageTemplate.MatchAll(), INFINITE,
 				new DataStore(), MSG_KEY);
 		this.template = new MessageTemplate(new BDIAgentMatchExpression());
-		this.log = LogFactory.getLog(this.getClass());
 	}
 
 	/**
