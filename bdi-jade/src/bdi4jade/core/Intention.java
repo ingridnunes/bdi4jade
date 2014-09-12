@@ -24,6 +24,7 @@ package bdi4jade.core;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -172,11 +173,12 @@ public class Intention {
 			}
 		}
 
-		for (Capability capability : options.keySet()) {
-			Set<Plan> plans = options.get(capability);
+		Iterator<Capability> it = options.keySet().iterator();
+		while (it.hasNext()) {
+			Set<Plan> plans = options.get(it.next());
 			plans.removeAll(executedPlans);
 			if (plans.isEmpty()) {
-				options.remove(capability);
+				it.remove();
 			}
 		}
 
@@ -296,7 +298,7 @@ public class Intention {
 			EndState endState = this.currentPlan.getEndState();
 			if (EndState.FAILED.equals(endState)) {
 				return GoalStatus.PLAN_FAILED;
-			} else if (EndState.SUCCESSFULL.equals(endState)) {
+			} else if (EndState.SUCCESSFUL.equals(endState)) {
 				return GoalStatus.ACHIEVED;
 			} else {
 				return GoalStatus.TRYING_TO_ACHIEVE;
