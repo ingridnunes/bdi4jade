@@ -37,6 +37,23 @@ public class PropositionalBeliefValueGoal<K> extends
 
 	private static final long serialVersionUID = -6711494133447825608L;
 
+	/**
+	 * Default constructor.
+	 */
+	public PropositionalBeliefValueGoal() {
+
+	}
+
+	/**
+	 * Creates a new PropositionalBeliefValueGoal with the provided belief name
+	 * and a boolean value. This value represents the value that is aimed to be
+	 * associated with the belief.
+	 * 
+	 * @param beliefName
+	 *            the belief name.
+	 * @param value
+	 *            the boolean value that is target of this goal.
+	 */
 	public PropositionalBeliefValueGoal(K beliefName, Boolean value) {
 		super(beliefName, value);
 	}

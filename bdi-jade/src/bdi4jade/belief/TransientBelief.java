@@ -41,7 +41,7 @@ public class TransientBelief<K, V> extends AbstractBelief<K, V> {
 	 * The default constructor. It should be only used if persistence frameworks
 	 * are used.
 	 */
-	protected TransientBelief() {
+	public TransientBelief() {
 
 	}
 

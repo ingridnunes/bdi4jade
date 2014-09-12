@@ -47,6 +47,13 @@ public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 	private V value;
 
 	/**
+	 * Default constructor.
+	 */
+	public BeliefSetHasValueGoal() {
+
+	}
+
+	/**
 	 * Creates a new BeliefSetValueGoal with the provided belief name and a
 	 * value. This value represents the one that should be part of the belief
 	 * set.
@@ -132,6 +139,26 @@ public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 		} else {
 			return beliefSet.hasValue(value);
 		}
+	}
+
+	/**
+	 * Sets the name of the belief associated with this goal.
+	 * 
+	 * @param beliefName
+	 *            the belief name.
+	 */
+	public void setBeliefName(K beliefName) {
+		this.beliefName = beliefName;
+	}
+
+	/**
+	 * Sets the value of this goal.
+	 * 
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue(V value) {
+		this.value = value;
 	}
 
 	/**

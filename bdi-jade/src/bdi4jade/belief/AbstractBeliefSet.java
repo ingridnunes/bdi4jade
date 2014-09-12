@@ -52,7 +52,7 @@ public abstract class AbstractBeliefSet<K, V> extends AbstractBelief<K, Set<V>>
 	 * The default constructor. It should be only used if persistence frameworks
 	 * are used.
 	 */
-	protected AbstractBeliefSet() {
+	public AbstractBeliefSet() {
 
 	}
 

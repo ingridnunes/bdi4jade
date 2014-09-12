@@ -39,6 +39,13 @@ public class BeliefPresentGoal<K> implements BeliefGoal<K> {
 	private K beliefName;
 
 	/**
+	 * Default constructor.
+	 */
+	public BeliefPresentGoal() {
+
+	}
+
+	/**
 	 * Creates a new BeliefGoal with the provided belief name.
 	 * 
 	 * @param beliefName
@@ -92,6 +99,16 @@ public class BeliefPresentGoal<K> implements BeliefGoal<K> {
 	 */
 	public boolean isAchieved(BeliefBase beliefBase) {
 		return beliefBase.hasBelief(beliefName);
+	}
+
+	/**
+	 * Sets the name of the belief associated with this goal.
+	 * 
+	 * @param beliefName
+	 *            the belief name.
+	 */
+	public void setBeliefName(K beliefName) {
+		this.beliefName = beliefName;
 	}
 
 	/**

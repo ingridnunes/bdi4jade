@@ -25,6 +25,8 @@ package bdi4jade.goal;
 import jade.content.Concept;
 import jade.content.ContentElement;
 
+import java.io.Serializable;
+
 /**
  * This interface defines the abstraction of an agent softgoal. Softgoals are
  * not used in the default BDI reasoning cycle, but can be used in the process
@@ -32,6 +34,6 @@ import jade.content.ContentElement;
  * 
  * @author Ingrid Nunes
  */
-public interface Softgoal extends ContentElement, Concept {
+public interface Softgoal extends Serializable, Concept, ContentElement {
 
 }

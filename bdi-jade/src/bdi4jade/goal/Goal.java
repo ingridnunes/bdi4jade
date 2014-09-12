@@ -24,6 +24,9 @@ package bdi4jade.goal;
 
 import jade.content.Concept;
 import jade.content.ContentElement;
+
+import java.io.Serializable;
+
 import bdi4jade.annotation.GoalOwner;
 
 /**
@@ -36,6 +39,6 @@ import bdi4jade.annotation.GoalOwner;
  * 
  * @author Ingrid Nunes
  */
-public interface Goal extends ContentElement, Concept {
+public interface Goal extends Serializable, Concept, ContentElement {
 
 }

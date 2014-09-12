@@ -57,7 +57,7 @@ public abstract class AbstractBelief<K, V> extends MetadataElementImpl
 	 * The default constructor. It should be only used if persistence frameworks
 	 * are used.
 	 */
-	protected AbstractBelief() {
+	public AbstractBelief() {
 		this.beliefBases = new HashSet<>();
 	}
 
@@ -177,7 +177,7 @@ public abstract class AbstractBelief<K, V> extends MetadataElementImpl
 	 * @param name
 	 *            the name to set.
 	 */
-	protected void setName(K name) {
+	public void setName(K name) {
 		this.name = name;
 	}
 

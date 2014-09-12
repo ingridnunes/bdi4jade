@@ -37,7 +37,7 @@ public class TransientPropositionalBelief<K> extends
 	 * The default constructor. It should be only used if persistence frameworks
 	 * are used.
 	 */
-	protected TransientPropositionalBelief() {
+	public TransientPropositionalBelief() {
 
 	}
 

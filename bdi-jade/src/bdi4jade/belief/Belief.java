@@ -23,6 +23,7 @@
 package bdi4jade.belief;
 
 import jade.content.Concept;
+import jade.content.ContentElement;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -47,8 +48,8 @@ import bdi4jade.core.MetadataElement;
  * 
  * @author Ingrid Nunes
  */
-public interface Belief<K, V> extends MetadataElement, Serializable, Concept,
-		Cloneable {
+public interface Belief<K, V> extends Serializable, Concept, ContentElement,
+		MetadataElement, Cloneable {
 
 	/**
 	 * Adds a belief base that contains this belief. The agent whose capability

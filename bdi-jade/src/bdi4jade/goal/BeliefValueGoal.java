@@ -47,6 +47,13 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	private V value;
 
 	/**
+	 * Default constructor.
+	 */
+	public BeliefValueGoal() {
+
+	}
+
+	/**
 	 * Creates a new BeliefValueGoal with the provided belief name and a value.
 	 * This value represents the value that is aimed to be associated with the
 	 * belief.
@@ -139,6 +146,26 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	}
 
 	/**
+	 * Sets the name of the belief associated with this goal.
+	 * 
+	 * @param beliefName
+	 *            the belief name.
+	 */
+	public void setBeliefName(K beliefName) {
+		this.beliefName = beliefName;
+	}
+
+	/**
+	 * Sets the value of this goal.
+	 * 
+	 * @param value
+	 *            the value.
+	 */
+	public void setValue(V value) {
+		this.value = value;
+	}
+
+	/**
 	 * Returns a string representation of this goal, in the form
 	 * "BeliefValueGoal: BELIEF NAME should be BELIEF VALUE".
 	 * 
@@ -149,8 +176,7 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	@Override
 	public String toString() {
 		return new StringBuffer(getClass().getName()).append(": ")
-				.append(getBeliefName()).append("=").append(value)
-				.toString();
+				.append(getBeliefName()).append("=").append(value).toString();
 	}
 
 }

@@ -37,6 +37,14 @@ public class PersistentBelief<K, V> extends AbstractBelief<K, V> {
 	protected V value;
 
 	/**
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	public PersistentBelief() {
+
+	}
+
+	/**
 	 * Initializes a belief with its name.
 	 * 
 	 * @param name
