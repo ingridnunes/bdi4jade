@@ -22,6 +22,9 @@
 
 package bdi4jade.examples.capabilities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.belief.Belief;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.goal.Goal;
@@ -38,6 +41,7 @@ public class TestPlanBody extends AbstractPlanBody {
 		BELIEF, BOTTOM_EXTERNAL_GOAL, BOTTOM_INTERNAL_GOAL, COMPLETED, MIDDLE2_EXTERNAL_GOAL, MY_EXTERNAL_GOAL, MY_INTERNAL_GOAL, MY_PARENT_INTERNAL_GOAL, TOP_EXTERNAL_GOAL, TOP_INTERNAL_GOAL, TOP_PARENT_INTERNAL_GOAL;
 	}
 
+	private static final Log log = LogFactory.getLog(TestPlanBody.class);
 	private static final long serialVersionUID = -9039447524062487795L;
 
 	@bdi4jade.annotation.Belief

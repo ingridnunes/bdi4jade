@@ -25,6 +25,10 @@ package bdi4jade.examples.ping;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.belief.Belief;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
@@ -33,6 +37,8 @@ import bdi4jade.plan.planbody.AbstractPlanBody;
  * @author Ingrid Nunes
  */
 public class PingPlanBody extends AbstractPlanBody {
+
+	private static final Log log = LogFactory.getLog(PingPlanBody.class);
 
 	public static final String MSG_CONTENT = "ping";
 	private static final long serialVersionUID = -6288758975856575305L;

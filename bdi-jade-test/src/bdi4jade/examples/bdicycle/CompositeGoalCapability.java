@@ -24,6 +24,9 @@ package bdi4jade.examples.bdicycle;
 
 import java.util.Random;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.annotation.GoalOwner;
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
@@ -117,6 +120,8 @@ public class CompositeGoalCapability extends Capability {
 		}
 	}
 
+	private static final Log log = LogFactory
+			.getLog(CompositeGoalCapability.class);
 	private static final long serialVersionUID = -4800805796961540570L;
 
 	@bdi4jade.annotation.Plan

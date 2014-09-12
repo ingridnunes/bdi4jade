@@ -22,6 +22,9 @@
 
 package bdi4jade.examples.bdicycle;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.annotation.GoalOwner;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
@@ -132,6 +135,7 @@ public class SubgoalCapability extends Capability {
 		private static final long serialVersionUID = 2702962164032833240L;
 	}
 
+	private static final Log log = LogFactory.getLog(SubgoalCapability.class);
 	private static final long serialVersionUID = -4388902481688697669L;
 
 	@bdi4jade.annotation.Plan

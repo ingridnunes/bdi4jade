@@ -24,6 +24,9 @@ package bdi4jade.examples.blocksworld.plan;
 
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.annotation.Parameter;
 import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.event.GoalEvent;
@@ -40,6 +43,7 @@ import bdi4jade.plan.planbody.BeliefGoalPlanBody;
  */
 public class TopLevelPlanBody extends BeliefGoalPlanBody {
 
+	private static final Log log = LogFactory.getLog(TopLevelPlanBody.class);
 	private static final long serialVersionUID = -5919677537834351951L;
 
 	private int counter;

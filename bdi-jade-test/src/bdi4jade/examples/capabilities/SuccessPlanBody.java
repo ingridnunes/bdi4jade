@@ -22,6 +22,9 @@
 
 package bdi4jade.examples.capabilities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
@@ -30,6 +33,7 @@ import bdi4jade.plan.planbody.AbstractPlanBody;
  */
 public class SuccessPlanBody extends AbstractPlanBody {
 
+	private static final Log log = LogFactory.getLog(SuccessPlanBody.class);
 	private static final long serialVersionUID = -9039447524062487795L;
 
 	public void action() {
