@@ -75,7 +75,7 @@ public class SubgoalCapability extends Capability {
 			if (counter >= 5) {
 				log.info("Plan " + getPlan().getId()
 						+ " completed its execution.");
-				setEndState(EndState.SUCCESSFULL);
+				setEndState(EndState.SUCCESSFUL);
 			}
 		}
 

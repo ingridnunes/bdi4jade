@@ -43,7 +43,7 @@ public interface Plan extends MetadataElement {
 	 * @author Ingrid Nunes
 	 */
 	public enum EndState {
-		FAILED, SUCCESSFULL;
+		FAILED, SUCCESSFUL;
 	}
 
 	/**

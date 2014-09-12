@@ -46,7 +46,7 @@ public class PongPlanBody extends AbstractPlanBody {
 		reply.setContent(MSG_CONTENT);
 		this.myAgent.send(reply);
 		log.info("Pong sent to agent " + pingMsg.getSender().getName() + "!");
-		setEndState(EndState.SUCCESSFULL);
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 	@Parameter(direction = Direction.IN)

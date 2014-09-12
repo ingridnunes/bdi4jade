@@ -62,7 +62,7 @@ public class SequentialGoalPlanBody extends AbstractPlanBody implements
 	public void action() {
 		if (this.currentGoal == null) {
 			if (!it.hasNext()) {
-				setEndState(EndState.SUCCESSFULL);
+				setEndState(EndState.SUCCESSFUL);
 				log.debug("All goals completed.");
 			} else {
 				this.currentGoal = it.next();

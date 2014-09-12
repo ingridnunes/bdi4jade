@@ -127,7 +127,7 @@ public class TransportationPlanBody extends AbstractPlanBody {
 		this.satisfaction.addValue(this.satisfaction.getCount() + 1,
 				satisfaction);
 		log.debug("Plan finished!");
-		setEndState(EndState.SUCCESSFULL);
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 	@SuppressWarnings("unchecked")

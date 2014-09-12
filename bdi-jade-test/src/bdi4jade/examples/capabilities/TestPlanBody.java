@@ -151,7 +151,7 @@ public class TestPlanBody extends AbstractPlanBody {
 			this.step = TestStep.COMPLETED;
 			break;
 		case COMPLETED:
-			setEndState(EndState.SUCCESSFULL);
+			setEndState(EndState.SUCCESSFUL);
 			break;
 		}
 	}

@@ -67,7 +67,7 @@ public class PingPlanBody extends AbstractPlanBody {
 				log.info("Content: " + reply.getContent());
 				counter++;
 				if (counter == pingTimes.getValue()) {
-					setEndState(EndState.SUCCESSFULL);
+					setEndState(EndState.SUCCESSFUL);
 				} else {
 					this.sent = false;
 				}

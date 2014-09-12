@@ -65,7 +65,7 @@ public class PerformMovePlanBody extends AbstractPlanBody {
 		}
 		onSet.addValue(new On(thing1, thing2));
 
-		setEndState(EndState.SUCCESSFULL);
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 	@Parameter(direction = Direction.IN, mandatory = true)

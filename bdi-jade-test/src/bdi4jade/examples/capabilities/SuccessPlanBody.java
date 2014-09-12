@@ -36,7 +36,7 @@ public class SuccessPlanBody extends AbstractPlanBody {
 		log.info("Plan " + getPlan().getId() + " executed from capability "
 				+ getPlan().getPlanLibrary().getCapability()
 				+ " to achieve goal " + getGoal());
-		setEndState(EndState.SUCCESSFULL);
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 }

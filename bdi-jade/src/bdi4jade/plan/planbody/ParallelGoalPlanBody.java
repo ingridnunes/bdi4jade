@@ -65,7 +65,7 @@ public class ParallelGoalPlanBody extends AbstractPlanBody implements
 					this.completedGoals.add(goalEvent.getGoal());
 					log.debug("Goal " + goalEvent.getGoal() + " completed!");
 					if (completedGoals.size() == parallelGoal.getGoals().size()) {
-						setEndState(EndState.SUCCESSFULL);
+						setEndState(EndState.SUCCESSFUL);
 						log.debug("All goals completed.");
 					}
 				} else {

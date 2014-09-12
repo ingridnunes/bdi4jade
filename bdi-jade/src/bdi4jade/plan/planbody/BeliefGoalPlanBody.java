@@ -67,7 +67,7 @@ public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 	protected boolean isGoalAchieved() {
 		BeliefGoal<?> goal = (BeliefGoal<?>) getGoal();
 		if (goal.isAchieved(getBeliefBase())) {
-			setEndState(EndState.SUCCESSFULL);
+			setEndState(EndState.SUCCESSFUL);
 			return true;
 		}
 		return false;

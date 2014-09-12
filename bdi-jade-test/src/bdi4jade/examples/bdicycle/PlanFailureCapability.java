@@ -66,7 +66,7 @@ public class PlanFailureCapability extends Capability {
 			long random = new Random().nextLong();
 			log.info("Random: " + random);
 			if (random % 3 == 0)
-				setEndState(EndState.SUCCESSFULL);
+				setEndState(EndState.SUCCESSFUL);
 			else
 				setEndState(EndState.FAILED);
 			log.info(getGoal() + " Plan#" + getPlan().getId() + " EndState: "

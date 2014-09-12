@@ -35,7 +35,7 @@ public class MyPlan2Body extends AbstractPlanBody {
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
-		setEndState(EndState.SUCCESSFULL);
+		setEndState(EndState.SUCCESSFUL);
 	}
 
 }

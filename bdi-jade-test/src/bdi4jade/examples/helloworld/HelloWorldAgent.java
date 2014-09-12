@@ -53,7 +53,7 @@ public class HelloWorldAgent extends SingleCapabilityAgent {
 		public void action() {
 			System.out.println("Hello, "
 					+ ((HelloWorldGoal) getGoal()).getName() + "!");
-			setEndState(EndState.SUCCESSFULL);
+			setEndState(EndState.SUCCESSFUL);
 		}
 	}
 

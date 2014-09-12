@@ -78,7 +78,7 @@ public class HelloWorldAnnotatedCapability extends Capability {
 		public void action() {
 			System.out.println("Hello, " + name + "!");
 			this.time = System.currentTimeMillis();
-			setEndState(EndState.SUCCESSFULL);
+			setEndState(EndState.SUCCESSFUL);
 		}
 
 		@Parameter(direction = Direction.OUT)
