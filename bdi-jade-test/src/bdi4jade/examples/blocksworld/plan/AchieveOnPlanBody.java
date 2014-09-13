@@ -93,7 +93,7 @@ public class AchieveOnPlanBody extends BeliefGoalPlanBody {
 	}
 
 	@Override
-	public void onStart() {
+	public void init() {
 		this.step = Step.CLEAR_1;
 	}
 

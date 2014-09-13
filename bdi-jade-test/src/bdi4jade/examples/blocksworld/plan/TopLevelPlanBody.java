@@ -85,7 +85,7 @@ public class TopLevelPlanBody extends BeliefGoalPlanBody {
 	}
 
 	@Override
-	public void onStart() {
+	public void init() {
 		this.counter = 0;
 		log.info("World Model at start is:");
 		log.info(getBeliefBase());

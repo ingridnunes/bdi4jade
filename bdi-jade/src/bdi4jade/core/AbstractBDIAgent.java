@@ -556,6 +556,9 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 * 
 	 * @param owner
 	 *            the capability class that is the goal owner.
+	 * @param internal
+	 *            a boolean indicated whether the goal is internal. It is true
+	 *            if the goal is internal, false otherwise.
 	 * @return the capability instances related to this capability that owns the
 	 *         goal, or an empty set if the agent cannot add this goal.
 	 */

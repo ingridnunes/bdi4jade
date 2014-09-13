@@ -28,7 +28,9 @@ package bdi4jade.belief;
  * 
  * @author Ingrid Nunes
  * 
- * @param <T>
+ * @param <K>
+ *            the type of the belief name.
+ * @param <V>
  *            the type of the belief value.
  */
 public class TransientBelief<K, V> extends AbstractBelief<K, V> {

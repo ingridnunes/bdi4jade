@@ -361,10 +361,10 @@ public class Capability implements Serializable {
 	 * checks the plan library of this capabilities and, if cannot achieve it,
 	 * it checks part capabilities, recursively.
 	 * 
-	 * @param msg
-	 *            the message to be checked.
-	 * @return true if this capability has at least a plan that can process the
-	 *         message.
+	 * @param goal
+	 *            the goal to be checked.
+	 * @return true if this capability has at least a plan that can achieve the
+	 *         goal.
 	 */
 	public boolean canAchieve(Goal goal) {
 		if (planLibrary.canAchieve(goal)) {

@@ -341,6 +341,8 @@ public class BeliefBase implements Serializable {
 	 * 
 	 * @param name
 	 *            the belief to be checked
+	 * @param value
+	 *            the value to be checked
 	 * @return true if the belief base contains the belief.
 	 */
 	public boolean hasBelief(Object name, Object value) {

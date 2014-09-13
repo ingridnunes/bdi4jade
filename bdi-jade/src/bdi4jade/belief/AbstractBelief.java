@@ -165,8 +165,8 @@ public abstract class AbstractBelief<K, V> extends MetadataElementImpl
 	/**
 	 * @see Belief#removeBeliefBase(BeliefBase)
 	 */
-	public void removeBeliefBase(BeliefBase beliefBases) {
-		this.beliefBases.remove(beliefBases);
+	public void removeBeliefBase(BeliefBase beliefBase) {
+		this.beliefBases.remove(beliefBase);
 	}
 
 	/**

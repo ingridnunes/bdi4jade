@@ -73,7 +73,7 @@ public class ClearPlanBody extends BeliefGoalPlanBody {
 	}
 
 	@Override
-	public void onStart() {
+	public void init() {
 		this.goalDispatched = false;
 	}
 

@@ -46,6 +46,8 @@ public interface AgentPlanSelectionStrategy extends AgentReasoningStrategy {
 	 *            the goal to be achieved.
 	 * @param capabilityPlans
 	 *            the set of candidate plans of each capability, as a map.
+	 * 
+	 * @return the selected plan.
 	 */
 	public Plan selectPlan(Goal goal, Map<Capability, Set<Plan>> capabilityPlans);
 

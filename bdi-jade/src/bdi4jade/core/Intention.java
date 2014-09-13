@@ -78,6 +78,10 @@ public class Intention {
 	 *            the goal to be achieved.
 	 * @param bdiAgent
 	 *            the bdiAgent associated with this intention.
+	 * 
+	 * @throws IllegalAccessException
+	 *             if the goal was dispatched by a capability that has no access
+	 *             to the goal to be achieved.
 	 */
 	public Intention(Goal goal, AbstractBDIAgent bdiAgent)
 			throws IllegalAccessException {
@@ -95,6 +99,10 @@ public class Intention {
 	 *            the bdiAgent associated with this intention.
 	 * @param dispatcher
 	 *            the Capability that dispatched the goal.
+	 * 
+	 * @throws IllegalAccessException
+	 *             if the goal was dispatched by a capability that has no access
+	 *             to the goal to be achieved.
 	 */
 	public Intention(Goal goal, AbstractBDIAgent bdiAgent, Capability dispatcher)
 			throws IllegalAccessException {

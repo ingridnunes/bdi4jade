@@ -33,7 +33,9 @@ import java.util.Set;
  * 
  * @author Ingrid Nunes
  * 
- * @param <T>
+ * @param <K>
+ *            the type of the belief name.
+ * @param <V>
  *            the type of the belief set values.
  */
 public class TransientBeliefSet<K, V> extends AbstractBeliefSet<K, V> {

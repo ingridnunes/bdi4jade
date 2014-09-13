@@ -63,8 +63,8 @@ public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 	 * @param value
 	 *            the value that is target of this goal.
 	 */
-	public BeliefSetHasValueGoal(K beliefName, V value) {
-		this.beliefName = beliefName;
+	public BeliefSetHasValueGoal(K beliefSetName, V value) {
+		this.beliefName = beliefSetName;
 		this.value = value;
 	}
 
