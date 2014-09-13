@@ -27,6 +27,7 @@ import jade.lang.acl.MessageTemplate;
 
 import java.lang.reflect.Modifier;
 
+import bdi4jade.core.BDIAgent;
 import bdi4jade.core.Capability;
 import bdi4jade.exception.PlanInstantiationException;
 import bdi4jade.goal.Goal;
@@ -262,10 +263,20 @@ public class DefaultPlan extends AbstractPlan {
 		try {
 			Class<?> enclosingClass = planBodyClass.getEnclosingClass();
 			if (!Modifier.isStatic(planBodyClass.getModifiers())
-					&& enclosingClass != null
-					&& Capability.class.isAssignableFrom(enclosingClass)) {
-				return planBodyClass.getDeclaredConstructor(enclosingClass)
-						.newInstance(getPlanLibrary().getCapability());
+					&& enclosingClass != null) {
+				if (BDIAgent.class.isAssignableFrom(enclosingClass)) {
+					return planBodyClass.getDeclaredConstructor(enclosingClass)
+							.newInstance(
+									getPlanLibrary().getCapability()
+											.getMyAgent());
+				} else if (Capability.class.isAssignableFrom(enclosingClass)) {
+					return planBodyClass.getDeclaredConstructor(enclosingClass)
+							.newInstance(getPlanLibrary().getCapability());
+				} else {
+					assert Plan.class.isAssignableFrom(enclosingClass);
+					return planBodyClass.getDeclaredConstructor(enclosingClass)
+							.newInstance(this);
+				}
 			} else {
 				return this.planBodyClass.newInstance();
 			}
