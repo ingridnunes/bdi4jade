@@ -23,45 +23,16 @@
 package bdi4jade.belief;
 
 /**
- * This class extends the {@link TransientBelief} class and represents a
- * transient propositional belief, which is not persisted in a permanent memory.
+ * This interface represents a belief that is a logic predicate. The information
+ * is represented as an object of type K, which has a boolean value to indicate
+ * if the formula is true or false. Null may represents the absence of knowledge
+ * if the formula is true or false.
+ * 
+ * @param <K>
+ *            the type of the propositional statement.
  * 
  * @author Ingrid Nunes
  */
-public class TransientPropositionalBelief<K> extends
-		TransientBelief<K, Boolean> implements PropositionalBelief<K> {
-
-	private static final long serialVersionUID = -2315938302480821432L;
-
-	/**
-	 * The default constructor. It should be only used if persistence frameworks
-	 * are used.
-	 */
-	public TransientPropositionalBelief() {
-
-	}
-
-	/**
-	 * Creates a new transient propositional belief, whose value is true.
-	 * 
-	 * @param name
-	 *            the belief name.
-	 */
-	public TransientPropositionalBelief(K name) {
-		super(name, Boolean.TRUE);
-	}
-
-	/**
-	 * Initializes a transient propositional belief with its name and a initial
-	 * value.
-	 * 
-	 * @param name
-	 *            the belief name.
-	 * @param value
-	 *            the initial belief value.
-	 */
-	public TransientPropositionalBelief(K name, Boolean value) {
-		super(name, value);
-	}
+public interface Predicate<K> extends Belief<K, Boolean> {
 
 }

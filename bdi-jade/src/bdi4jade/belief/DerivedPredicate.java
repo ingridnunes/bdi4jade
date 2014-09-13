@@ -23,16 +23,34 @@
 package bdi4jade.belief;
 
 /**
- * This interface represents a belief that is a propositional logic statement.
- * The information is represented as an object of type K, which has a boolean
- * value to indicate if the formula is true or false. Null may represents the
- * absence of knowledge if the formula is true or false.
- * 
- * @param <T>
- *            the type of the propositional statement.
+ * This class represents a logic predicate that is derived from other agent
+ * belief. The evaluation of this predicate is not given, but derived from other
+ * values of a belief base.
  * 
  * @author Ingrid Nunes
  */
-public interface PropositionalBelief<K> extends Belief<K, Boolean> {
+public abstract class DerivedPredicate<K> extends DerivedBelief<K, Boolean>
+		implements Predicate<K> {
+
+	private static final long serialVersionUID = -1551397656846999182L;
+
+	/**
+	 * The default constructor. It should be only used if persistence frameworks
+	 * are used.
+	 */
+	public DerivedPredicate() {
+		super();
+	}
+
+	/**
+	 * Creates a new derived predicate. The value of this belief cannot be set
+	 * as it is derived from other values of a belief base.
+	 * 
+	 * @param name
+	 *            the belief name.
+	 */
+	public DerivedPredicate(K name) {
+		super(name);
+	}
 
 }
