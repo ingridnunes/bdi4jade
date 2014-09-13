@@ -58,6 +58,14 @@ public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 	protected abstract void execute();
 
 	/**
+	 * This method is a placeholder for subclasses. It is invoked by the
+	 * {@link #onStart()} method, after it performs some pre-processing.
+	 */
+	protected void init() {
+
+	}
+
+	/**
 	 * Returns true if the goal of this plan body was achieved. If so, it sets
 	 * the end state to successful, which cases this plan body to complete its
 	 * execution.
@@ -79,9 +87,10 @@ public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 	 * .
 	 */
 	@Override
-	public void onStart() {
+	public final void onStart() {
 		if (!(getGoal() instanceof BeliefGoal))
 			throw new IllegalArgumentException("BeliefGoal expected.");
+		init();
 	}
 
 }
