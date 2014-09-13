@@ -54,6 +54,17 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	}
 
 	/**
+	 * Creates a new BeliefValueGoal with the provided belief. The value
+	 * associated with this goal is initialized with null.
+	 * 
+	 * @param beliefName
+	 *            the belief name.
+	 */
+	public BeliefValueGoal(K beliefName) {
+		this(beliefName, null);
+	}
+
+	/**
 	 * Creates a new BeliefValueGoal with the provided belief name and a value.
 	 * This value represents the value that is aimed to be associated with the
 	 * belief.
