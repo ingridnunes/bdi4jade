@@ -120,7 +120,9 @@ public class BeliefBase implements Serializable {
 	 *            the listener to be added.
 	 */
 	public void addBeliefListener(BeliefListener beliefListener) {
-		this.beliefListeners.add(beliefListener);
+		synchronized (beliefListeners) {
+			this.beliefListeners.add(beliefListener);
+		}
 	}
 
 	/**
@@ -162,7 +164,9 @@ public class BeliefBase implements Serializable {
 	 * @return the belief listeners.
 	 */
 	public Set<BeliefListener> getBeliefListeners() {
-		return new HashSet<>(beliefListeners);
+		synchronized (beliefListeners) {
+			return new HashSet<>(beliefListeners);
+		}
 	}
 
 	/**
@@ -366,11 +370,13 @@ public class BeliefBase implements Serializable {
 	 *            the belief that was changed
 	 */
 	protected void notifyBeliefChanged(BeliefEvent beliefChanged) {
-		for (BeliefListener beliefListener : beliefListeners) {
-			beliefListener.eventOccurred(beliefChanged);
-		}
-		for (Capability part : capability.getPartCapabilities()) {
-			part.getBeliefBase().notifyBeliefChanged(beliefChanged);
+		synchronized (beliefListeners) {
+			for (BeliefListener beliefListener : beliefListeners) {
+				beliefListener.eventOccurred(beliefChanged);
+			}
+			for (Capability part : capability.getPartCapabilities()) {
+				part.getBeliefBase().notifyBeliefChanged(beliefChanged);
+			}
 		}
 	}
 
@@ -423,7 +429,9 @@ public class BeliefBase implements Serializable {
 	 *            the listener to be removed.
 	 */
 	public void removeBeliefListener(BeliefListener beliefListener) {
-		this.beliefListeners.remove(beliefListener);
+		synchronized (beliefListeners) {
+			this.beliefListeners.remove(beliefListener);
+		}
 	}
 
 	/**
