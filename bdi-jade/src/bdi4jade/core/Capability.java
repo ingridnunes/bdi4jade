@@ -275,6 +275,7 @@ public class Capability implements Serializable {
 				}
 			} catch (Exception exc) {
 				log.warn(exc);
+				exc.printStackTrace();
 			}
 			field.setAccessible(b);
 		}

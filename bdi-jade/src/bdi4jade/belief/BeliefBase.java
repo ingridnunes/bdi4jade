@@ -370,13 +370,12 @@ public class BeliefBase implements Serializable {
 	 *            the belief that was changed
 	 */
 	protected void notifyBeliefChanged(BeliefEvent beliefChanged) {
-		synchronized (beliefListeners) {
-			for (BeliefListener beliefListener : beliefListeners) {
-				beliefListener.eventOccurred(beliefChanged);
-			}
-			for (Capability part : capability.getPartCapabilities()) {
-				part.getBeliefBase().notifyBeliefChanged(beliefChanged);
-			}
+		Set<BeliefListener> beliefListeners = getBeliefListeners();
+		for (BeliefListener beliefListener : beliefListeners) {
+			beliefListener.eventOccurred(beliefChanged);
+		}
+		for (Capability part : capability.getPartCapabilities()) {
+			part.getBeliefBase().notifyBeliefChanged(beliefChanged);
 		}
 	}
 
