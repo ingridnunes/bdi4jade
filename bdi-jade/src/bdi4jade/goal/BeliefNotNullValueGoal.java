@@ -22,8 +22,6 @@
 
 package bdi4jade.goal;
 
-import bdi4jade.annotation.Parameter;
-import bdi4jade.annotation.Parameter.Direction;
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
 
@@ -39,11 +37,9 @@ import bdi4jade.belief.BeliefBase;
  * 
  * @author Ingrid Nunes
  */
-public class BeliefNotNullValueGoal<K, V> implements BeliefGoal<K> {
+public class BeliefNotNullValueGoal<K, V> extends AbstractBeliefGoal<K> {
 
 	private static final long serialVersionUID = 2493877854717226283L;
-
-	private K beliefName;
 
 	/**
 	 * Default constructor.
@@ -53,13 +49,13 @@ public class BeliefNotNullValueGoal<K, V> implements BeliefGoal<K> {
 	}
 
 	/**
-	 * Creates a new BeliefValueGoal with the provided belief.
+	 * Creates a new BeliefNotNullValueGoal with the provided belief.
 	 * 
 	 * @param beliefName
 	 *            the belief name.
 	 */
 	public BeliefNotNullValueGoal(K beliefName) {
-		this.beliefName = beliefName;
+		super(beliefName);
 	}
 
 	/**
@@ -69,19 +65,9 @@ public class BeliefNotNullValueGoal<K, V> implements BeliefGoal<K> {
 	public boolean equals(Object obj) {
 		if (obj instanceof BeliefNotNullValueGoal) {
 			BeliefNotNullValueGoal<?, ?> bg = (BeliefNotNullValueGoal<?, ?>) obj;
-			return (!beliefName.equals(bg.beliefName));
+			return beliefName.equals(bg.beliefName);
 		}
 		return false;
-	}
-
-	/**
-	 * Returns the name of the belief associated with this goal.
-	 * 
-	 * @return the belief name.
-	 */
-	@Parameter(direction = Direction.IN)
-	public K getBeliefName() {
-		return beliefName;
 	}
 
 	/**
@@ -112,16 +98,6 @@ public class BeliefNotNullValueGoal<K, V> implements BeliefGoal<K> {
 		} else {
 			return belief.getValue() != null;
 		}
-	}
-
-	/**
-	 * Sets the name of the belief associated with this goal.
-	 * 
-	 * @param beliefName
-	 *            the belief name.
-	 */
-	public void setBeliefName(K beliefName) {
-		this.beliefName = beliefName;
 	}
 
 	/**

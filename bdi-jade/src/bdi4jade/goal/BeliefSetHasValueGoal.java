@@ -39,11 +39,10 @@ import bdi4jade.belief.BeliefSet;
  * 
  * @author Ingrid Nunes
  */
-public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
+public class BeliefSetHasValueGoal<K, V> extends AbstractBeliefGoal<K> {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
-	private K beliefName;
 	private V value;
 
 	/**
@@ -64,7 +63,7 @@ public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 	 *            the value that is target of this goal.
 	 */
 	public BeliefSetHasValueGoal(K beliefSetName, V value) {
-		this.beliefName = beliefSetName;
+		super(beliefSetName);
 		this.value = value;
 	}
 
@@ -86,16 +85,6 @@ public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Returns the name of the belief associated with this goal.
-	 * 
-	 * @return the belief name.
-	 */
-	@Parameter(direction = Direction.IN)
-	public K getBeliefName() {
-		return beliefName;
 	}
 
 	/**
@@ -139,16 +128,6 @@ public class BeliefSetHasValueGoal<K, V> implements BeliefGoal<K> {
 		} else {
 			return beliefSet.hasValue(value);
 		}
-	}
-
-	/**
-	 * Sets the name of the belief associated with this goal.
-	 * 
-	 * @param beliefName
-	 *            the belief name.
-	 */
-	public void setBeliefName(K beliefName) {
-		this.beliefName = beliefName;
 	}
 
 	/**

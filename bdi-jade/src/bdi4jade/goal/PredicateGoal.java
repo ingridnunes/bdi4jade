@@ -32,15 +32,14 @@ package bdi4jade.goal;
  * 
  * @author Ingrid Nunes
  */
-public class PropositionalBeliefValueGoal<K> extends
-		BeliefValueGoal<K, Boolean> {
+public class PredicateGoal<K> extends BeliefValueGoal<K, Boolean> {
 
 	private static final long serialVersionUID = -6711494133447825608L;
 
 	/**
 	 * Default constructor.
 	 */
-	public PropositionalBeliefValueGoal() {
+	public PredicateGoal() {
 
 	}
 
@@ -54,7 +53,7 @@ public class PropositionalBeliefValueGoal<K> extends
 	 * @param value
 	 *            the boolean value that is target of this goal.
 	 */
-	public PropositionalBeliefValueGoal(K beliefName, Boolean value) {
+	public PredicateGoal(K beliefName, Boolean value) {
 		super(beliefName, value);
 	}
 

@@ -39,11 +39,10 @@ import bdi4jade.belief.BeliefBase;
  * 
  * @author Ingrid Nunes
  */
-public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
+public class BeliefValueGoal<K, V> extends AbstractBeliefGoal<K> {
 
 	private static final long serialVersionUID = 2493877854717226283L;
 
-	private K beliefName;
 	private V value;
 
 	/**
@@ -75,7 +74,7 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 	 *            the value that is target of this goal.
 	 */
 	public BeliefValueGoal(K beliefName, V value) {
-		this.beliefName = beliefName;
+		super(beliefName);
 		this.value = value;
 	}
 
@@ -97,16 +96,6 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Returns the name of the belief associated with this goal.
-	 * 
-	 * @return the belief name.
-	 */
-	@Parameter(direction = Direction.IN)
-	public K getBeliefName() {
-		return beliefName;
 	}
 
 	/**
@@ -154,16 +143,6 @@ public class BeliefValueGoal<K, V> implements BeliefGoal<K> {
 				return belief.getValue().equals(value);
 			}
 		}
-	}
-
-	/**
-	 * Sets the name of the belief associated with this goal.
-	 * 
-	 * @param beliefName
-	 *            the belief name.
-	 */
-	public void setBeliefName(K beliefName) {
-		this.beliefName = beliefName;
 	}
 
 	/**

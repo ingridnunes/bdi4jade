@@ -22,6 +22,9 @@
 
 package bdi4jade.plan.planbody;
 
+import bdi4jade.annotation.Parameter;
+import bdi4jade.annotation.Parameter.Direction;
+import bdi4jade.belief.Belief;
 import bdi4jade.goal.BeliefGoal;
 import bdi4jade.plan.Plan.EndState;
 
@@ -56,6 +59,12 @@ public abstract class BeliefGoalPlanBody extends AbstractPlanBody {
 	 * of steps needed to achieve this plan body goal.
 	 */
 	protected abstract void execute();
+
+	@Parameter(direction = Direction.OUT)
+	public Belief<?, ?> getOutputBelief() {
+		return getBeliefBase().getBelief(
+				((BeliefGoal<?>) getGoal()).getBeliefName());
+	}
 
 	/**
 	 * This method is a placeholder for subclasses. It is invoked by the

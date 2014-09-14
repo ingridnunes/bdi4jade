@@ -22,6 +22,7 @@
 
 package bdi4jade.goal;
 
+import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
 
 /**
@@ -40,6 +41,13 @@ public interface BeliefGoal<K> extends Goal {
 	public K getBeliefName();
 
 	/**
+	 * Returns the belief which is the output of this goal achievement.
+	 * 
+	 * @return the belief.
+	 */
+	public Belief<K, ?> getOutputBelief();
+
+	/**
 	 * Checks whether this goal is achieved by checking the provided belief
 	 * base.
 	 * 
@@ -48,5 +56,12 @@ public interface BeliefGoal<K> extends Goal {
 	 * @return true if goal was achieved, false otherwise.
 	 */
 	public boolean isAchieved(BeliefBase beliefBase);
+
+	/**
+	 * Sets the belief which is the output of this goal achievement.
+	 * 
+	 * @return the belief.
+	 */
+	public void setOutputBelief(Belief<K, ?> belief);
 
 }
