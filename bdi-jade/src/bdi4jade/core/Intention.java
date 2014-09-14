@@ -226,8 +226,7 @@ public class Intention {
 			break;
 		case TRYING_TO_ACHIEVE:
 			this.waiting = true;
-			this.currentPlan.stop();
-			this.currentPlan = null;
+			this.currentPlan.block();
 			break;
 		case PLAN_FAILED:
 			this.waiting = true;
@@ -325,6 +324,10 @@ public class Intention {
 		switch (status) {
 		case WAITING:
 			this.noLongerDesired = true;
+			if (currentPlan != null) {
+				this.currentPlan.stop();
+				this.currentPlan = null;
+			}
 			break;
 		case TRYING_TO_ACHIEVE:
 			this.noLongerDesired = true;
@@ -367,7 +370,11 @@ public class Intention {
 			break;
 		case WAITING:
 			this.waiting = false;
-			dispatchPlan();
+			if (currentPlan != null) {
+				this.currentPlan.restart();
+			} else {
+				dispatchPlan();
+			}
 			break;
 		case PLAN_FAILED:
 			this.executedPlans.add(this.currentPlan.getPlan());

@@ -48,6 +48,21 @@ import bdi4jade.plan.Plan.EndState;
 public interface PlanBody extends GoalListener {
 
 	/**
+	 * Blocks this behaviour. It should be noticed that this method is NOT a
+	 * blocking call: when it is invoked, the internal behaviour state is set to
+	 * Blocked so that, as soon as the action() method returns, the behaviour is
+	 * put into a blocked behaviours queue so that it will not be scheduled
+	 * anymore. The behaviour is moved back in the pool of active behaviours
+	 * when either a message is received or the behaviour is explicitly
+	 * restarted by means of its restart() method. If this behaviour is a child
+	 * of a CompositeBehaviour a suitable event is fired to notify its parent
+	 * behaviour up to the behaviour composition hierarchy root.
+	 * 
+	 * @see Behaviour#block()
+	 */
+	public void block();
+
+	/**
 	 * Dispatches a goal to be achieved. It is added as a top level agent goal,
 	 * that is, the dispatched goal is independent of the goal that this plan
 	 * body is trying to achieve.
@@ -169,8 +184,6 @@ public interface PlanBody extends GoalListener {
 	 * body. Note that onEnd is called after the plan body has already stopped
 	 * its execution.
 	 * 
-	 * @see Behaviour#onEnd()
-	 * 
 	 * @return an integer code representing the termination value of the
 	 *         behaviour.
 	 * 
@@ -195,6 +208,17 @@ public interface PlanBody extends GoalListener {
 	 * @see Behaviour#reset()
 	 */
 	public void reset();
+
+	/**
+	 * Restarts a blocked behaviour. This method fires a suitable event to
+	 * notify this behaviour's parent. When the agent scheduler inserts a
+	 * blocked event back into the agent ready queue, it restarts it
+	 * automatically. When this method is called, any timer associated with this
+	 * behaviour object is cleared.
+	 * 
+	 * @see Behaviour#restart()
+	 */
+	public void restart();
 
 	/**
 	 * Starts the execution of a plan body, a {@link Behaviour}, associated with
