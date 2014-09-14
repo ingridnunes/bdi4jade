@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import bdi4jade.event.GoalListener;
 import bdi4jade.goal.Goal;
 import bdi4jade.goal.GoalStatus;
 
@@ -54,16 +55,19 @@ public class GoalUpdateSet {
 		private final Capability dispatcher;
 		private final Goal goal;
 		private final Intention intention;
+		private final GoalListener listener;
 		private final GoalStatus status;
 
 		private GoalDescription(Goal goal) {
-			this(goal, null);
+			this(goal, null, null);
 		}
 
-		private GoalDescription(Goal goal, Capability dispatcher) {
+		private GoalDescription(Goal goal, Capability dispatcher,
+				GoalListener listener) {
 			this.goal = goal;
 			this.status = null;
 			this.dispatcher = dispatcher;
+			this.listener = listener;
 			this.intention = null;
 		}
 
@@ -71,6 +75,7 @@ public class GoalUpdateSet {
 			this.goal = intention.getGoal();
 			this.status = intention.getStatus();
 			this.dispatcher = intention.getDispatcher();
+			this.listener = null;
 			this.intention = intention;
 		}
 
@@ -100,6 +105,15 @@ public class GoalUpdateSet {
 		 */
 		Intention getIntention() {
 			return intention;
+		}
+
+		/**
+		 * Returns a listener of the goal.
+		 * 
+		 * @return the listener.
+		 */
+		public GoalListener getListener() {
+			return listener;
 		}
 
 		/**
@@ -167,7 +181,38 @@ public class GoalUpdateSet {
 	 *            the capability that dispatched the goal.
 	 */
 	public void generateGoal(Goal goal, Capability dispatcher) {
-		this.generatedGoals.add(new GoalDescription(goal, dispatcher));
+		this.generatedGoals.add(new GoalDescription(goal, dispatcher, null));
+	}
+
+	/**
+	 * Indicates that a goal should be added to the agent, with the capability
+	 * that dispatched the goal and provided listener. The goal is added to the
+	 * set of generated goals.
+	 * 
+	 * @param goal
+	 *            the goal to be added.
+	 * @param dispatcher
+	 *            the capability that dispatched the goal.
+	 * @param listener
+	 *            a goal listener.
+	 */
+	public void generateGoal(Goal goal, Capability dispatcher,
+			GoalListener listener) {
+		this.generatedGoals
+				.add(new GoalDescription(goal, dispatcher, listener));
+	}
+
+	/**
+	 * Indicates that a goal should be added to the agent, with the provided
+	 * listener. The goal is added to the set of generated goals.
+	 * 
+	 * @param goal
+	 *            the goal to be added.
+	 * @param listener
+	 *            a goal listener.
+	 */
+	public void generateGoal(Goal goal, GoalListener listener) {
+		this.generatedGoals.add(new GoalDescription(goal, null, listener));
 	}
 
 	/**

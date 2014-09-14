@@ -133,7 +133,8 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 						.getGeneratedGoals()) {
 					try {
 						Intention intention = addIntention(
-								goal.getDispatcher(), goal.getGoal(), null);
+								goal.getDispatcher(), goal.getGoal(),
+								goal.getListener());
 						if (intention != null)
 							agentGoalUpdateSet.addIntention(intention);
 					} catch (IllegalAccessException exc) {
@@ -146,7 +147,8 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 							.getGeneratedGoals()) {
 						try {
 							Intention intention = addIntention(
-									goal.getDispatcher(), goal.getGoal(), null);
+									goal.getDispatcher(), goal.getGoal(),
+									goal.getListener());
 							if (intention != null)
 								goalUpdateSet.addIntention(intention);
 						} catch (IllegalAccessException exc) {
