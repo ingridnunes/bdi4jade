@@ -38,10 +38,10 @@ import org.apache.log4j.PropertyConfigurator;
 import bdi4jade.event.GoalEvent;
 import bdi4jade.event.GoalListener;
 import bdi4jade.examples.BDI4JADEExamplesApp;
+import bdi4jade.examples.planselection.TransportationAgent.TransportationGoal;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class ExperimentRunner implements GoalListener {
 

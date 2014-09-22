@@ -23,8 +23,7 @@
 package bdi4jade.examples.planselection;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class PairT<T1, T2> {
 

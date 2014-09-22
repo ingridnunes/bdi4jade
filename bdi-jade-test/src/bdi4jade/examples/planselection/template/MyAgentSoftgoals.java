@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// Copyright (C) 2013 Ingrid Nunes
+// Copyright (C) 2013  Ingrid Nunes
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -20,16 +20,24 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.planselection;
+package bdi4jade.examples.planselection.template;
 
-import bdi4jade.goal.Goal;
+import bdi4jade.goal.NamedSoftgoal;
+import bdi4jade.goal.Softgoal;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
-public class TransportationGoal implements Goal {
+public class MyAgentSoftgoals {
 
-	private static final long serialVersionUID = 5008348479798066431L;
+	// Softgoals
+	public static final Softgoal Softgoal1 = new NamedSoftgoal("Softgoal1");
+	public static final Softgoal Softgoal2 = new NamedSoftgoal("Softgoal2");
+
+	public static final Softgoal ALL_SOFTGOALS[] = { Softgoal1, Softgoal2 };
+
+	private MyAgentSoftgoals() {
+
+	}
 
 }

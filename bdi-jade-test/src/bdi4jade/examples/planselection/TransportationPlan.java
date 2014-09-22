@@ -27,14 +27,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bdi4jade.examples.planselection.TransportationAgent.TransportationGoal;
 import bdi4jade.extension.planselection.utilitybased.PlanContribution;
 import bdi4jade.goal.GoalTemplateFactory;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.DefaultPlan;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class TransportationPlan extends DefaultPlan {
 

@@ -23,8 +23,7 @@
 package bdi4jade.examples.planselection;
 
 /**
- * @author ingridn
- * 
+ * @author Ingrid Nunes
  */
 public class Pair<T> extends PairT<T, T> {
 

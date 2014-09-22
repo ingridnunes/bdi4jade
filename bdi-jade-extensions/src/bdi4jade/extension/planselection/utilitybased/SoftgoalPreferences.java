@@ -37,7 +37,7 @@ import bdi4jade.goal.Softgoal;
 public class SoftgoalPreferences extends
 		TransientBelief<String, Map<Softgoal, Double>> {
 
-	public static final String NAME = SoftgoalPreferences.class.getSimpleName();
+	public static final String NAME = "SoftgoalPreferences";
 
 	private static final long serialVersionUID = 1802540697397519283L;
 

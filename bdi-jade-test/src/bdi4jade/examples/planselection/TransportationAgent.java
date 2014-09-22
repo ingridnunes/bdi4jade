@@ -31,14 +31,20 @@ import bdi4jade.belief.TransientBelief;
 import bdi4jade.core.SingleCapabilityAgent;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
 import bdi4jade.extension.planselection.utilitybased.UtilityBasedCabability;
+import bdi4jade.goal.Goal;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class TransportationAgent extends SingleCapabilityAgent {
+
+	public static class TransportationGoal implements Goal {
+
+		private static final long serialVersionUID = 5008348479798066431L;
+
+	}
 
 	public static final String SATISFACTION = "Satisfaction";
 

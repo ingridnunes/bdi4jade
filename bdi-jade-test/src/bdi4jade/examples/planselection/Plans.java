@@ -23,8 +23,7 @@
 package bdi4jade.examples.planselection;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public interface Plans {
 

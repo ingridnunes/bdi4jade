@@ -27,14 +27,13 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import bdi4jade.belief.TransientBelief;
+import bdi4jade.annotation.Belief;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
 import bdi4jade.plan.Plan.EndState;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class TransportationPlanBody extends AbstractPlanBody {
 
@@ -117,27 +116,24 @@ public class TransportationPlanBody extends AbstractPlanBody {
 
 	private Log log;
 	private TransportationPlan plan;
+	@Belief(name = SoftgoalPreferences.NAME)
 	private SoftgoalPreferences preferences;
-	private GenericValueFunction<Integer> satisfaction;
+	@Belief(name = TransportationAgent.SATISFACTION)
+	private bdi4jade.belief.Belief<String, GenericValueFunction<Integer>> satisfaction;
 
 	public void action() {
 		log.debug("Plan executed: " + this.plan.getId());
 		Scenario scenario = new Scenario();
 		double satisfaction = scenario.getSatisfaction();
-		this.satisfaction.addValue(this.satisfaction.getCount() + 1,
-				satisfaction);
+		this.satisfaction.getValue().addValue(
+				this.satisfaction.getValue().getCount() + 1, satisfaction);
 		log.debug("Plan finished!");
 		setEndState(EndState.SUCCESSFUL);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void onStart() {
 		this.log = LogFactory.getLog(this.getClass());
 		this.plan = (TransportationPlan) getPlan();
-		this.satisfaction = ((TransientBelief<String, GenericValueFunction<Integer>>) getBeliefBase()
-				.getBelief(TransportationAgent.SATISFACTION)).getValue();
-		this.preferences = (SoftgoalPreferences) getBeliefBase().getBelief(
-				SoftgoalPreferences.NAME);
 	}
 
 }

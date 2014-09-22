@@ -23,7 +23,7 @@
 package bdi4jade.examples.template.goal;
 
 import bdi4jade.annotation.GoalOwner;
-import bdi4jade.examples.template.MyCapability;
+import bdi4jade.examples.planselection.template.MyCapability;
 import bdi4jade.goal.Goal;
 
 /**

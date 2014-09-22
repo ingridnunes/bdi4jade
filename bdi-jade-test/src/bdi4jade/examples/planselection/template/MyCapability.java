@@ -20,7 +20,7 @@
 //
 //----------------------------------------------------------------------------
 
-package bdi4jade.examples.template;
+package bdi4jade.examples.planselection.template;
 
 import bdi4jade.examples.template.goal.MyGoal;
 import bdi4jade.examples.template.plan.MyPlan1;
@@ -30,7 +30,7 @@ import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.Plan;
 
 /**
- * @author IngridNunes
+ * @author Ingrid Nunes
  */
 public class MyCapability extends UtilityBasedCabability {
 
@@ -55,7 +55,6 @@ public class MyCapability extends UtilityBasedCabability {
 				MyAgentSoftgoals.Softgoal1, 0.3);
 		this.softgoalPreferences.setPreferenceForSoftgoal(
 				MyAgentSoftgoals.Softgoal2, 0.7);
-
 	}
 
 }

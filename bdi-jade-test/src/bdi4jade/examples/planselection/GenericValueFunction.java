@@ -27,8 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author ingrid
- * 
+ * @author Ingrid Nunes
  */
 public class GenericValueFunction<T> {
 
