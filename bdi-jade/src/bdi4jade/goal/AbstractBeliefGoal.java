@@ -113,7 +113,7 @@ public abstract class AbstractBeliefGoal<K> implements BeliefGoal<K> {
 	/**
 	 * Sets the belief which is the output of this goal achievement.
 	 * 
-	 * @return the belief.
+	 * @param belief the belief.
 	 */
 	@Override
 	public void setOutputBelief(Belief<K, ?> belief) {

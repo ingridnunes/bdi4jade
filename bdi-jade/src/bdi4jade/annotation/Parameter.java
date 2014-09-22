@@ -29,20 +29,42 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author ingrid
+ * This annotations is used to specify properties that are input, output or both
+ * of goals and plan bodies. When a plan body has an annotated input, it is set
+ * automatically by the platform by obtaining it from a goal input. When a plan
+ * body has an output, it is automatically used to set a goal output.
  * 
+ * @author Ingrid Nunes
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Parameter {
 
+	/**
+	 * This enumeration is used to indicate the parameter direction (input,
+	 * output, or both).
+	 * 
+	 * @author Ingrid Nunes
+	 */
 	public enum Direction {
 		IN, INOUT, OUT
 	};
 
+	/**
+	 * This attribute indicates the direction of the parameter. The default
+	 * value is {@link Direction#IN}.
+	 * 
+	 * @return the parameter direction.
+	 */
 	Direction direction() default Direction.IN;
 
+	/**
+	 * This attribute indicates if the parameter is mandatory. The default is
+	 * false.
+	 * 
+	 * @return true if the parameter is mandatory, false otherwise.
+	 */
 	boolean mandatory() default false;
 
 }

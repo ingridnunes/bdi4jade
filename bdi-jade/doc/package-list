@@ -3,7 +3,6 @@ bdi4jade.belief
 bdi4jade.core
 bdi4jade.event
 bdi4jade.exception
-bdi4jade.extension.planselection.utilitybased
 bdi4jade.goal
 bdi4jade.message
 bdi4jade.plan

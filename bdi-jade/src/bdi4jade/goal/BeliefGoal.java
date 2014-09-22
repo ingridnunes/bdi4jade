@@ -60,7 +60,7 @@ public interface BeliefGoal<K> extends Goal {
 	/**
 	 * Sets the belief which is the output of this goal achievement.
 	 * 
-	 * @return the belief.
+	 * @param belief the belief.
 	 */
 	public void setOutputBelief(Belief<K, ?> belief);
 

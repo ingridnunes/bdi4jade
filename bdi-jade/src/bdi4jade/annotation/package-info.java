@@ -21,7 +21,9 @@
 //----------------------------------------------------------------------------
 
 /**
- * @author ingridnunes
- *
+ * This package contains the set of annotations used to implement and 
+ * configure BDI agents and their components.
+ * 
+ * @author Ingrid Nunes
  */
 package bdi4jade.annotation;
