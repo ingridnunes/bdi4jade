@@ -27,6 +27,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.proto.states.MsgReceiver;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -220,13 +221,12 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 		 */
 		private GoalUpdateSet processIntentions(Collection<Intention> intentions) {
 			GoalUpdateSet goalUpdateSet = new GoalUpdateSet();
-			Iterator<Intention> it = intentions.iterator();
-			while (it.hasNext()) {
-				Intention intention = it.next();
+			List<Intention> intentionsList = new ArrayList<>(intentions);
+			for (Intention intention : intentionsList) {
 				GoalStatus status = intention.getStatus();
 				if (status.isFinished()) {
 					fireGoalEvent(intention);
-					it.remove();
+					intentions.remove(intention);
 					allIntentions.remove(intention.getGoal());
 				} else {
 					if (GoalStatus.PLAN_FAILED.equals(status)) {
@@ -373,30 +373,31 @@ public abstract class AbstractBDIAgent extends Agent implements BDIAgent {
 	 */
 	private final Intention addIntention(Capability dispatcher, Goal goal,
 			GoalListener goalListener) throws IllegalAccessException {
+		Intention intention = null;
 		synchronized (allIntentions) {
-			Intention intention = allIntentions.get(goal);
-			if (intention == null) {
-				intention = new Intention(goal, this, dispatcher);
-				this.allIntentions.put(goal, intention);
-				if (dispatcher == null) {
-					agentIntentions.add(intention);
-				} else {
-					dispatcher.addIntention(intention);
-				}
-				if (goalListener != null) {
-					intention.addGoalListener(goalListener);
-				}
-				fireGoalEvent(new GoalEvent(goal));
-				restart();
-				return intention;
-			} else {
+			intention = allIntentions.get(goal);
+			if (intention != null) {
 				log.info("This agent already has goal: " + goal);
 				if (goalListener != null) {
 					intention.addGoalListener(goalListener);
 				}
 				return null;
 			}
+
+			intention = new Intention(goal, this, dispatcher);
+			this.allIntentions.put(goal, intention);
+			if (dispatcher == null) {
+				agentIntentions.add(intention);
+			} else {
+				dispatcher.addIntention(intention);
+			}
+			if (goalListener != null) {
+				intention.addGoalListener(goalListener);
+			}
 		}
+		fireGoalEvent(new GoalEvent(goal));
+		restart();
+		return intention;
 	}
 
 	/**
