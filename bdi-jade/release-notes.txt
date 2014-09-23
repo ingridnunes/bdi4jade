@@ -1,4 +1,39 @@
 -----------
+version 2.0
+-----------
+
+This version of BDI4JADE provides many new features, and allows easier implementation of BDI agents. Because of many new changes, this version is incompatible with the previous version. Therefore, if you upgrade your BDI4JADE library using in an existing application, you would have to adapt your code.
+
+- A set of annotations added to:
+
+    * Setup plan body parameters based on goal parameters
+    * Setup plan body references to beliefs (whose name is a String)
+    * Specify capability components (beliefs, plans and associated capabilities)
+    
+- New belief types added
+
+    * Predicate (and its implementation TransientPredicate): represents a belief whose name is a logic predicate and its value is a boolean that indicates whether the predicate is true or false
+    * DerivedBelief and DerivedPredicates: represent beliefs whose value are derived from a belief base
+ 
+- Agents can now be one of two types: SingleCapabilityAgent and MultipleCapabilityAgent (the first has a single root capability, while the latter can have as many as desired)
+ 
+- Capability can now have different types of relationships (inheritance, association and composition) - check out the paper published in EMAS 2014, by Ingrid Nunes
+ 
+- BeliefGoal and its implementations added: belief goals are used to implement declarative agents. Goals are specified in terms of agent beliefs. Associated with belief goals, there is BeliefGoalPlanBody, which is a plan to achieve belief goals.
+ 
+- The goals that a plan can achieve are specified in a set of goal templates (similar to message templates to messages). They can be constructed by implementing a goal template or using the GoalTemplateFactory.
+ 
+- Plan bodies can be implemented in a simpler way: now, they must only extend a single class (AbstractPlanBody). In previous versions, they had to extend a class (Behaviour from JADE) and implement an interface (PlanInstance)
+ 
+- The instantiation of plan bodies whose class are provided for DefaultPlan is now possible even if they non-static inner classes of agents, capabilities and plans. 
+ 
+- Reasoning strategies are now modularised at the capability level. Each capability can have their own reasoning strategy. However, there is still reasoning strategies at the agent level.
+
+- Examples can run all at once in a graphical interface.
+
+- Additional refactorings to the last version were performed.
+
+-----------
 version 1.0
 -----------
 
@@ -12,7 +47,7 @@ version 1.0
 	* Nested capabilities example
 	* Agent based on utility-based plan selection example/template
 
-- Refactoring of the BDI4JADE packages
+- Refactoring of BDI4JADE packages
 
 -----------
 version 0.1
