@@ -8,7 +8,7 @@
 \graphicspath{ {images/} }
 
 \title{BDI4JADE Tutorial}
-\author{Matheus Dias (revised by Ingrid Nunes)}
+\author{Matheus Dias and Ingrid Nunes}
 \date{\today}
 
 \begin{document}
@@ -127,8 +127,93 @@ A \texttt{DefaultPlan} is instantiated to initialise the \texttt{plan} attribute
 
 The \texttt{HelloWorldAnnotatedCapability} capability can then be instantiated and added to any agent or associated with other capabilities.
 
-% This paragraph may be part of the explanations of the main concepts of BDI4JADE
-% Plan bodies must implement the \texttt{PlanBody} interface and extend the JADE \texttt{Behaviour} class. Alternatively, a plan body can simply extend the \texttt{AbstractPlanBody} class. A plan body must implement the method \texttt{action()} that contains actions to achieve goals. To indicate that a plan has completed its execution, the \texttt{setEndState(EndState)} must be invoke, with one of two parameters: (i) \texttt{EndState.SUCCESSFUL}; or (ii) \texttt{EndState.FAILED}. The former indicates that the plan was successfully completed, while the latter indicates that the plan failed. Before the end state of a plan is set, the method \texttt{getEndState()} returns \texttt{null}, meaning that the plan is still being executed.
+\section{BDI4JADE Main Components}\label{sec:components}
+
+\subsection{BDI Agents} \label{sec:BDIagent}
+
+A BDI agent represents an agent that follows the BDI  software model. And have a reasoning cycle, responsible for driving the agent behaviour, strategies, and capabilities.
+
+The agent class must extends the capability, and may have a goal class and a planbody class. The goal class and the planbody class can be declared in the capability.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth]{agentdecl}
+	\label{fig:agentdecl}
+\end{figure}
+
+\subsection{Capabilities} \label{sec:capability}
+
+A capability in BDI4JADE is self-contained in the agente the capability consisting of (i) a set of plans, (ii) a fragment of the knowledge base that is manipulated by these plans and (iii) a specification of the interface to the capability.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth]{capability}
+	\label{fig:capability}
+\end{figure}
+
+\subsection{Goals} \label{sec:goal}
+
+Goals represent the motivational state of the system, and represent desires that the agent wants to achieve.
+
+A goal in BDI4JADE can be any Java object, with the condition that it must implement the Goal interface.the implementation of the goal interface may need the annotation {@link GoalOwner} in order to especify the capability that own this goal.If is required add a new goal to an agent, the only thing that must be done is to invoke the method void addGoal(Goal goal) of an instance of the BDIAgent.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth]{Goal}
+	\label{fig:goal}
+\end{figure}
+
+\subsection{Plans} \label{sec:plans}
+
+\subsubsection{Plans}
+
+The representation of plans in BDI4JADE is not associated with one but with a set of classes. This is because our goal is to reuse JADE as much as possible. In the BDI4JADE platform there is three main kind of plans.
+
+Plans do not state a set of actions to be executed to achieve a goal, but have some information about them.Beside this they define the methods that will be implemented by the sub-classes.  
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth]{Plan}
+	\label{fig:Plan}
+\end{figure}
+
+\subsubsection{Plan Bodies}
+
+Plan bodies must implement the \texttt{PlanBody} interface and extend the JADE \texttt{Behaviour} class. Alternatively, a plan body can simply extend the \texttt{AbstractPlanBody} class. A plan body must implement the method \texttt{action()} that contains actions to achieve goals. To indicate that a plan has completed its execution, the \texttt{setEndState(EndState)} must be invoke, with one of two parameters: (i) \texttt{EndState.SUCCESSFUL}; or (ii) \texttt{EndState.FAILED}. The former indicates that the plan was successfully completed, while the latter indicates that the plan failed. Before the end state of a plan is set, the method \texttt{getEndState()} returns \texttt{null}, meaning that the plan is still being executed.
+
+%The planbody class implements the AbstractPlanBody interface and must own the set of actions to be executed by a plan. Beside this two methods must be implemented the former is EndState getEndState(), returns the end state of the plan body. If it has not finished yet, it should return null. This shows that the platform detects that a goal was achieved when the selected plan finished with a SUCCESSFUL state. 
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\linewidth]{GetEndState}
+	\label{Rotulo}
+\end{figure}
+
+The latter is the void init (PlanInstance planinstance), is invoked when the plan body is instantiated. This is used to initialise it, for instance retrieving parameters of the goal to be achieved.
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\linewidth]{voidInit}
+	\label{fig:voidInit}
+\end{figure}
+
+%\textbf{Plans Instances}
+%\newline
+%Plan instances are created to achieve a particular goal, according to a specification of a plan.
+%\newline
+%\textbf{Implementation}
+%\newline
+%The implementation of plan instances requires the following attributes.
+%\newline
+
+\begin{description}
+	\item[Behaviour behaviour] The behaviour being executed to achieve the goal associated with the intention.
+	\item[Intention] The intention whose goal is trying to be achieved.
+	\item[Plan plan] The plan that this plan instance is associated with.
+	\item[EndState endstate] The end state of the plan instance (FAILED or SUCCESSFUL), or null if it is currently being executed.
+	\item[List$\langle$Goal$\rangle$ subgoals] The subgoals dispatched by this plan. In case the goal of the intention associated with the plan of this plan instance is dropped, all subgoals are also dropped.
+	\item[List$\langle$GoalFinishedEvent$\rangle$ goalEventQueue] When this plan instance dispatches a goal, it can be notified when the dispatched goal finished.
+\end{description}
 
 \bibliographystyle{plain}
 \bibliography{tutorial}
