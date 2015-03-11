@@ -4,6 +4,12 @@ import bdi4jade.annotation.Belief;
 import bdi4jade.core.Capability;
 import bdi4jade.extension.planselection.utilitybased.SoftgoalPreferences;
 
+/**
+ * Represents a capability that implements the {@link}
+ * LearningBasedPlanSelectionStrategy.
+ * 
+ * @author João Faccin
+ */
 public class LearningBasedCapability extends Capability {
 
 	private static final long serialVersionUID = -1044132085270106726L;
@@ -11,14 +17,12 @@ public class LearningBasedCapability extends Capability {
 	@Belief
 	protected SoftgoalPreferences softgoalPreferences = new SoftgoalPreferences();
 
-	/*
-	 * Passando o LearningAlgorithm como parâmetro aqui ele será instanciado no
-	 * agente. Assim será possível definir diferentes algoritmos de aprendizado
-	 * para diferentes agentes.
+	/**
+	 * Default constructor that sets the {@link}
+	 * LearningBasedPlanSelectionStrategy as the plan selection strategy.
 	 */
-	public LearningBasedCapability(LearningAlgorithm learningAlgorithm) {
-		setPlanSelectionStrategy(new LearningBasedPlanSelectionStrategy(
-				learningAlgorithm));
+	public LearningBasedCapability() {
+		setPlanSelectionStrategy(new LearningBasedPlanSelectionStrategy());
 	}
 
 }

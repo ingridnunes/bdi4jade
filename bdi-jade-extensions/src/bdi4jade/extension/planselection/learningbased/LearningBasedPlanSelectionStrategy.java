@@ -9,23 +9,24 @@ import bdi4jade.plan.Plan;
 import bdi4jade.reasoning.AbstractReasoningStrategy;
 import bdi4jade.reasoning.PlanSelectionStrategy;
 
+/**
+ * A learning-based implementation of the {@link} PlanSelectionStrategy. It
+ * selects the plan that has the best expected contribution based on a predicted
+ * outcome value and agent preferences.
+ * 
+ * @author João Faccin
+ */
 public class LearningBasedPlanSelectionStrategy extends
 		AbstractReasoningStrategy implements PlanSelectionStrategy {
 
 	private LearningAlgorithm learningAlgorithm;
 
-	/*
-	 * Instanciarei um algoritmo de aprendizagem aqui, e.g. public
-	 * UtilityBasedPlanSelectionStrategy(LearningAlgorithm la){}.
-	 * LearningAlgorithm será uma interface que obrigará a criação de uma função
-	 * getValue() ou algo do tipo. Criarei uma série de classes (nesse momento
-	 * apenas duas) que implementam essa interface, e.g.
-	 * LinearRegressionAlgorithm e SVMAlgorithm, que serão criadas no pacote
-	 * implementation.
+	/**
+	 * Default constructor that initializes the {@link} LearningAlgorithm used
+	 * in the plan selection process.
 	 */
-	public LearningBasedPlanSelectionStrategy(
-			LearningAlgorithm learningAlgorithm) {
-		this.learningAlgorithm = learningAlgorithm;
+	public LearningBasedPlanSelectionStrategy() {
+		this.learningAlgorithm = new LearningAlgorithm();
 	}
 
 	@Override

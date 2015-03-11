@@ -6,10 +6,20 @@ import java.util.Map;
 import bdi4jade.goal.Softgoal;
 import bdi4jade.plan.planbody.AbstractPlanBody;
 
+/**
+ * Represents the learning-based plan body abstraction, being an extension of
+ * the {@link} AbstractPlanBody.
+ * 
+ * @author João Faccin
+ */
 public abstract class LearningBasedPlanBody extends AbstractPlanBody {
 
 	private static final long serialVersionUID = -5064965263121492233L;
 
+	/**
+	 * Notifies some elements of a plan metadata (e.g. {@link} Outcome instance)
+	 * that a plan execution will start.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onStart() {
@@ -21,6 +31,10 @@ public abstract class LearningBasedPlanBody extends AbstractPlanBody {
 		}
 	}
 
+	/**
+	 * Notifies some elements of a plan metadata (e.g. {@link} Outcome instance)
+	 * that a plan execution ended.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public int onEnd() {
@@ -29,7 +43,9 @@ public abstract class LearningBasedPlanBody extends AbstractPlanBody {
 
 		for (PlanMetadata metadata : planMetadata) {
 			metadata.getNotifiedAtEndedPlanExecution();
+			metadata.increasePlanExecutionsCounter();
 		}
+
 		return super.onEnd();
 	}
 }
