@@ -80,17 +80,18 @@ public class LearningAlgorithm {
 
 			try {
 				prediction = planMetadata.getModel().classifyInstance(instance);
+				switch (planMetadata.getOptimizationFunction()) {
+				case MINIMIZE:
+					return 1 - prediction;
+				default:
+					return prediction;
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
-		switch (planMetadata.getOptimizationFunction()) {
-		case MINIMIZE:
-			return 1 - prediction;
-		default:
-			return prediction;
-		}
+		return prediction;
 	}
 
 	/**
