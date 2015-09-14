@@ -42,7 +42,9 @@ public class LearningAlgorithm {
 	@SuppressWarnings("unchecked")
 	public double predictExpectedContribution(Plan plan, Softgoal softgoal) {
 
-		double prediction = 1;
+		double expectedContribution = 1;
+		double predictedValue = 1;
+
 		PlanMetadata planMetadata = ((Map<Softgoal, PlanMetadata>) plan
 				.getMetadata(PlanMetadata.METADATA_NAME)).get(softgoal);
 
@@ -72,6 +74,9 @@ public class LearningAlgorithm {
 
 			Instance instance = new DenseInstance(numOfFactors);
 
+			// TODO This code snippet needs to be refactored to accept values
+			// different of doubles (allowing the use of
+			// NominalInfluenceFactors)
 			for (int i = 0; i < numOfFactors; i++) {
 				instance.setValue(trainingInstances.attribute(i),
 						(Double) planMetadata.getInfluenceFactors().get(i)
@@ -79,7 +84,13 @@ public class LearningAlgorithm {
 			}
 
 			try {
-				prediction = planMetadata.getModel().classifyInstance(instance);
+				predictedValue = planMetadata.getModel().classifyInstance(
+						instance);
+				double min = planMetadata.getOutcome().getMin();
+				double max = planMetadata.getOutcome().getMax();
+				if (min != max) {
+					expectedContribution = (predictedValue - min) / (max - min);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -87,9 +98,9 @@ public class LearningAlgorithm {
 
 		switch (planMetadata.getOptimizationFunction()) {
 		case MINIMIZE:
-			return 1 - prediction;
+			return 1 - expectedContribution;
 		default:
-			return prediction;
+			return expectedContribution;
 		}
 	}
 

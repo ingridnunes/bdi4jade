@@ -7,6 +7,14 @@ package bdi4jade.extension.planselection.learningbased;
  * @author João Faccin
  */
 public abstract class Outcome {
+	
+	private double min;
+	private double max;
+	
+	public Outcome() {
+		this.min = 0;
+		this.max = 0;
+	}
 
 	/**
 	 * Gets the final measurement of an outcome value.
@@ -14,6 +22,22 @@ public abstract class Outcome {
 	 * @return An outcome measurement.
 	 */
 	public abstract double getMeasurement();
+
+	public double getMin() {
+		return min;
+	}
+
+	public void setMin(double min) {
+		this.min = min;
+	}
+
+	public double getMax() {
+		return max;
+	}
+
+	public void setMax(double max) {
+		this.max = max;
+	}
 
 	/**
 	 * Used in cases that a measurement is an interval between two values, e.g.

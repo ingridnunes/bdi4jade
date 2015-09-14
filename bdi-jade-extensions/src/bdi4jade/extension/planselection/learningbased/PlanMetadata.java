@@ -187,12 +187,19 @@ public class PlanMetadata {
 	}
 
 	/**
-	 * Represents the notification of an already ended plan execution.
+	 * Represents the notification of an already ended plan execution and sets
+	 * the result to the instances file.
 	 */
 	public void getNotifiedAtEndedPlanExecution() {
 		this.outcome.endMeasurement();
-
-		this.currentInstance = currentInstance + this.outcome.getMeasurement();
+		double currentMeasurement = this.outcome.getMeasurement();
+		if (currentMeasurement >= this.outcome.getMax()) {
+			this.outcome.setMax(currentMeasurement);
+		}
+		if (currentMeasurement <= this.outcome.getMin()) {
+			this.outcome.setMin(currentMeasurement);
+		}
+		this.currentInstance = currentInstance + currentMeasurement;
 		saveInstance();
 	}
 
