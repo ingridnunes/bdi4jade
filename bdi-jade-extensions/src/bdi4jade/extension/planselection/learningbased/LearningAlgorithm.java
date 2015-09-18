@@ -45,8 +45,8 @@ public class LearningAlgorithm {
 		double expectedContribution = 1;
 		double predictedValue = 1;
 
-		PlanMetadata planMetadata = ((Map<Softgoal, PlanMetadata>) plan
-				.getMetadata(PlanMetadata.METADATA_NAME)).get(softgoal);
+		PlanMetadataElement planMetadata = ((Map<Softgoal, PlanMetadataElement>) plan
+				.getMetadata(PlanMetadataElement.METADATA_NAME)).get(softgoal);
 
 		if (planMetadata.getPlanExecutionsCounter() < planMetadata
 				.getMinPlanExecutions()) {
@@ -74,13 +74,13 @@ public class LearningAlgorithm {
 
 			Instance instance = new DenseInstance(numOfFactors);
 
-			// TODO This code snippet needs to be refactored to accept values
-			// different of doubles (allowing the use of
-			// NominalInfluenceFactors)
 			for (int i = 0; i < numOfFactors; i++) {
-				instance.setValue(trainingInstances.attribute(i),
-						(Double) planMetadata.getInfluenceFactors().get(i)
-								.getBeliefValue());
+				InfluenceFactor influenceFactor = planMetadata.getInfluenceFactors().get(i);
+				if (influenceFactor instanceof NumericInfluenceFactor) {
+					instance.setValue(trainingInstances.attribute(i), (double) influenceFactor.getBeliefValue());
+				} else if (influenceFactor instanceof NominalInfluenceFactor) {
+					instance.setValue(trainingInstances.attribute(i), (String) influenceFactor.getBeliefValue());
+				}
 			}
 
 			try {
@@ -89,19 +89,23 @@ public class LearningAlgorithm {
 				double min = planMetadata.getOutcome().getMin();
 				double max = planMetadata.getOutcome().getMax();
 				if (min != max) {
-					expectedContribution = (predictedValue - min) / (max - min);
+					double value = (predictedValue - min) / (max - min);
+					expectedContribution = (value > 1) ? 1 : value;
+				}
+				
+				
+				switch (planMetadata.getOptimizationFunction()) {
+				case MINIMIZE:
+					return 1 - expectedContribution;
+				default:
+					return expectedContribution;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
-		switch (planMetadata.getOptimizationFunction()) {
-		case MINIMIZE:
-			return 1 - expectedContribution;
-		default:
-			return expectedContribution;
-		}
+		return expectedContribution;
 	}
 
 	/**
@@ -116,8 +120,8 @@ public class LearningAlgorithm {
 	@SuppressWarnings("unchecked")
 	private void learnFromTrainingSet(Plan plan, Softgoal softgoal) {
 
-		PlanMetadata planMetadata = ((Map<Softgoal, PlanMetadata>) plan
-				.getMetadata(PlanMetadata.METADATA_NAME)).get(softgoal);
+		PlanMetadataElement planMetadata = ((Map<Softgoal, PlanMetadataElement>) plan
+				.getMetadata(PlanMetadataElement.METADATA_NAME)).get(softgoal);
 
 		try {
 			trainingInstances = new Instances(new BufferedReader(

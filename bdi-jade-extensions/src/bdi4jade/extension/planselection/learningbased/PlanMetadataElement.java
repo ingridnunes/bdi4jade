@@ -17,9 +17,9 @@ import bdi4jade.plan.Plan;
  * 
  * @author João Faccin
  */
-public class PlanMetadata {
+public class PlanMetadataElement {
 
-	public static final String METADATA_NAME = PlanMetadata.class
+	public static final String METADATA_NAME = PlanMetadataElement.class
 			.getSimpleName();
 
 	private final int MIN_PLAN_EXECUTIONS;
@@ -57,7 +57,7 @@ public class PlanMetadata {
 	 *            An integer indicating the interval of plan's executions
 	 *            between two learning processes.
 	 */
-	public PlanMetadata(Plan plan, Softgoal softgoal, Outcome outcome,
+	public PlanMetadataElement(Plan plan, Softgoal softgoal, Outcome outcome,
 			OptimizationFunction optFunction,
 			Class<? extends Classifier> modelClass, int minPlanExecutions,
 			int learningGap) {
@@ -104,7 +104,7 @@ public class PlanMetadata {
 	 *            An integer indicating the interval of plan's executions
 	 *            between two learning processes.
 	 */
-	public PlanMetadata(Plan plan, Softgoal softgoal, Outcome outcome,
+	public PlanMetadataElement(Plan plan, Softgoal softgoal, Outcome outcome,
 			OptimizationFunction optFunction,
 			ArrayList<InfluenceFactor> influenceFactors,
 			Class<? extends Classifier> modelClass, int minPlanExecutions,

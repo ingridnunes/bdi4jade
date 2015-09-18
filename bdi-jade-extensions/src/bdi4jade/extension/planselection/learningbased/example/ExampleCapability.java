@@ -11,7 +11,7 @@ import bdi4jade.belief.TransientBelief;
 import bdi4jade.extension.planselection.learningbased.LearningBasedCapability;
 import bdi4jade.extension.planselection.learningbased.NumericInfluenceFactor;
 import bdi4jade.extension.planselection.learningbased.OptimizationFunction;
-import bdi4jade.extension.planselection.learningbased.PlanMetadata;
+import bdi4jade.extension.planselection.learningbased.PlanMetadataElement;
 import bdi4jade.goal.Softgoal;
 
 public class ExampleCapability extends LearningBasedCapability {
@@ -39,40 +39,40 @@ public class ExampleCapability extends LearningBasedCapability {
 
 	private void init() {
 
-		Map<Softgoal, PlanMetadata> metadata = new HashMap<Softgoal, PlanMetadata>();
+		Map<Softgoal, PlanMetadataElement> metadata = new HashMap<Softgoal, PlanMetadataElement>();
 
-		PlanMetadata planMetadata = new PlanMetadata(plan01, Softgoals.COST,
+		PlanMetadataElement planMetadataElement = new PlanMetadataElement(plan01, Softgoals.COST,
 				new Outcome01(), OptimizationFunction.MINIMIZE,
 				LinearRegression.class, 50, 100);
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief01));
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief02));
-		metadata.put(Softgoals.COST, planMetadata);
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief01));
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief02));
+		metadata.put(Softgoals.COST, planMetadataElement);
 
-		planMetadata = new PlanMetadata(plan01, Softgoals.PERFORMANCE,
+		planMetadataElement = new PlanMetadataElement(plan01, Softgoals.PERFORMANCE,
 				new Outcome02(), OptimizationFunction.MAXIMIZE,
 				MultilayerPerceptron.class, 50, 100);
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief02));
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief03));
-		metadata.put(Softgoals.PERFORMANCE, planMetadata);
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief02));
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief03));
+		metadata.put(Softgoals.PERFORMANCE, planMetadataElement);
 
-		plan01.putMetadata(PlanMetadata.METADATA_NAME, metadata);
+		plan01.putMetadata(PlanMetadataElement.METADATA_NAME, metadata);
 
-		metadata = new HashMap<Softgoal, PlanMetadata>();
+		metadata = new HashMap<Softgoal, PlanMetadataElement>();
 
-		planMetadata = new PlanMetadata(plan02, Softgoals.COST,
+		planMetadataElement = new PlanMetadataElement(plan02, Softgoals.COST,
 				new Outcome01(), OptimizationFunction.MINIMIZE,
 				LinearRegression.class, 50, 100);
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief01));
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief02));
-		metadata.put(Softgoals.COST, planMetadata);
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief01));
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief02));
+		metadata.put(Softgoals.COST, planMetadataElement);
 
-		planMetadata = new PlanMetadata(plan02, Softgoals.PERFORMANCE,
+		planMetadataElement = new PlanMetadataElement(plan02, Softgoals.PERFORMANCE,
 				new Outcome02(), OptimizationFunction.MAXIMIZE,
 				MultilayerPerceptron.class, 50, 100);
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief02));
-		planMetadata.addInfluenceFactor(new NumericInfluenceFactor(belief03));
-		metadata.put(Softgoals.PERFORMANCE, planMetadata);
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief02));
+		planMetadataElement.addInfluenceFactor(new NumericInfluenceFactor(belief03));
+		metadata.put(Softgoals.PERFORMANCE, planMetadataElement);
 
-		plan02.putMetadata(PlanMetadata.METADATA_NAME, metadata);
+		plan02.putMetadata(PlanMetadataElement.METADATA_NAME, metadata);
 	}
 }

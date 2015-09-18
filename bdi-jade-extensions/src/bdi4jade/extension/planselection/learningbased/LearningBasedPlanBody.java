@@ -23,10 +23,10 @@ public abstract class LearningBasedPlanBody extends AbstractPlanBody {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onStart() {
-		Collection<PlanMetadata> planMetadata = ((Map<Softgoal, PlanMetadata>) this
-				.getPlan().getMetadata(PlanMetadata.METADATA_NAME)).values();
+		Collection<PlanMetadataElement> planMetadata = ((Map<Softgoal, PlanMetadataElement>) this
+				.getPlan().getMetadata(PlanMetadataElement.METADATA_NAME)).values();
 
-		for (PlanMetadata metadata : planMetadata) {
+		for (PlanMetadataElement metadata : planMetadata) {
 			metadata.getNotifiedAtStartedPlanExecution();
 		}
 	}
@@ -38,10 +38,10 @@ public abstract class LearningBasedPlanBody extends AbstractPlanBody {
 	@SuppressWarnings("unchecked")
 	@Override
 	public int onEnd() {
-		Collection<PlanMetadata> planMetadata = ((Map<Softgoal, PlanMetadata>) this
-				.getPlan().getMetadata(PlanMetadata.METADATA_NAME)).values();
+		Collection<PlanMetadataElement> planMetadata = ((Map<Softgoal, PlanMetadataElement>) this
+				.getPlan().getMetadata(PlanMetadataElement.METADATA_NAME)).values();
 
-		for (PlanMetadata metadata : planMetadata) {
+		for (PlanMetadataElement metadata : planMetadata) {
 			metadata.getNotifiedAtEndedPlanExecution();
 			metadata.increasePlanExecutionsCounter();
 		}

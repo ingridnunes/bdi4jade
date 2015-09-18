@@ -12,8 +12,8 @@ public abstract class Outcome {
 	private double max;
 	
 	public Outcome() {
-		this.min = 0;
-		this.max = 0;
+		this.min = 0.0;
+		this.max = 0.0;
 	}
 
 	/**
