@@ -38,7 +38,7 @@ import bdi4jade.plan.planbody.AbstractPlanBody;
 public class TestPlanBody extends AbstractPlanBody {
 
 	enum TestStep {
-		BELIEF, BOTTOM_EXTERNAL_GOAL, BOTTOM_INTERNAL_GOAL, COMPLETED, MIDDLE2_EXTERNAL_GOAL, MY_EXTERNAL_GOAL, MY_INTERNAL_GOAL, MY_PARENT_INTERNAL_GOAL, TOP_EXTERNAL_GOAL, TOP_INTERNAL_GOAL, TOP_PARENT_INTERNAL_GOAL;
+		BELIEF, BOTTOM_EXTERNAL_GOAL, BOTTOM_INTERNAL_GOAL, COMPLETED, MIDDLE2_EXTERNAL_GOAL, MY_EXTERNAL_GOAL, MY_INTERNAL_GOAL, MY_PARENT_INTERNAL_GOAL, TOP_EXTERNAL_GOAL, TOP_INTERNAL_GOAL, TOP_PARENT_INTERNAL_GOAL, ASSOCIATED_MIDDLE_1_INTERNAL_GOAL, ASSOCIATED_MIDDLE_1_EXTERNAL_GOAL, ASSOCIATED_MIDDLE_1_PARENT_INTERNAL_GOAL, ASSOCIATED_MIDDLE_1_PARENT_EXTERNAL_GOAL, ASSOCIATED_TOP_INTERNAL_GOAL, ASSOCIATED_TOP_EXTERNAL_GOAL;
 	}
 
 	private static final Log log = LogFactory.getLog(TestPlanBody.class);
@@ -57,6 +57,12 @@ public class TestPlanBody extends AbstractPlanBody {
 	private Belief<String, String> topBelief;
 	@bdi4jade.annotation.Belief
 	private Belief<String, String> topParentBelief;
+	@bdi4jade.annotation.Belief
+	private Belief<String, String> associatedMiddle1Belief;
+	@bdi4jade.annotation.Belief
+	private Belief<String, String> associatedMiddle1ParentBelief;
+	@bdi4jade.annotation.Belief
+	private Belief<String, String> associatedTopBelief;
 
 	public void action() {
 		switch (step) {
@@ -70,6 +76,10 @@ public class TestPlanBody extends AbstractPlanBody {
 			log.info("These should be null:");
 			log.info("middle2Belief: " + middle2Belief);
 			log.info("bottomBelief: " + bottomBelief);
+			log.info("associatedTopBelief: " + associatedTopBelief);
+			log.info("associatedMiddle1Belief: " + associatedMiddle1Belief);
+			log.info("associatedMiddle1ParentBelief: "
+					+ associatedMiddle1ParentBelief);
 
 			log.info("Testing plans...");
 			dispatchSubgoalAndListen(new Middle1Capability.Middle1ExternalGoal());
@@ -152,6 +162,46 @@ public class TestPlanBody extends AbstractPlanBody {
 			this.step = TestStep.BOTTOM_INTERNAL_GOAL;
 			break;
 		case BOTTOM_INTERNAL_GOAL:
+			dispatchSubgoalAndListen(new AssociatedMiddle1Capability.AssociatedMiddle1ExternalGoal());
+			this.step = TestStep.ASSOCIATED_MIDDLE_1_EXTERNAL_GOAL;
+			break;
+		case ASSOCIATED_MIDDLE_1_EXTERNAL_GOAL:
+			goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else {
+				printGoal(goalEvent, true);
+				Goal goal = new AssociatedMiddle1Capability.AssociatedMiddle1InternalGoal();
+				printGoal(goal, dispatchSubgoal(goal), false);
+			}
+			this.step = TestStep.ASSOCIATED_MIDDLE_1_INTERNAL_GOAL;
+			break;
+		case ASSOCIATED_MIDDLE_1_INTERNAL_GOAL:
+			dispatchSubgoalAndListen(new AssociatedMiddle1ParentCapability.AssociatedMiddle1ParentExternalGoal());
+			this.step = TestStep.ASSOCIATED_MIDDLE_1_PARENT_EXTERNAL_GOAL;
+			break;
+		case ASSOCIATED_MIDDLE_1_PARENT_EXTERNAL_GOAL:
+			goalEvent = getGoalEvent();
+			if (goalEvent == null) {
+				return;
+			} else {
+				printGoal(goalEvent, true);
+				Goal goal = new AssociatedMiddle1ParentCapability.AssociatedMiddle1ParentInternalGoal();
+				printGoal(goal, dispatchSubgoal(goal), false);
+			}
+			this.step = TestStep.ASSOCIATED_MIDDLE_1_PARENT_INTERNAL_GOAL;
+			break;
+		case ASSOCIATED_MIDDLE_1_PARENT_INTERNAL_GOAL:
+			Goal goal = new AssociatedTopCapability.AssociatedTopExternalGoal();
+			printGoal(goal, dispatchSubgoal(goal), false);
+			this.step = TestStep.ASSOCIATED_TOP_EXTERNAL_GOAL;
+			break;
+		case ASSOCIATED_TOP_EXTERNAL_GOAL:
+			goal = new AssociatedTopCapability.AssociatedTopInternalGoal();
+			printGoal(goal, dispatchSubgoal(goal), false);
+			this.step = TestStep.ASSOCIATED_TOP_INTERNAL_GOAL;
+			break;
+		case ASSOCIATED_TOP_INTERNAL_GOAL:
 			this.step = TestStep.COMPLETED;
 			break;
 		case COMPLETED:

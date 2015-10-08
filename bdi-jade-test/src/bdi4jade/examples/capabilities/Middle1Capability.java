@@ -22,8 +22,8 @@
 
 package bdi4jade.examples.capabilities;
 
+import bdi4jade.annotation.AssociatedCapability;
 import bdi4jade.annotation.GoalOwner;
-import bdi4jade.annotation.PartCapability;
 import bdi4jade.annotation.TransientBelief;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
@@ -62,6 +62,9 @@ public class Middle1Capability extends Middle1ParentCapability {
 
 	@TransientBelief
 	private String middle1Belief = "MIDDLE1_BELIEF";
+
+	@AssociatedCapability
+	private Capability associatedMiddle1Capability = new AssociatedMiddle1Capability();
 
 	@bdi4jade.annotation.Plan
 	private Plan testPlan = new DefaultPlan(TestGoal.class, TestPlanBody.class);

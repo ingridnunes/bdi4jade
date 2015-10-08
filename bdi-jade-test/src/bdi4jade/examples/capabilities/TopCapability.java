@@ -22,6 +22,7 @@
 
 package bdi4jade.examples.capabilities;
 
+import bdi4jade.annotation.AssociatedCapability;
 import bdi4jade.annotation.GoalOwner;
 import bdi4jade.annotation.PartCapability;
 import bdi4jade.annotation.TransientBelief;
@@ -46,6 +47,9 @@ public class TopCapability extends TopParentCapability {
 	}
 
 	private static final long serialVersionUID = -8981563986693758609L;
+
+	@AssociatedCapability
+	private Capability associatedTopCapability = new AssociatedTopCapability();
 
 	@bdi4jade.annotation.Plan
 	private Plan externalGoalPlan = new DefaultPlan(TopExternalGoal.class,
