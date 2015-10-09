@@ -38,8 +38,10 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.belief.AttributeBelief;
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
+import bdi4jade.belief.NamedBelief;
 import bdi4jade.belief.TransientBelief;
 import bdi4jade.belief.TransientBeliefSet;
 import bdi4jade.goal.Goal;
@@ -222,18 +224,21 @@ public class Capability implements Serializable {
 						Belief<?, ?> belief = (Belief<?, ?>) field.get(this);
 						this.getBeliefBase().addBelief(belief);
 					} else {
-						throw new ClassCastException("Field " + field.getName()
-								+ " should be a Belief");
+						this.getBeliefBase().addBelief(
+								new AttributeBelief(this, field));
 					}
 				} else if (field
 						.isAnnotationPresent(bdi4jade.annotation.TransientBelief.class)) {
 					bdi4jade.annotation.TransientBelief annotation = field
 							.getAnnotation(bdi4jade.annotation.TransientBelief.class);
-					String name = "".equals(annotation.name()) ? field
-							.getName() : annotation.name();
 					Object value = field.get(this);
-					this.getBeliefBase().addBelief(
-							new TransientBelief(name, value));
+					if ("".equals(annotation.name())) {
+						this.getBeliefBase().addBelief(
+								new NamedBelief(field.getName(), value));
+					} else {
+						this.getBeliefBase().addBelief(
+								new TransientBelief(annotation.name(), value));
+					}
 				} else if (field
 						.isAnnotationPresent(bdi4jade.annotation.TransientBeliefSet.class)) {
 					bdi4jade.annotation.TransientBeliefSet annotation = field
