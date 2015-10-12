@@ -249,6 +249,9 @@ public class Capability implements Serializable {
 					if (Set.class.isAssignableFrom(field.getType())) {
 						this.getBeliefBase().addBelief(
 								new TransientBeliefSet(name, (Set) value));
+					} else {
+						throw new ClassCastException("Field " + field.getName()
+						+ " should be assignable to " + Set.class.getName());
 					}
 				} else if (field
 						.isAnnotationPresent(bdi4jade.annotation.Plan.class)) {

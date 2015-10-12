@@ -22,14 +22,13 @@
 
 package bdi4jade.examples.ping;
 
-import jade.lang.acl.MessageTemplate;
+import bdi4jade.annotation.Belief;
 import bdi4jade.annotation.GoalOwner;
-import bdi4jade.belief.Belief;
-import bdi4jade.belief.TransientBelief;
 import bdi4jade.core.Capability;
 import bdi4jade.goal.Goal;
 import bdi4jade.plan.DefaultPlan;
 import bdi4jade.plan.Plan;
+import jade.lang.acl.MessageTemplate;
 
 /**
  * @author Ingrid Nunes
@@ -43,25 +42,21 @@ public class PingPongCapability extends Capability {
 
 	private static final long serialVersionUID = -4800805796961540570L;
 
-	@bdi4jade.annotation.Belief
-	Belief<String, String> neighbour;
+	@Belief
+	String neighbour;
 
 	@bdi4jade.annotation.Plan
 	private Plan pingPlan = new DefaultPlan(PingGoal.class, PingPlanBody.class);
 
-	@bdi4jade.annotation.Belief
-	Belief<String, Integer> pingTimes;
+	@Belief
+	Integer pingTimes;
 
 	@bdi4jade.annotation.Plan
-	private Plan pongPlan = new DefaultPlan(
-			MessageTemplate.MatchContent(PingPlanBody.MSG_CONTENT),
-			PongPlanBody.class);
+	private Plan pongPlan = new DefaultPlan(MessageTemplate.MatchContent(PingPlanBody.MSG_CONTENT), PongPlanBody.class);
 
 	public PingPongCapability(String neighbour, int pingTimes) {
-		this.neighbour = new TransientBelief<String, String>("neighbour",
-				neighbour);
-		this.pingTimes = new TransientBelief<String, Integer>("pingTimes",
-				pingTimes);
+		this.neighbour = neighbour;
+		this.pingTimes = pingTimes;
 	}
 
 }
