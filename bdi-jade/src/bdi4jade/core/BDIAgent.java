@@ -241,6 +241,11 @@ public interface BDIAgent {
 	public AID getAMS();
 
 	/**
+	 * @see Agent#getArguments()
+	 */
+	public Object[] getArguments();
+
+	/**
 	 * Returns the belief revision strategy of this agent.
 	 * 
 	 * @return the beliefRevisionStrategy.
@@ -401,7 +406,7 @@ public interface BDIAgent {
 	 * @see Agent#send(ACLMessage)
 	 */
 	public void send(ACLMessage msg);
-
+	
 	/**
 	 * @see Agent#setQueueSize(int)
 	 */
