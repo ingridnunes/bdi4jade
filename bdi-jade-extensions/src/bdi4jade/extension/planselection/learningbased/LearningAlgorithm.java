@@ -44,14 +44,16 @@ public class LearningAlgorithm {
 
 		double expectedContribution = 1;
 		double predictedValue = 1;
-
+		
+		String agentName = plan.getPlanLibrary().getCapability().getMyAgent().getLocalName();
+		
 		PlanMetadataElement planMetadata = ((Map<Softgoal, PlanMetadataElement>) plan
 				.getMetadata(PlanMetadataElement.METADATA_NAME)).get(softgoal);
 
 		if (planMetadata.getPlanExecutionsCounter() < planMetadata
 				.getMinPlanExecutions()) {
 			String filePath = planMetadata.getFilePath()
-					+ (plan.getId() + "_" + plan.getClass().getSimpleName()
+					+ (agentName + "_" + plan.getId() + "_" + plan.getClass().getSimpleName()
 							+ "_" + softgoal).toLowerCase() + ".arff";
 			if (!new File(filePath).exists()) {
 				try {
@@ -123,11 +125,13 @@ public class LearningAlgorithm {
 		PlanMetadataElement planMetadata = ((Map<Softgoal, PlanMetadataElement>) plan
 				.getMetadata(PlanMetadataElement.METADATA_NAME)).get(softgoal);
 
+		//Added recently 02/05
+		String agentName = plan.getPlanLibrary().getCapability().getMyAgent().getLocalName();
 		try {
 			trainingInstances = new Instances(new BufferedReader(
 					new FileReader(
 							planMetadata.getFilePath()
-									+ (plan.getId() + "_"
+									+ (agentName + "_" + plan.getId() + "_"
 											+ plan.getClass().getSimpleName()
 											+ "_" + softgoal).toLowerCase()
 									+ ".arff")));

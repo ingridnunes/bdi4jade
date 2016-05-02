@@ -225,8 +225,9 @@ public class PlanMetadataElement {
 	 * Writes the current instance in a specific file.
 	 */
 	private void saveInstance() {
+		String agentName = this.plan.getPlanLibrary().getCapability().getMyAgent().getLocalName();
 		String filePath = this.filePath
-				+ (this.plan.getId() + "_"
+				+ (agentName + "_" + this.plan.getId() + "_"
 						+ this.plan.getClass().getSimpleName() + "_" + this.softgoal)
 						.toLowerCase() + ".arff";
 		try {

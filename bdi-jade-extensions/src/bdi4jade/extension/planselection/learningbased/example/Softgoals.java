@@ -5,9 +5,9 @@ import bdi4jade.goal.Softgoal;
 
 public class Softgoals {
 
-	public static final Softgoal COST = new NamedSoftgoal("COST");
-	public static final Softgoal PERFORMANCE = new NamedSoftgoal("PERFORMANCE");
+	public static final Softgoal MINCOST = new NamedSoftgoal("COST");
+	public static final Softgoal MAXPERFORMANCE = new NamedSoftgoal("PERFORMANCE");
 
-	public static final Softgoal SOFTGOALS[] = { COST, PERFORMANCE };
+	public static final Softgoal SOFTGOALS[] = { MINCOST, MAXPERFORMANCE };
 
 }
