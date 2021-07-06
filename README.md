@@ -1,4 +1,7 @@
 # BDI4JADE
+*A BDI Layer on Top of JADE*
+
+![bdi4jade-small](https://user-images.githubusercontent.com/32344317/124600297-da928d00-de66-11eb-86f7-5930ad53ec1d.png)
 
 **BDI4JADE** is an agent platform that implements the BDI (belief-desire-intention) architecture. It consists of a BDI layer implemented on top of [JADE](http://jade.tilab.com/).
 
@@ -184,7 +187,7 @@ The paper is entitled “BDI4JADE: a BDI Layer on Top of JADE” and is availabl
 ## Publications 
 
 * NUNES, I., LUCENA, C.J.P., LUCK, M. (2011), [BDI4JADE: a BDI layer on top of JADE](http://www.inf.ufrgs.br/~ingridnunes/publications/promas-2011.pdf), in Louise A. Dennis and Olivier Boissier and Rafael H. Bordini, ed., Ninth International Workshop on Programming Multi-Agent Systems (ProMAS 2011), Taipei, Taiwan, pp. 88-103. 
-* 
+
 ### BDI4JADE Extensions 
 
 * NUNES, I. (2014) [Improving the Design and Modularity of BDI Agents with Capability Relationships](http://dx.doi.org/10.1007/978-3-319-14484-9_4). F. Dalpiaz et al. (Eds.): EMAS 2014, LNAI 8758, pp. 58-80. Springer International Publishing Switzerland.
