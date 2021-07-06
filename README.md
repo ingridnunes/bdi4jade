@@ -1,7 +1,5 @@
-# BDI4JADE
+# ![bdi4jade-small](https://user-images.githubusercontent.com/32344317/124600297-da928d00-de66-11eb-86f7-5930ad53ec1d.png)
 *A BDI Layer on Top of JADE*
-
-![bdi4jade-small](https://user-images.githubusercontent.com/32344317/124600297-da928d00-de66-11eb-86f7-5930ad53ec1d.png)
 
 **BDI4JADE** is an agent platform that implements the BDI (belief-desire-intention) architecture. It consists of a BDI layer implemented on top of [JADE](http://jade.tilab.com/).
 
