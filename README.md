@@ -2,7 +2,7 @@
 
 **BDI4JADE** is an agent platform that implements the BDI (belief-desire-intention) architecture. It consists of a BDI layer implemented on top of [JADE](http://jade.tilab.com/).
 
-> Note: I am currently migrating the old BDI4JADE [website](https://www.inf.ufrgs.br/prosoft/bdi4jade) to GitHub. So far it's code has been hosted at [SourceForge](http://sourceforge.net/projects/bdi4jade/). I plan to configure the project with Maven, but I can do it only on my free time, which is a bit scarce :-) There's the draft of a tutorial, but I had the time to rewrite just part of it.
+> Note: I am currently migrating the old BDI4JADE [website](https://www.inf.ufrgs.br/prosoft/bdi4jade) to GitHub. So far its code has been hosted at [SourceForge](http://sourceforge.net/projects/bdi4jade/). I plan to configure the project with Maven, but I can do it only on my free time, which is a bit scarce :-) There's the draft of a tutorial, but I had the time to rewrite just part of it.
 
 BDI4JADE leverages all the features provided by JADE and reuses it as much as possible. Other highlights of our JADE extension, besides providing BDI abstractions and the reasoning cycle, include:
 
@@ -92,7 +92,7 @@ The class “AgentStarter” runs an application, starting the agents BDIAgent1 
 
 The paper published entitled “Capability Relationships in BDI Agents” was revised and extended in the EMAS post proceedings. The full reference to this new version of the paper can be seen below.
 
-NUNES, I. (2014) [Improving the Design and Modularity of BDI Agents with Capability Relationships](http://dx.doi.org/10.1007/978-3-319-14484-9_4). F. Dalpiaz et al. (Eds.): EMAS 2014, LNAI 8758, pp. 58-80. Springer International Publishing Switzerland.
+* NUNES, I. (2014) [Improving the Design and Modularity of BDI Agents with Capability Relationships](http://dx.doi.org/10.1007/978-3-319-14484-9_4). F. Dalpiaz et al. (Eds.): EMAS 2014, LNAI 8758, pp. 58-80. Springer International Publishing Switzerland.
 
 *Published on December 16, 2014.*
 
@@ -183,35 +183,35 @@ The paper is entitled “BDI4JADE: a BDI Layer on Top of JADE” and is availabl
 
 ## Publications 
 
-### BDI4JADE and Extensions 
+* NUNES, I., LUCENA, C.J.P., LUCK, M. (2011), [BDI4JADE: a BDI layer on top of JADE](http://www.inf.ufrgs.br/~ingridnunes/publications/promas-2011.pdf), in Louise A. Dennis and Olivier Boissier and Rafael H. Bordini, ed., Ninth International Workshop on Programming Multi-Agent Systems (ProMAS 2011), Taipei, Taiwan, pp. 88-103. 
+* 
+### BDI4JADE Extensions 
 
-NUNES, I., LUCENA, C.J.P., LUCK, M. (2011), [BDI4JADE: a BDI layer on top of JADE](http://www.inf.ufrgs.br/~ingridnunes/publications/promas-2011.pdf), in Louise A. Dennis and Olivier Boissier and Rafael H. Bordini, ed., Ninth International Workshop on Programming Multi-Agent Systems (ProMAS 2011), Taipei, Taiwan, pp. 88-103. 
-
-NUNES, I. (2014) [Improving the Design and Modularity of BDI Agents with Capability Relationships](http://dx.doi.org/10.1007/978-3-319-14484-9_4). F. Dalpiaz et al. (Eds.): EMAS 2014, LNAI 8758, pp. 58-80. Springer International Publishing Switzerland.
+* NUNES, I. (2014) [Improving the Design and Modularity of BDI Agents with Capability Relationships](http://dx.doi.org/10.1007/978-3-319-14484-9_4). F. Dalpiaz et al. (Eds.): EMAS 2014, LNAI 8758, pp. 58-80. Springer International Publishing Switzerland.
  
-NUNES, I.; LUCK, M. (2014), [Softgoal-based Plan Selection in Model-driven BDI Agents](http://dl.acm.org/citation.cfm?id=2615731.2615852), in The 13th International Conference on Autonomous Agents and Multiagent Systems (AAMAS 2014), IFAAMAS, Paris, France. p. 749-756.
+* NUNES, I.; LUCK, M. (2014), [Softgoal-based Plan Selection in Model-driven BDI Agents](http://dl.acm.org/citation.cfm?id=2615731.2615852), in The 13th International Conference on Autonomous Agents and Multiagent Systems (AAMAS 2014), IFAAMAS, Paris, France. p. 749-756.
  
-NUNES, I. (2014) [Capability Relationships in BDI Agents](http://aamas2014.lip6.fr/proceedings/workshops/AAMAS2014-W11/100000055.pdf), in The 2nd International Workshop on Engineering Multi-Agent Systems (EMAS 2014) at AAMAS 2014. Paris, France.
+* NUNES, I. (2014) [Capability Relationships in BDI Agents](http://aamas2014.lip6.fr/proceedings/workshops/AAMAS2014-W11/100000055.pdf), in The 2nd International Workshop on Engineering Multi-Agent Systems (EMAS 2014) at AAMAS 2014. Paris, France.
  
 ### Use of BDI4JADE 
 
-NUNES, I., LUCK, M., BARBOSA, S., MILES, S., LUCENA, C.J.P. (2012), [Dynamically Adapting BDI Agents based on High-level User Specifications](http://dx.doi.org/10.1007/978-3-642-27216-5_11), in Francien Deschesne, Hiromitsu Hattori, Adriaan ter Mors, Jose Miguel Such, Danny Weyns and Frank Dignum (eds.), Advanced Agent Technology; proceedings of workshops at AAMAS 2011, Vol. 7068 of LNCS, Springer-Verlag, 2012, p. 139-163.
+* NUNES, I., LUCK, M., BARBOSA, S., MILES, S., LUCENA, C.J.P. (2012), [Dynamically Adapting BDI Agents based on High-level User Specifications](http://dx.doi.org/10.1007/978-3-642-27216-5_11), in Francien Deschesne, Hiromitsu Hattori, Adriaan ter Mors, Jose Miguel Such, Danny Weyns and Frank Dignum (eds.), Advanced Agent Technology; proceedings of workshops at AAMAS 2011, Vol. 7068 of LNCS, Springer-Verlag, 2012, p. 139-163.
  
-NUNES, I., BARBOSA, S., LUCK, M., LUCENA, C.J.P. (2011), [Dynamically Adapting BDI Agent Architectures based on High-level User Specifications](http://www.inf.ufrgs.br/prosoft/bdi4jade/wp-content/uploads/2011_05_02-aose-2011.pdf), in Danny Weyns and Jörg P. Müller, ed., The 12th International Workshop on Agent-Oriented Software Engineering (AOSE 2011), Taipei, Taiwan, pp. 105-116.
+* NUNES, I., BARBOSA, S., LUCK, M., LUCENA, C.J.P. (2011), [Dynamically Adapting BDI Agent Architectures based on High-level User Specifications](http://www.inf.ufrgs.br/prosoft/bdi4jade/wp-content/uploads/2011_05_02-aose-2011.pdf), in Danny Weyns and Jörg P. Müller, ed., The 12th International Workshop on Agent-Oriented Software Engineering (AOSE 2011), Taipei, Taiwan, pp. 105-116.
  
-NUNES, I., BARBOSA, S., LUCENA, C.J.P. (2010), [Increasing Users Trust on Personal Assistance Software using a Domain-neutral High-level User Model](http://dx.doi.org/10.1007/978-3-642-16558-0_40), in Tiziana Margaria and Bernhard Steffen, ed., Leveraging Applications of Formal Methods, Verification, and Validation (ISoLA 2010), Vol. 6415 of LNCS, Springer, Heraclion, Greece, pp. 473-487.
+* NUNES, I., BARBOSA, S., LUCENA, C.J.P. (2010), [Increasing Users Trust on Personal Assistance Software using a Domain-neutral High-level User Model](http://dx.doi.org/10.1007/978-3-642-16558-0_40), in Tiziana Margaria and Bernhard Steffen, ed., Leveraging Applications of Formal Methods, Verification, and Validation (ISoLA 2010), Vol. 6415 of LNCS, Springer, Heraclion, Greece, pp. 473-487.
  
-NUNES, I., BARBOSA, S., LUCENA, C.J.P. (2010), [Supporting the Development of Personal Assistance Software](http://www.inf.ufrgs.br/prosoft/bdi4jade/wp-content/uploads/2010_09_26-autosoft-2010.pdf), AUTOSOFT 2010 – I Workshop on Autonomous Software Systems, Vol. 10, SBC, Salvador, Brazil, pp. 31-40.
+* NUNES, I., BARBOSA, S., LUCENA, C.J.P. (2010), [Supporting the Development of Personal Assistance Software](http://www.inf.ufrgs.br/prosoft/bdi4jade/wp-content/uploads/2010_09_26-autosoft-2010.pdf), AUTOSOFT 2010 – I Workshop on Autonomous Software Systems, Vol. 10, SBC, Salvador, Brazil, pp. 31-40.
  
 ### Previous Experiences with BDI platforms 
 
-NUNES, I., CIRILO, E.J.R., COWAN, D., LUCENA, C.J.P. (2009), [Fine-grained Variability in the Development of Families of Software Agents](http://www.inf.ufrgs.br/prosoft/bdi4jade/wp-content/uploads/2009_12_18-eumas-2009.pdf), 7th European Workshop on Multi-Agent Systems (EUMAS 2009), Ayia Napa, Cyprus.
+* NUNES, I., CIRILO, E.J.R., COWAN, D., LUCENA, C.J.P. (2009), [Fine-grained Variability in the Development of Families of Software Agents](http://www.inf.ufrgs.br/prosoft/bdi4jade/wp-content/uploads/2009_12_18-eumas-2009.pdf), 7th European Workshop on Multi-Agent Systems (EUMAS 2009), Ayia Napa, Cyprus.
  
-NUNES, I., CIRILO, E.J.R., LUCENA, C.J.P. (2009), [Developing a Family of Software Agents with Fine-grained Variability: an Exploratory Study](http://www.lbd.dcc.ufmg.br:8080/colecoes/seas/2009/007.pdf), V Workshop on Software Engineering for Agent-oriented Systems (SEAS 2009), Fortaleza, Brasil, pp. 71-82.
+* NUNES, I., CIRILO, E.J.R., LUCENA, C.J.P. (2009), [Developing a Family of Software Agents with Fine-grained Variability: an Exploratory Study](http://www.lbd.dcc.ufmg.br:8080/colecoes/seas/2009/007.pdf), V Workshop on Software Engineering for Agent-oriented Systems (SEAS 2009), Fortaleza, Brasil, pp. 71-82.
  
-NUNES, I., LUCENA, C.J.P., COWAN, D., ALENCAR, P. (2009), [Building Service-oriented User Agents using a Software Product Line Approach](http://dx.doi.org/10.1007/978-3-642-04211-9_23), in Stephen Edwards and Gregory Kulczycki, ed., Formal Foundations of Reuse and Domain Engineering (ICSR 2009), Vol. 5791 of Lecture Notes in Computer Science (LNCS), Springer Berlin / Heidelberg, Falls Church, United States, pp. 236-245.
+* NUNES, I., LUCENA, C.J.P., COWAN, D., ALENCAR, P. (2009), [Building Service-oriented User Agents using a Software Product Line Approach](http://dx.doi.org/10.1007/978-3-642-04211-9_23), in Stephen Edwards and Gregory Kulczycki, ed., Formal Foundations of Reuse and Domain Engineering (ICSR 2009), Vol. 5791 of Lecture Notes in Computer Science (LNCS), Springer Berlin / Heidelberg, Falls Church, United States, pp. 236-245.
  
-NUNES, I. ; KULESZA, U. ; NUNES, C. ; CIRILO, E. ; LUCENA, C. . [Extending Web-Based Applications to Incorporate Autonomous Behavior](http://dx.doi.org/10.1145/1666091.1666112). In: WebMedia 2008: XIV Brazilian Symposium on Multimedia and Web Systems, 2008, Vila Velha. Proceedings of XIV Brazilian Symposium on Multimedia and Web Systems, 2008. p. 115-122.
+* NUNES, I. ; KULESZA, U. ; NUNES, C. ; CIRILO, E. ; LUCENA, C. . [Extending Web-Based Applications to Incorporate Autonomous Behavior](http://dx.doi.org/10.1145/1666091.1666112). In: WebMedia 2008: XIV Brazilian Symposium on Multimedia and Web Systems, 2008, Vila Velha. Proceedings of XIV Brazilian Symposium on Multimedia and Web Systems, 2008. p. 115-122.
 
 ## References 
 
