@@ -32,6 +32,8 @@ Rao & Georgeff (Rao & Georgeff 1995) adopted the BDI model for software agents a
 
 The process of practical reasoning in a BDI agent is presented in the figure below. As shown in this figure, there are seven main components in a BDI agent:
 
+![bdiArch](https://user-images.githubusercontent.com/32344317/124599456-f9445400-de65-11eb-9e7e-6e4886fecaf7.jpeg)
+
 * a set of current *beliefs*, representing information the agent has about its current environment;
 * a *belief revision function*, which takes a perceptual input and the agent’s current beliefs, and on the basis of these, determines a new set of beliefs;
 * an *option generation function*, (options), which determines the options available to the agent (its desires), on the basis of its current beliefs about its environment and its current intentions;
