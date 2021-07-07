@@ -59,10 +59,10 @@ The zip file contains:
 * required libraries
 * release notes, lincense, and readme.
 
-The provided zip file contains a folder named “examples-src,” in which you can find different examples of the use of BDI4JADE. The class “bdi4jade.examples.BDI4JADEExamplesApp” runs an application, showing a GUI with buttons to execute the different examples. When the application starts, agents of all examples start. Then, when a button is clicked, goals that
+The provided zip file contains a folder named “examples-src,” in which you can find different examples of the use of BDI4JADE. The class `bdi4jade.examples.BDI4JADEExamplesApp` runs an application, showing a GUI with buttons to execute the different examples. When the application starts, agents of all examples start. Then, when a button is clicked, goals that
 cause agents to execute are added to them. Make sure you are running the application with all the necessary libraries (provided in the lib folder) – examples also require BDI4JADE and its extensions libraries.
 
-The class “bdi4jade.examples.BDI4JADEExamplesPanel” has many action inner classes, which are responsible for handling GUI events. The different examples are in the form of different agents or capabilities, in their respective packages in the bdi4jade.examples package.
+The class `bdi4jade.examples.BDI4JADEExamplesPanel` has many action inner classes, which are responsible for handling GUI events. The different examples are in the form of different agents or capabilities, in their respective packages in the `bdi4jade.examples` package.
 
 The provided examples are:
 
@@ -85,11 +85,11 @@ In all examples, you can see how to implement agents, belief bases, plans, etc.
 
 ### Running Examples in BDI4JADE 
 
-The class “AgentStarter” runs an application, starting the agents BDIAgent1 and BDIAgent2 (the provided source has the code line that starts BDIAgent2 as a comment, so you have to uncomment it to start this agent). The different examples are in the form of different capabilities. To run the example with a particular capability you have to uncomment the respective code line in the BDIAgent1. The PingPong example consists of exchanging messages between BDIAgent1 and BDIAgent2, therefore, if you want to run this example you have to start both agents.
+The class `AgentStarter` runs an application, starting the agents `BDIAgent1` and `BDIAgent2` (the provided source has the code line that starts `BDIAgent2` as a comment, so you have to uncomment it to start this agent). The different examples are in the form of different capabilities. To run the example with a particular capability you have to uncomment the respective code line in the `BDIAgent1`. The `PingPong` example consists of exchanging messages between `BDIAgent1` and `BDIAgent2`, therefore, if you want to run this example you have to start both agents.
 
 ## Releases and News 
 
-### Capability Relationships – Revised and Extended.
+### Capability Relationships – Revised and Extended
 
 The paper published entitled “Capability Relationships in BDI Agents” was revised and extended in the EMAS post proceedings. The full reference to this new version of the paper can be seen below.
 
@@ -105,17 +105,17 @@ Check out the new release notes:
 
 * A set of annotations added to:
   * Setup plan body parameters based on goal parameters
-  * Setup plan body references to beliefs (whose name is a String)
+  * Setup plan body references to beliefs (whose name is a `String`)
   * Specify capability components (beliefs, plans and associated capabilities)
 * New belief types added
-  * Predicate (and its implementation TransientPredicate): represents a belief whose name is a logic predicate and its value is a boolean that indicates whether the predicate is true or false
-  * DerivedBelief and DerivedPredicate: represent beliefs whose values are derived from a belief base
-* Agents can now be one of two types: SingleCapabilityAgent and MultipleCapabilityAgent (the former has a single root capability, while the latter can have as many as desired)
+  * Predicate (and its implementation `TransientPredicate`): represents a belief whose name is a logic predicate and its value is a boolean that indicates whether the predicate is true or false
+  * `DerivedBelief` and `DerivedPredicate`: represent beliefs whose values are derived from a belief base
+* Agents can now be one of two types: `SingleCapabilityAgent` and `MultipleCapabilityAgent` (the former has a single root capability, while the latter can have as many as desired)
 * Capability can now have different types of relationships (inheritance, association and composition) – check out the paper published in EMAS 2014, by Ingrid Nunes
-* BeliefGoal and its implementations added: belief goals are used to implement declarative goals. Goals are specified in terms of agent beliefs. Associated with belief goals, there is the BeliefGoalPlanBody, which is a plan to achieve belief goals.
-* The goals that a plan can achieve are specified in a set of goal templates (similar to what message templates are to messages). They can be constructed by implementing a goal template or using the GoalTemplateFactory.
-* Plan bodies can be implemented in a simpler way: now, they must only extend a single class (AbstractPlanBody). In previous versions, they had to extend a class (Behaviour from JADE) and implement an interface (PlanInstance)
-* The instantiation of plan bodies whose class is provided for DefaultPlan is now possible even if they are non-static inner classes of agents, capabilities and plans.
+* `BeliefGoal` and its implementations added: belief goals are used to implement declarative goals. Goals are specified in terms of agent beliefs. Associated with belief goals, there is the BeliefGoalPlanBody, which is a plan to achieve belief goals.
+* The goals that a plan can achieve are specified in a set of goal templates (similar to what message templates are to messages). They can be constructed by implementing a goal template or using the `GoalTemplateFactory`.
+* Plan bodies can be implemented in a simpler way: now, they must only extend a single class (`AbstractPlanBody`). In previous versions, they had to extend a class (`Behaviour` from JADE) and implement an interface (`PlanInstance`)
+* The instantiation of plan bodies whose class is provided for `DefaultPlan` is now possible even if they are non-static inner classes of agents, capabilities and plans.
 * Reasoning strategies are now modularised at the capability level. Each capability can have their own reasoning strategy. However, there is still reasoning strategies at the agent level.
 * Examples can run all at once in a graphical interface.
 * Additional refactorings to the last version were performed.
@@ -144,7 +144,7 @@ Full reference of the published paper:
 
 Ingrid Nunes and Michael Luck proposed a new model-driven approach to BDI agent development, which consists of: (i) a meta-model to capture agent softgoals and plan contributions; (ii) a plan selection algorithm using information provided by an instance of the meta-model; and (iii) a model-to-text transformation that generates code based on an instance of the meta-model.
 
-This approach was published at AAMAS 2014, and it is implemented in BDI4JADE (version 1.0 or later). Besides providing an implementation of the meta-model and algorithm, you can run an example of the use of the approach (bdi4jade.examples.planselection.ExperimentRunner) and see a template for using it in the package bdi4jade.examples.planselection.template. The model-to-text transformation is currently not available.
+This approach was published at AAMAS 2014, and it is implemented in BDI4JADE (version 1.0 or later). Besides providing an implementation of the meta-model and algorithm, you can run an example of the use of the approach (`bdi4jade.examples.planselection.ExperimentRunner`) and see a template for using it in the package `bdi4jade.examples.planselection.template`. The model-to-text transformation is currently not available.
 
 Full reference of the published paper:
 
@@ -158,7 +158,7 @@ A new version of BDI4JADE was released.
 
 Check out the new release notes:
 
-* Implementation of the UtilityBasedBDIAgent, which is an agent that uses the UtilityBasedPlanSelectionStrategy to select plans. It uses other concepts as soft goals and plan contributions. See the template for learning how to use it.
+* Implementation of the `UtilityBasedBDIAgent`, which is an agent that uses the `UtilityBasedPlanSelectionStrategy` to select plans. It uses other concepts as soft goals and plan contributions. See the template for learning how to use it.
 * Implementation of the management of nested capabilities. Goals can be dispatched in plans within the scope of a capability, so that only the plans of that capability or its children will be considered to achieve the goal.
 * New examples provided
   * Hello World example
@@ -182,11 +182,23 @@ The paper is entitled “BDI4JADE: a BDI Layer on Top of JADE” and is availabl
 
 *Published on May 6, 2011.*
 
+## The Story behind BDI4JADE
+
+In the second year of my PhD (2010), I worked with dynamic adaptation of user agents. These agents were structured with the BDI architecture. For evaluating the proposed approach, I needed to make an implementation but no existing BDI platform could be used. The agent code writen in these other platforms could not be integrated with general-purpose programming languages and associated technologies (in my case Spring, Hibernate and AspectJ).
+
+This motivated me to implement BDI4JADE - with JADE controlling the distribution, message exchange, and behaviour scheduling, I could focus on the BDI cycle, which has its core implemented on the `AbstractBDIAgent` class. At that time, I didn't think of making it available but, when I mentioned it while presenting papers, people got interested. So I wrote a paper about BDI4JADE (published in the ProMAS workshop - but the paper didn't go to the post-proceedings because a reviewer said he didn't see a contribution on the paper, (s)he not even wanted the paper accepted for the pre/informal proceedings - yes, I still feel the pain). Soon after the presentation at the workshop, I made the platform open source, available on SourceForge.
+
+Over the years, I evolved BDI4JADE with additional features (annotations) and research on BDI agents (capability relationships). However, I haven't worked on it since 2014. It kept being download on SourceForge and, although I received some questions over time, I never received a bug report :-) Moreover, some of my undergraduate and graduate students worked on it, in particular João Guilherme Faccin ( @jfaccin ), who made an extention for plan selection based on learning.
+
 ## Publications 
 
 * NUNES, I., LUCENA, C.J.P., LUCK, M. (2011), [BDI4JADE: a BDI layer on top of JADE](http://www.inf.ufrgs.br/~ingridnunes/publications/promas-2011.pdf), in Louise A. Dennis and Olivier Boissier and Rafael H. Bordini, ed., Ninth International Workshop on Programming Multi-Agent Systems (ProMAS 2011), Taipei, Taiwan, pp. 88-103. 
 
 ### BDI4JADE Extensions 
+
+* NUNES, I.; FACCIN, J. G. . [Modelling and Implementing Modularised BDI Agents with Capability Relationships](http://dx.doi.org/10.1504/IJAOSE.2016.10001864). International Journal of Agent-Oriented Software Engineering, v. 5(2/3), p. 203-231, 2016.
+
+* FACCIN, J. G. ; NUNES, I. . [BDI-Agent Plan Selection based on Prediction of Plan Outcomes](http://dx.doi.org/10.1109/WI-IAT.2015.58). In: ACM International Conference on Intelligent Agent Technology (IAT'15), IEEE, Singapore. p. 187-173.
 
 * NUNES, I. (2014) [Improving the Design and Modularity of BDI Agents with Capability Relationships](http://dx.doi.org/10.1007/978-3-319-14484-9_4). F. Dalpiaz et al. (Eds.): EMAS 2014, LNAI 8758, pp. 58-80. Springer International Publishing Switzerland.
  
@@ -195,6 +207,26 @@ The paper is entitled “BDI4JADE: a BDI Layer on Top of JADE” and is availabl
 * NUNES, I. (2014) [Capability Relationships in BDI Agents](http://aamas2014.lip6.fr/proceedings/workshops/AAMAS2014-W11/100000055.pdf), in The 2nd International Workshop on Engineering Multi-Agent Systems (EMAS 2014) at AAMAS 2014. Paris, France.
  
 ### Use of BDI4JADE 
+
+* FACCIN, J. ; NUNES, I. . [Remediating critical cause-effect situations with an extended BDI architecture](https://doi.org/10.1016/j.eswa.2017.11.036). EXPERT SYSTEMS WITH APPLICATIONS, v. 95, p. 190-200, 2018.
+
+* FACCIN, J. G. ; NUNES, I. . [Cleaning up the mess: a formal framework for autonomously reverting BDI agent actions](https://doi.org/10.1145/3194133.3194156). In: International Symposium on Software Engineering for Adaptive and Self-Managing Systems, 2018, Götenburg. SEAMS '18 Proceedings of the 13th International Conference on Software Engineering for Adaptive and Self-Managing Systems. New York: ACM, 2018. p. 108-118.
+
+* SCHARDONG, F. ; NUNES, I. ; SCHAEFFER FILHO, A.E. . [Providing Cognitive Components with a Bidding Heuristic for Emergent NFV Orchestration](https://doi.org/10.1109/NOMS.2018.8406269). In: IEEE/IFIP Network Operations and Management Symposium, 2018, Taipei, Taiwan. 2018 IEEE/IFIP Network Operations and Management Symposium (NOMS 2018). New York: IEEE, 2018.
+
+* FACCIN, J. G. ; NUNES, I. . [A tool-supported development method for improved BDI plan selection](https://doi.org/10.1016/j.engappai.2017.04.008). ENGINEERING APPLICATIONS OF ARTIFICIAL INTELLIGENCE, v. 62, p. 195-213, 2017.
+
+* FACCIN, J. G. ; NUNES, I. . [Modelling and Reasoning about Remediation Actions in BDI Agents](http://dl.acm.org/citation.cfm?id=3091282.3091350) (Extended Abstract). In: International Joint Conference on Autonomous Agents and Multiagents Systems, 2017, São Paulo. AAMAS '17 Proceedings of the 16th Conference on Autonomous Agents and MultiAgent Systems. Richland: IFAAMAS, 2017. p. 1526-1528.
+
+* FACCIN, J. G. ; NUNES, I. ; BAZZAN, A. L. C. . [Understanding the Behaviour of Learning-based BDI Agents in the Braess' Paradox](http://dx.doi.org/10.1007/978-3-319-64798-2_12). In: German Conference on Multiagent System Technologies, 2017, Leipzig. Multiagent System Technologies: 15th German Conference, MATES 2017, Leipzig, Germany, August 23--26, 2017, Proceedings. Cham: Springer International Publishing, 2017. v. 10413. p. 187-204.
+
+* NUNES, I.; SCHARDONG, F.; SCHAEFFER-FILHO, A. . [BDI2DoS: an Application using Collaborating BDI Agents to Combat DDoS Attacks](http://dx.doi.org/10.1016/j.jnca.2017.01.035). Journal of Network and Computer Applications, v. 84, p. 14-24, 2017.
+
+* SCHARDONG, F. ; NUNES, I. ; SCHAEFFER FILHO, A.E. . [A Distributed NFV Orchestrator based on BDI Reasoning](https://doi.org/10.23919/INM.2017.7987270). In: IFIP/IEEE International Symposium on Integrated Network Management, 2017, Lisbon. 2017 IFIP/IEEE International Symposium on Integrated Network Management (IM 2017). New York: IEEE, 2017. p. 107-115. 
+
+* FACCIN, J. G. ; WENG, J. ; NUNES, I. . [SAM: A Tool to Ease the Development of Intelligent Agents](https://ingridnunes.github.io/publications/cbsoft-2016-tools.pdf). In: Congresso Brasileiro de Software: Teoria e Prática, 2016, Maringá. XXIII Sessão de Ferramentas: Sessão de Ferramentas 2016. Porto Alegre: SBC, 2016. p. 89-96.
+
+* NUNES, I., SCHAEFFER-FILHO, A. (2014) [Reengineering Network Resilience Strategies using a BDI Architecture](https://ingridnunes.github.io/publications/autosoft-2014.pdf), in The 5th Workshop on Autonomous Software Systems (AutoSoft 2014). Maceió, Brazil. p. 25-36. 
 
 * NUNES, I., LUCK, M., BARBOSA, S., MILES, S., LUCENA, C.J.P. (2012), [Dynamically Adapting BDI Agents based on High-level User Specifications](http://dx.doi.org/10.1007/978-3-642-27216-5_11), in Francien Deschesne, Hiromitsu Hattori, Adriaan ter Mors, Jose Miguel Such, Danny Weyns and Frank Dignum (eds.), Advanced Agent Technology; proceedings of workshops at AAMAS 2011, Vol. 7068 of LNCS, Springer-Verlag, 2012, p. 139-163.
  
