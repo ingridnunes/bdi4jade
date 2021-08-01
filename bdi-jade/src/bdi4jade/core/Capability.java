@@ -22,11 +22,8 @@
 
 package bdi4jade.core;
 
-import jade.lang.acl.ACLMessage;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.security.acl.Owner;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +35,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import bdi4jade.annotation.GoalOwner;
 import bdi4jade.belief.AttributeBelief;
 import bdi4jade.belief.Belief;
 import bdi4jade.belief.BeliefBase;
@@ -56,6 +54,7 @@ import bdi4jade.reasoning.DeliberationFunction;
 import bdi4jade.reasoning.OptionGenerationFunction;
 import bdi4jade.reasoning.PlanSelectionStrategy;
 import bdi4jade.util.ReflectionUtils;
+import jade.lang.acl.ACLMessage;
 
 /**
  * This capability represents a component that aggregates the mental attitudes
@@ -523,7 +522,7 @@ public class Capability implements Serializable {
 	 * This method thus searches all capabilities that have a relationship with
 	 * this capability (either inheritance, composition or association) and
 	 * finds the concrete capability instances whose definition owns a goal
-	 * (specified with the {@link Owner} annotation in goals).
+	 * (specified with the {@link GoalOwner} annotation in goals).
 	 * 
 	 * If this method returns an empty set, it means that this capability has no
 	 * access to the goal owned by capabilities of the given class.
