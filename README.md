@@ -59,6 +59,16 @@ The zip file contains:
 * required libraries
 * release notes, lincense, and readme.
 
+### Requirements: 
+
+* **JADE**: http://jade.tilab.com/
+* **log4j**: http://logging.apache.org/log4j
+* **Apache commons logging**: http://commons.apache.org/logging/
+
+### Running Examples in BDI4JADE 
+
+#### BDI4JADE 2.0
+
 The provided zip file contains a folder named “examples-src,” in which you can find different examples of the use of BDI4JADE. The class `bdi4jade.examples.BDI4JADEExamplesApp` runs an application, showing a GUI with buttons to execute the different examples. When the application starts, agents of all examples start. Then, when a button is clicked, goals that
 cause agents to execute are added to them. Make sure you are running the application with all the necessary libraries (provided in the lib folder) – examples also require BDI4JADE and its extensions libraries.
 
@@ -77,13 +87,7 @@ The provided examples are:
  
 In all examples, you can see how to implement agents, belief bases, plans, etc.
 
-### Requirements: 
-
-* **JADE**: http://jade.tilab.com/
-* **log4j**: http://logging.apache.org/log4j
-* **Apache commons logging**: http://commons.apache.org/logging/
-
-### Running Examples in BDI4JADE 
+#### BDI4JADE 0.1 and 1.0
 
 The class `AgentStarter` runs an application, starting the agents `BDIAgent1` and `BDIAgent2` (the provided source has the code line that starts `BDIAgent2` as a comment, so you have to uncomment it to start this agent). The different examples are in the form of different capabilities. To run the example with a particular capability you have to uncomment the respective code line in the `BDIAgent1`. The `PingPong` example consists of exchanging messages between `BDIAgent1` and `BDIAgent2`, therefore, if you want to run this example you have to start both agents.
 
