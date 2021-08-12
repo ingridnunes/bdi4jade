@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>bdi-jade</name>
+	<name>bdi4jade</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -18,12 +18,12 @@
 		<link>
 			<name>examples-src</name>
 			<type>2</type>
-			<location>D:/ingrid/Workspaces/mas-research/bdi4jade/bdi-jade-test/src</location>
+			<location>/Applications/Eclipse.app/Contents/MacOS/D::/ingrid/Workspaces/mas-research/bdi4jade/bdi-jade-test/src</location>
 		</link>
 		<link>
 			<name>extensions-src</name>
 			<type>2</type>
-			<location>D:/ingrid/Workspaces/mas-research/bdi4jade/bdi-jade-extensions/src</location>
+			<location>/Applications/Eclipse.app/Contents/MacOS/D::/ingrid/Workspaces/mas-research/bdi4jade/bdi-jade-extensions/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>
