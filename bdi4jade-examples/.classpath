@@ -2,10 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bdi-jade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bdi4jade-extensions"/>
 	<classpathentry kind="lib" path="/bdi-jade/lib/jade-4.3.2.jar"/>
 	<classpathentry kind="lib" path="/bdi-jade/lib/commons-logging-1.1.3.jar"/>
 	<classpathentry kind="lib" path="/bdi-jade/lib/log4j-1.2.17.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/bdi-jade-extensions"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/bdi4jade-extensions/lib/weka.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
