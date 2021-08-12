@@ -14,16 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>examples-src</name>
-			<type>2</type>
-			<location>/Applications/Eclipse.app/Contents/MacOS/D::/ingrid/Workspaces/mas-research/bdi4jade/bdi-jade-test/src</location>
-		</link>
-		<link>
-			<name>extensions-src</name>
-			<type>2</type>
-			<location>/Applications/Eclipse.app/Contents/MacOS/D::/ingrid/Workspaces/mas-research/bdi4jade/bdi-jade-extensions/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>
