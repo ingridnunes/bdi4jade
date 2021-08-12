@@ -1,6 +1,4 @@
 /bin
-.classpath
+/target/
 /APDescription.txt
 /MTPs-Main-Container.txt
-/hs_err_pid11572.log
-/hs_err_pid11648.log

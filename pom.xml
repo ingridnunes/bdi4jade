@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>bdi4jade</groupId>
+  <artifactId>bdi4jade-project</artifactId>
+  <version>2.0.1</version>
+  
+  <packaging>pom</packaging>
+  
+  <name>BDI4JADE</name>
+  <description>A layer that implements the belief-desire-intention (BDI) reasoning cycle to develop BDI agents that run on top of the JADE platform.</description>
+  <url>https://github.com/ingridnunes/bdi4jade</url>
+  
+  <repositories>
+  	<repository> 
+    	<id>tilab</id> 
+    	<url>https://jade.tilab.com/maven/</url> 
+	</repository>
+  </repositories>
+  
+  <dependencies>
+  	<dependency>  
+    	<groupId>com.tilab.jade</groupId> 
+    	<artifactId>jade</artifactId> 
+		<version>4.3.2</version>  
+	</dependency>
+	<dependency>
+    	<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+    	<version>1.2.17</version>
+	</dependency>
+	<dependency>
+	    <groupId>commons-logging</groupId>
+	    <artifactId>commons-logging</artifactId>
+	    <version>1.1.3</version>
+	</dependency>
+  </dependencies>
+  
+  <modules>
+  	<module>bdi4jade</module>
+  	<module>bdi4jade-extensions</module>
+  	<module>bdi4jade-examples</module>
+  </modules>
+</project>

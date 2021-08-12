@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>bdi4jade</artifactId>
+  <name>BDI4JADE</name>
+  <description>BDI4JADE core classes. This is the only module required for using BDI4JADE.</description>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+	    <configuration>
+	       <release>15</release> 
+	    </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <parent>
+  	<groupId>bdi4jade</groupId>
+  	<artifactId>bdi4jade-project</artifactId>
+  	<version>2.0.1</version>
+  </parent>
+</project>
