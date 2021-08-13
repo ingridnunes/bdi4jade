@@ -22,13 +22,6 @@
 
 package bdi4jade.examples;
 
-import jade.BootProfileImpl;
-import jade.core.Agent;
-import jade.core.ProfileImpl;
-import jade.wrapper.AgentContainer;
-import jade.wrapper.AgentController;
-import jade.wrapper.PlatformController;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +31,15 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+
+import jade.BootProfileImpl;
+import jade.core.Agent;
+import jade.core.ProfileImpl;
+import jade.wrapper.AgentContainer;
+import jade.wrapper.AgentController;
+import jade.wrapper.PlatformController;
 
 /**
  * This class is responsible for initiating the BDI4JADE app. It bootstraps
@@ -49,9 +50,11 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class BDI4JADEExamplesApp {
 
-	public static void main(String[] args) {
-		PropertyConfigurator.configure(BDI4JADEExamplesApp.class
-				.getResource("log4j.properties"));
+	public static void main(String[] args) throws Exception {
+		LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) 
+				LogManager.getContext(false);
+		context.setConfigLocation(BDI4JADEExamplesApp.class
+				.getResource("log4j2.configurationFile").toURI());
 
 		new BDI4JADEExamplesApp().createAndShowGUI();
 	}
